@@ -5,15 +5,16 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "Category",
+    tableName = "User",
     foreignKeys = [ForeignKey(
         entity = ClientVO::class,
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("clientId")
     )]
 )
-data class CategoryVO(
+data class UserVO(
     @PrimaryKey(autoGenerate = true) val id: Int,
     val clientId: Int,
-    val name: String
+    val email: String,
+    val password: String
 )
