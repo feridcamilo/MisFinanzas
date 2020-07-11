@@ -12,9 +12,6 @@ interface PersonDAO {
     @Query("SELECT * FROM Person WHERE id = :id")
     fun getById(id: Int): PersonVO
 
-    @Query("SELECT * FROM Person WHERE clientId = :clientId")
-    fun getAllByClient(clientId: Int): List<PersonVO>
-
     @Insert
     fun insert(vararg person: PersonVO)
 

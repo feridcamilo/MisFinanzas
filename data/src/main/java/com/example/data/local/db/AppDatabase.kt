@@ -7,7 +7,6 @@ import com.example.data.local.model.*
 
 @Database(
     entities = [
-        ClientVO::class,
         UserVO::class,
         CategoryVO::class,
         DebtVO::class,
@@ -18,7 +17,6 @@ import com.example.data.local.model.*
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDAO(): CategoryDAO
-    abstract fun clientDAO(): ClientDAO
     abstract fun debtDAO(): DebtDAO
     abstract fun movementDAO(): MovementDAO
     abstract fun personDAO(): PersonDAO

@@ -1,6 +1,8 @@
 package com.example.data.local.model
 
-enum class MovementType(val type: Int) {
+import java.io.Serializable
+
+enum class MovementType(val type: Int) : Serializable {
     CASH_INCOME(1),
     CASH_OUT(2),
     CARD_INCOME(3),

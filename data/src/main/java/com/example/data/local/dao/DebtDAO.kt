@@ -12,9 +12,6 @@ interface DebtDAO {
     @Query("SELECT * FROM Debt WHERE id = :id")
     fun getById(id: Int): DebtVO
 
-    @Query("SELECT * FROM Debt WHERE clientId = :clientId")
-    fun getAllByClient(clientId: Int): List<DebtVO>
-
     @Insert
     fun insert(vararg debt: DebtVO)
 

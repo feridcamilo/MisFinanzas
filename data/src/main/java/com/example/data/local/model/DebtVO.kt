@@ -1,19 +1,21 @@
 package com.example.data.local.model
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-@Entity(
-    tableName = "Debt",
-    foreignKeys = [ForeignKey(
-        entity = ClientVO::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("clientId")
-    )]
-)
-class DebtVO(
-    @PrimaryKey(autoGenerate = true) val id: Int,
-    val clientId: Int,
-    val name: String
-)
+@Entity(tableName = "Debt")
+data class DebtVO(
+    @PrimaryKey
+    val id: Int,
+    @SerializedName("Nombre")
+    val name: String,
+    @SerializedName("Activo")
+    val enabled: Boolean
+) : Serializable
+
+data class DebtVOBody(
+    @SerializedName("getDeudasResult")
+    val results: List<DebtVO>
+) : Serializable
