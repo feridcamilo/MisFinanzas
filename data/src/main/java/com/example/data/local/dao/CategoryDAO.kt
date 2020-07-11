@@ -16,7 +16,7 @@ interface CategoryDAO {
     fun getAll(): List<CategoryVO>
 
     @Query("SELECT * FROM Category WHERE enabled = 1")
-    fun getAllActives(): List<CategoryVO>
+    fun getAllActivated(): List<CategoryVO>
 
     @Insert
     fun insert(vararg category: CategoryVO)
