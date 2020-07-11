@@ -24,8 +24,3 @@ data class BalanceVO(
     val TotalIngresos: BigDecimal,
     val TotalEgresos: BigDecimal
 ) : Serializable
-
-data class BalanceVOBody(
-    @SerializedName("getSaldosResult")
-    val result: BalanceVO
-) : Serializable

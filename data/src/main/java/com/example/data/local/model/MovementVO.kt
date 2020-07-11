@@ -3,7 +3,6 @@ package com.example.data.local.model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 import java.math.BigDecimal
 import java.util.*
@@ -29,7 +28,8 @@ import java.util.*
     )]
 )
 data class MovementVO(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey
+    val id: Int,
     val idType: MovementType,
     val value: BigDecimal,
     val description: String,
@@ -40,9 +40,4 @@ data class MovementVO(
     val debtId: Int?,
     val dateEntry: Date,
     val dateLastUpd: Date?
-) : Serializable
-
-data class MovementVOBody(
-    @SerializedName("getMovimientosResult")
-    val results: List<MovementVO>
 ) : Serializable

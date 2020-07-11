@@ -13,8 +13,3 @@ data class UserVO(
     val email: String,
     val password: String
 ) : Serializable
-
-data class UserVOBody(
-    @SerializedName("getUsuarioResult")
-    val result: UserVO
-) : Serializable

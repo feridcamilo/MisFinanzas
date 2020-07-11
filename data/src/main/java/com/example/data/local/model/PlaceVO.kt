@@ -14,8 +14,3 @@ data class PlaceVO(
     @SerializedName("Activo")
     val enabled: Boolean
 ) : Serializable
-
-data class PlaceVOBody(
-    @SerializedName("getLugaresResult")
-    val results: List<PlaceVO>
-) : Serializable

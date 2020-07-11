@@ -15,8 +15,3 @@ data class CategoryVO(
     @SerializedName("Activo")
     val enabled: Boolean
 ) : Serializable
-
-data class CategoryVOBody(
-    @SerializedName("getCategoriasResult")
-    val results: List<CategoryVO>
-) : Serializable

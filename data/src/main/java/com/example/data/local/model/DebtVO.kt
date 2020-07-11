@@ -14,8 +14,3 @@ data class DebtVO(
     @SerializedName("Activo")
     val enabled: Boolean
 ) : Serializable
-
-data class DebtVOBody(
-    @SerializedName("getDeudasResult")
-    val results: List<DebtVO>
-) : Serializable

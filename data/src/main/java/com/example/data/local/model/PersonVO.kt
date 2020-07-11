@@ -14,8 +14,3 @@ data class PersonVO(
     @SerializedName("Activo")
     val enabled: Boolean
 ) : Serializable
-
-data class PersonaVOBody(
-    @SerializedName("getPersonaResult")
-    val results: List<PersonVO>
-) : Serializable
