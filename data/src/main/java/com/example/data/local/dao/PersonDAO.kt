@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import com.example.data.local.model.DebtVO
 import com.example.data.local.model.PersonVO
 
 @Dao
@@ -12,8 +13,11 @@ interface PersonDAO {
     @Query("SELECT * FROM Person WHERE id = :id")
     fun getById(id: Int): PersonVO
 
-    @Query("SELECT * FROM Person WHERE clientId = :clientId")
-    fun getAllByClient(clientId: Int): List<PersonVO>
+    @Query("SELECT * FROM Person")
+    fun getAll(): List<PersonVO>
+
+    @Query("SELECT * FROM Person WHERE enabled = 1")
+    fun getAllActivated(): List<PersonVO>
 
     @Insert
     fun insert(vararg person: PersonVO)

@@ -12,8 +12,11 @@ interface PlaceDAO {
     @Query("SELECT * FROM Place WHERE id = :id")
     fun getById(id: Int): PlaceVO
 
-    @Query("SELECT * FROM Place WHERE clientId = :clientId")
-    fun getAllByClient(clientId: Int): List<PlaceVO>
+    @Query("SELECT * FROM Place")
+    fun getAll(): List<PlaceVO>
+
+    @Query("SELECT * FROM Place WHERE enabled = 1")
+    fun getAllActivated(): List<PlaceVO>
 
     @Insert
     fun insert(vararg place: PlaceVO)

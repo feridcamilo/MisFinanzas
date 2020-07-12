@@ -12,9 +12,6 @@ interface MovementDAO {
     @Query("SELECT * FROM Movement WHERE id = :id")
     fun getById(id: Int): MovementVO
 
-    @Query("SELECT * FROM Movement WHERE clientId = :clientId")
-    fun getAllByClient(clientId: Int): List<MovementVO>
-
     @Insert
     fun insert(vararg movement: MovementVO)
 

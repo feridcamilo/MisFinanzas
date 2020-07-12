@@ -3,17 +3,14 @@ package com.example.data.local.model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.example.data.remote.model.MovementType
+import java.io.Serializable
 import java.math.BigDecimal
 import java.util.*
-
 
 @Entity(
     tableName = "Movement",
     foreignKeys = [ForeignKey(
-        entity = ClientVO::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("clientId")
-    ), ForeignKey(
         entity = PersonVO::class,
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("personId")
@@ -32,8 +29,8 @@ import java.util.*
     )]
 )
 data class MovementVO(
-    @PrimaryKey(autoGenerate = true) val id: Int,
-    val clientId: Int,
+    @PrimaryKey
+    val id: Int,
     val idType: MovementType,
     val value: BigDecimal,
     val description: String,
@@ -44,4 +41,4 @@ data class MovementVO(
     val debtId: Int?,
     val dateEntry: Date,
     val dateLastUpd: Date?
-)
+) : Serializable
