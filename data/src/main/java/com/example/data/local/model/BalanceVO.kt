@@ -2,13 +2,12 @@ package com.example.data.local.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 import java.math.BigDecimal
 
 @Entity(tableName = "Balance")
 data class BalanceVO(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id: Int,
     val IngresosEfectivo: BigDecimal,
     val EgresosEfectivo: BigDecimal,

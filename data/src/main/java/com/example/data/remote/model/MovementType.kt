@@ -1,4 +1,4 @@
-package com.example.data.local.model
+package com.example.data.remote.model
 
 import java.io.Serializable
 
