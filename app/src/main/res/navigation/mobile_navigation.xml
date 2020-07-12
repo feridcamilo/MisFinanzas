@@ -12,14 +12,14 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.misfinanzas.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_movements"
+        android:name="com.example.misfinanzas.ui.movements.MovementsFragment"
+        android:label="@string/title_movements"
+        tools:layout="@layout/fragment_movements" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.misfinanzas.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_sync"
+        android:name="com.example.misfinanzas.ui.sync.SyncFragment"
+        android:label="@string/title_sync"
+        tools:layout="@layout/fragment_sync" />
 </navigation>

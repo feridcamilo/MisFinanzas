@@ -1,4 +1,4 @@
-package com.example.misfinanzas.ui.dashboard
+package com.example.misfinanzas.ui.sync
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.misfinanzas.R
 
-class DashboardFragment : Fragment() {
+class SyncFragment : Fragment() {
 
-    private lateinit var dashboardViewModel: DashboardViewModel
+    private lateinit var syncViewModel: SyncViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        dashboardViewModel =
-                ViewModelProviders.of(this).get(DashboardViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
-        val textView: TextView = root.findViewById(R.id.text_dashboard)
-        dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
+        syncViewModel =
+                ViewModelProviders.of(this).get(SyncViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_sync, container, false)
+        val textView: TextView = root.findViewById(R.id.text_notifications)
+        syncViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root

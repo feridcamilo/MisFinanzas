@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">MisFinanzas</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_home">Saldos</string>
+    <string name="title_movements">Movimientos</string>
+    <string name="title_sync">Sincronizar</string>
+
+    <!--Login CardView-->
+    <string name="title">Ingreso Mis Finanzas</string>
+    <string name="user">Usuario</string>
+    <string name="password">Contraseña</string>
+    <string name="enter">Ingresar</string>
 </resources>

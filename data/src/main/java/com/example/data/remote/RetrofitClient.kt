@@ -11,11 +11,11 @@ class RetrofitClient {
         private lateinit var retrofit: Retrofit
 
         fun getClient(baseURL: String): Retrofit {
-            val logging = HttpLoggingInterceptor()
-            logging.level = HttpLoggingInterceptor.Level.BODY
+            val log = HttpLoggingInterceptor()
+            log.level = HttpLoggingInterceptor.Level.BODY
             val httpClient = OkHttpClient.Builder()
 
-            httpClient.addInterceptor(logging)
+            httpClient.addInterceptor(log)
 
             retrofit = Retrofit.Builder()
                 .baseUrl(baseURL)
