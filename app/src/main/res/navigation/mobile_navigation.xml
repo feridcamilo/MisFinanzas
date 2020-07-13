@@ -3,23 +3,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/homeFragment">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/homeFragment"
         android:name="com.android.misfinanzas.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_movements"
+        android:id="@+id/movementsFragment"
         android:name="com.android.misfinanzas.ui.movements.MovementsFragment"
         android:label="@string/title_movements"
-        tools:layout="@layout/fragment_movements" />
+        tools:layout="@layout/fragment_movements">
+        <action
+            android:id="@+id/action_movementsFragment_to_movementsDetailsFragment"
+            app:destination="@id/movementsDetailsFragment" />
+        <action
+            android:id="@+id/action_movementsFragment_to_filtersFragment"
+            app:destination="@id/filtersFragment" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_sync"
+        android:id="@+id/syncFragment"
         android:name="com.android.misfinanzas.ui.sync.SyncFragment"
         android:label="@string/title_sync"
         tools:layout="@layout/fragment_sync" />
+
+    <fragment
+        android:id="@+id/movementsDetailsFragment"
+        android:name="com.android.misfinanzas.ui.movementsDetails.MovementsDetailsFragment"
+        android:label="@string/title_movements_details"
+        tools:layout="@layout/fragment_movements_details" />
+
+    <fragment
+        android:id="@+id/filtersFragment"
+        android:name="com.android.misfinanzas.ui.filters.FiltersFragment"
+        android:label="@string/title_filters"
+        tools:layout="@layout/fragment_filters" />
 </navigation>

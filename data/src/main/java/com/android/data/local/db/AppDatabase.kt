@@ -1,6 +1,8 @@
 package com.android.data.local.db
 
+import android.content.Context
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.android.data.local.dao.*
@@ -27,4 +29,17 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun personDAO(): PersonDAO
     abstract fun placeDAO(): PlaceDAO
     abstract fun userDao(): UserDAO
+
+    companion object {
+        private var INSTANCE: AppDatabase? = null
+
+        fun getDatabase(context: Context): AppDatabase {
+            INSTANCE = INSTANCE ?: Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "MisFinanzas").build()
+            return INSTANCE!!
+        }
+
+        fun destroyInstance() {
+            INSTANCE = null
+        }
+    }
 }

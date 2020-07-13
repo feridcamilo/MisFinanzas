@@ -1,7 +1,6 @@
 package com.android.data.remote.api
 
 import com.android.data.remote.model.*
-import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -9,24 +8,24 @@ import retrofit2.http.Path
 
 interface APIService {
 
-    @GET("/Servicios/Maestros.svc/getCategorias/{clientId}")
-    fun getCategories(@Path("clientId") clientId: String): Call<CategoryDTO>
+    @GET("Maestros.svc/getCategorias/{clientId}")
+    suspend fun getCategories(@Path("clientId") clientId: String): CategoryDTO
 
-    @GET("/Servicios/Maestros.svc/getDeudas/{clientId}")
-    fun getDebts(@Path("clientId") clientId: String): Call<DebtDTO>
+    @GET("Maestros.svc/getDeudas/{clientId}")
+    suspend fun getDebts(@Path("clientId") clientId: String): DebtDTO
 
-    @GET("/Servicios/Maestros.svc/getLugares/{clientId}")
-    fun getPlaces(@Path("clientId") clientId: String): Call<PlaceDTO>
+    @GET("Maestros.svc/getLugares/{clientId}")
+    suspend fun getPlaces(@Path("clientId") clientId: String): PlaceDTO
 
-    @GET("/Servicios/Maestros.svc/getPersonas/{clientId}")
-    fun getPeople(@Path("clientId") clientId: String): Call<PersonaDTO>
+    @GET("Maestros.svc/getPersonas/{clientId}")
+    suspend fun getPeople(@Path("clientId") clientId: String): PersonaDTO
 
-    @GET("/Servicios/Maestros.svc/getUsuario/{user}/{password}")
-    fun getUser(@Path("user") user: String, @Path("password") password: String): Call<UserDTO>
+    @GET("Maestros.svc/getUsuario/{user}/{password}")
+    suspend fun getUser(@Path("user") user: String, @Path("password") password: String): UserDTO
 
-    @POST("/Servicios/Movimientos.svc/getSaldos")
-    fun getSaldo(@Body parametros: APIParameterBody): Call<BalanceDTO>
+    @POST("Movimientos.svc/getSaldos")
+    suspend fun getSaldo(@Body parametros: APIParameterBody): BalanceDTO
 
-    @POST("/Servicios/Movimientos.svc/getMovimientos")
-    fun getMovements(@Body parametros: APIParameterBody): Call<MovementDTO>
+    @POST("Movimientos.svc/getMovimientos")
+    suspend fun getMovements(@Body parametros: APIParameterBody): MovementDTO
 }

@@ -2,6 +2,8 @@
     <string name="app_name">Mis Finanzas</string>
     <string name="title_home">Saldos</string>
     <string name="title_movements">Movimientos</string>
+    <string name="title_movements_details">Detalle del movimiento</string>
+    <string name="title_filters">Filtros</string>
     <string name="title_sync">Sincronizar</string>
 
     <!--Login CardView-->
