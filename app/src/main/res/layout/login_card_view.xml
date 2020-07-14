@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -25,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
             android:gravity="center_horizontal"
-            android:text="@string/title"
+            android:text="@string/login_cardview_title"
             android:textColor="@color/gray"
             android:textSize="@dimen/text_size_24"
             app:layout_constraintBottom_toTopOf="@id/et_user"
@@ -39,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
             android:gravity="center_horizontal"
-            android:hint="@string/user"
+            android:hint="@string/login_cardview_user"
             android:inputType="text"
             app:layout_constraintBottom_toTopOf="@id/et_password"
             app:layout_constraintEnd_toEndOf="parent"
@@ -52,20 +53,20 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
             android:gravity="center_horizontal"
-            android:hint="@string/password"
+            android:hint="@string/login_cardview_password"
             android:inputType="textPassword"
-            app:layout_constraintBottom_toTopOf="@id/btn_loggin"
+            app:layout_constraintBottom_toTopOf="@id/btn_login"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/et_user" />
 
         <Button
-            android:id="@+id/btn_loggin"
+            android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
             android:background="@color/colorPrimary"
-            android:text="@string/enter"
+            android:text="@string/login_cardview_enter"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_20"
             app:layout_constraintBottom_toBottomOf="parent"

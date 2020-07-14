@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.homeFragment,
+                R.id.balanceFragment,
                 R.id.movementsFragment,
                 R.id.syncFragment
             )

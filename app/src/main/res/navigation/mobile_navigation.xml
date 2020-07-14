@@ -3,13 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/homeFragment">
+    app:startDestination="@+id/balanceFragment">
 
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.android.misfinanzas.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/balanceFragment"
+        android:name="com.android.misfinanzas.ui.balance.BalanceFragment"
+        android:label="@string/title_balance"
+        tools:layout="@layout/fragment_balance">
+        <action
+            android:id="@+id/action_balanceFragment_to_syncFragment"
+            app:destination="@id/syncFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/movementsFragment"
@@ -17,11 +25,22 @@
         android:label="@string/title_movements"
         tools:layout="@layout/fragment_movements">
         <action
-            android:id="@+id/action_movementsFragment_to_movementsDetailsFragment"
-            app:destination="@id/movementsDetailsFragment" />
+            android:id="@+id/action_movementsFragment_to_movementDetailFragment"
+            app:destination="@id/movementDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right" />
         <action
             android:id="@+id/action_movementsFragment_to_filtersFragment"
             app:destination="@id/filtersFragment" />
+        <action
+            android:id="@+id/action_movementsFragment_to_syncFragment"
+            app:destination="@id/syncFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right" />
     </fragment>
 
     <fragment
@@ -31,10 +50,10 @@
         tools:layout="@layout/fragment_sync" />
 
     <fragment
-        android:id="@+id/movementsDetailsFragment"
-        android:name="com.android.misfinanzas.ui.movementsDetails.MovementsDetailsFragment"
+        android:id="@+id/movementDetailFragment"
+        android:name="com.android.misfinanzas.ui.movementDetail.MovementDetailFragment"
         android:label="@string/title_movements_details"
-        tools:layout="@layout/fragment_movements_details" />
+        tools:layout="@layout/fragment_movement_detail" />
 
     <fragment
         android:id="@+id/filtersFragment"

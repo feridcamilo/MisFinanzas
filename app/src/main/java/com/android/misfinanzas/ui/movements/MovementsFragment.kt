@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -13,15 +14,21 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.data.local.RoomDataSource
+import com.android.data.local.model.MovementVO
+import com.android.data.local.repository.LocalRepositoryImp
+import com.android.data.local.repository.UserSesion
 import com.android.data.remote.RetrofitDataSource
-import com.android.data.remote.repository.LocalRepositoryImp
 import com.android.data.remote.repository.WebRepositoryImp
 import com.android.domain.result.Result
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseViewModelFactory
+import com.android.misfinanzas.ui.movementDetail.MovementDetailFragment
+import com.android.misfinanzas.ui.sync.SyncFragment
 import kotlinx.android.synthetic.main.fragment_movements.*
 
-class MovementsFragment : Fragment() {
+class MovementsFragment : Fragment(), MovementsAdapter.OnMovementClickListener {
+
+    val TAG = this.javaClass.name
 
     private val viewModel by viewModels<MovementsViewModel> {
         BaseViewModelFactory(
@@ -37,16 +44,21 @@ class MovementsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupRecyclerView()
-        setupObservers()
-        btn_filtros.setOnClickListener {
-            findNavController().navigate(R.id.filtersFragment)
+        if (UserSesion.getUser() == null) {
+            navigateToSync()
+        } else {
+            setupRecyclerView()
+            setupSearchView()
+            getLocalMovements()
+
+            btn_filtros.setOnClickListener {
+                findNavController().navigate(R.id.filtersFragment)
+            }
+
+            btn_add_movement.setOnClickListener {
+                findNavController().navigate(R.id.action_movementsFragment_to_movementDetailFragment)
+            }
         }
-        /*
-        btn_detalles.setOnClickListener {
-            findNavController().navigate(R.id.movementsDetailsFragment)
-        }
-        */
     }
 
     private fun setupRecyclerView() {
@@ -54,22 +66,51 @@ class MovementsFragment : Fragment() {
         rv_movimientos.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
     }
 
-    private fun setupObservers() {
-        viewModel.getMovements.observe(viewLifecycleOwner, Observer { result ->
+    private fun setupSearchView() {
+        sv_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                //implement if you can to change in every letter written
+                return false
+            }
+        })
+    }
+
+    private fun navigateToSync() {
+        val bundle = Bundle()
+        bundle.putBoolean(SyncFragment.FROM_MOVEMENTS, true)
+        findNavController().navigate(R.id.action_movementsFragment_to_syncFragment, bundle)
+    }
+
+    private fun getLocalMovements() {
+        viewModel.getLocalMovements.observe(viewLifecycleOwner, Observer { result ->
             when (result) {
                 is Result.Loading -> {
                     progressBar.visibility = View.VISIBLE
                 }
                 is Result.Success -> {
-                    rv_movimientos.adapter = MovementsAdapter(requireContext(), result.data)
+                    if (result.data.isEmpty()) {
+                        Toast.makeText(requireContext(), R.string.info_no_movements, Toast.LENGTH_SHORT).show()
+                    } else {
+                        rv_movimientos.adapter = MovementsAdapter(requireContext(), result.data, this)
+                    }
                     progressBar.visibility = View.GONE
                 }
                 is Result.Error -> {
                     progressBar.visibility = View.GONE
-                    Toast.makeText(requireContext(), "Error al consultar los movimientos: ${result.exception}", Toast.LENGTH_SHORT).show()
-                    Log.e("MovementsFragment", "onRetrofitRequest: ${result.exception}")
+                    Toast.makeText(requireContext(), getString(R.string.error_getting_movements, result.exception), Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, getString(R.string.error_room, result.exception))
                 }
             }
         })
+    }
+
+    override fun onMovementClicked(movement: MovementVO) {
+        val bundle = Bundle()
+        bundle.putParcelable(MovementDetailFragment.MOVEMENT_DATA, movement)
+        findNavController().navigate(R.id.action_movementsFragment_to_movementDetailFragment, bundle)
     }
 }

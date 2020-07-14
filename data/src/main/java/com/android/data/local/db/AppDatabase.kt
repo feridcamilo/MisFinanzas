@@ -13,16 +13,18 @@ import com.android.data.local.model.converters.MovementTypeConverter
 
 @Database(
     entities = [
-        UserVO::class,
+        BalanceVO::class,
         CategoryVO::class,
         DebtVO::class,
+        MovementVO::class,
         PersonVO::class,
         PlaceVO::class,
-        MovementVO::class
+        UserVO::class
     ], version = 1
 )
 @TypeConverters(MovementTypeConverter::class, DateConverter::class, BigDecimalConverter::class)
 abstract class AppDatabase : RoomDatabase() {
+    abstract fun balanceDAO(): BalanceDAO
     abstract fun categoryDAO(): CategoryDAO
     abstract fun debtDAO(): DebtDAO
     abstract fun movementDAO(): MovementDAO
