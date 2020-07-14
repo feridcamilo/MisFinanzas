@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
@@ -37,18 +36,10 @@ android {
 
 }
 
-ext.nav_version = "2.3.0"
-ext.cardView_version = '27.1.0'
-ext.support_version = '27.1.0'
-ext.picasso_version = '2.71828'
-ext.retrofit_version = '2.3.0'
-
 dependencies {
     //local projects
     implementation project(':data')
-
-    //Retrofit
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation project(':domain')
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -56,7 +47,11 @@ dependencies {
     implementation "androidx.core:core-ktx:1.3.0"
     implementation "com.google.android.material:material:1.1.0"
     implementation "androidx.constraintlayout:constraintlayout:1.1.3"
-    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+
+    //LifeCycle KTX ViewModel y LiveData
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
 
     //Navigation
     implementation "androidx.navigation:navigation-fragment:$nav_version"
@@ -64,19 +59,19 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
-    //Room
-    implementation "android.arch.persistence.room:runtime:1.1.1"
-    kapt "android.arch.persistence.room:compiler:1.1.1"
-
-    //Suport
+    //Support
     implementation "com.android.support:appcompat-v7:$support_version"
     implementation "com.android.support:recyclerview-v7:$support_version"
 
-    //Cardview
+    //CardView
     implementation "com.android.support:cardview-v7:$cardView_version"
 
     //Picasso
     implementation "com.squareup.picasso:picasso:$picasso_version"
+
+    //Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

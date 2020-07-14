@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_half_margin">
+
+    <ImageView
+        android:id="@+id/iv_tipo_movimiento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_money"
+        app:layout_constraintBottom_toTopOf="@id/tv_descripcion"
+        app:layout_constraintEnd_toStartOf="@id/tv_valor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_valor"
+        android:layout_width="@dimen/zero"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="@dimen/text_size_24"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/tv_descripcion"
+        app:layout_constraintEnd_toStartOf="@id/tv_fecha"
+        app:layout_constraintStart_toEndOf="@id/iv_tipo_movimiento"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="0.00 $" />
+
+    <TextView
+        android:id="@+id/tv_fecha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="textEnd"
+        android:textSize="@dimen/text_size_20"
+        app:layout_constraintBottom_toTopOf="@id/tv_descripcion"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_valor"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="dd/mm/yyyy" />
+
+    <TextView
+        android:id="@+id/tv_descripcion"
+        android:layout_width="@dimen/zero"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textSize="@dimen/text_size_20"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_view_details"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_tipo_movimiento"
+        tools:text="Descripción" />
+
+    <ImageView
+        android:id="@+id/iv_view_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_rigth_arrow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_descripcion"
+        app:layout_constraintTop_toBottomOf="@id/iv_tipo_movimiento" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,12 +1,35 @@
 <resources>
     <string name="app_name">Mis Finanzas</string>
-    <string name="title_home">Saldos</string>
+    <string name="title_balance">Saldos</string>
     <string name="title_movements">Movimientos</string>
+    <string name="title_movements_details">Detalle del movimiento</string>
+    <string name="title_filters">Filtros</string>
     <string name="title_sync">Sincronizar</string>
 
+    <string name="sync_data">Sincronizar datos</string>
+
     <!--Login CardView-->
-    <string name="title">Ingreso Mis Finanzas</string>
-    <string name="user">Usuario</string>
-    <string name="password">Contraseña</string>
-    <string name="enter">Ingresar</string>
+    <string name="login_cardview_title">Ingreso Mis Finanzas</string>
+    <string name="login_cardview_user">Usuario</string>
+    <string name="login_cardview_password">Contraseña</string>
+    <string name="login_cardview_enter">Ingresar</string>
+
+    <!--Error messages-->
+    <string name="error_getting_movements">Ocurrió un error obteniendo los movimientos: %1$s</string>
+    <string name="error_getting_balance">Ocurrió un error obteniendo los saldos: %1$s</string>
+    <string name="error_getting_user">Ocurrió un error obteniendo el usuario: %1$s</string>
+    <string name="error_retrofit">Retrofit: %1$s</string>
+    <string name="error_room">Room: %1$s</string>
+
+    <!--Info messages-->
+    <string name="info_enter_user_and_password">Por favor ingrese usuario y contraseña.</string>
+    <string name="info_wrong_user_or_password">Usuario y/o contraseña incorrecta.</string>
+    <string name="info_please_log_in">Por favor inicie sesión.</string>
+    <string name="info_no_movements">No hay movimientos para mostrar.</string>
+    <string name="info_no_balance">No hay saldos para mostrar.</string>
+    <string name="info_movements_saved">Movimientos guardados con éxito.</string>
+    <string name="info_movement_saved">Movimiento guardado con éxito.</string>
+    <string name="info_user_saved">Usuario guardado con éxito.</string>
+    <string name="info_balance_saved">Saldos guardados con éxito.</string>
+
 </resources>

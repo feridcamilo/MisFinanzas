@@ -1,26 +1,23 @@
 package com.android.data.local.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.android.data.local.model.PersonVO
 
 @Dao
 interface PersonDAO {
 
     @Query("SELECT * FROM Person WHERE id = :id")
-    fun getById(id: Int): PersonVO
+    suspend fun getById(id: Int): PersonVO
 
     @Query("SELECT * FROM Person")
-    fun getAll(): List<PersonVO>
+    suspend fun getAll(): List<PersonVO>
 
     @Query("SELECT * FROM Person WHERE enabled = 1")
-    fun getAllActivated(): List<PersonVO>
+    suspend fun getAllActivated(): List<PersonVO>
 
-    @Insert
-    fun insert(vararg person: PersonVO)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(vararg person: PersonVO)
 
     @Delete
-    fun delete(person: PersonVO)
+    suspend fun delete(person: PersonVO)
 }

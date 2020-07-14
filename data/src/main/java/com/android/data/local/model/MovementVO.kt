@@ -1,14 +1,14 @@
 package com.android.data.local.model
 
+import android.os.Parcelable
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.android.data.remote.model.MovementType
+import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 import java.util.*
 
 @Entity(
-    tableName = "Movement",
+    tableName = "Movement"/*,
     foreignKeys = [ForeignKey(
         entity = PersonVO::class,
         parentColumns = arrayOf("id"),
@@ -25,19 +25,21 @@ import java.util.*
         entity = DebtVO::class,
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("debtId")
-    )]
+    )]*/
 )
+
+@Parcelize
 data class MovementVO(
     @PrimaryKey
     val id: Int,
-    val idType: MovementType,
+    val idType: Int,
     val value: BigDecimal,
     val description: String,
     val personId: Int?,
     val placeId: Int?,
     val categoryId: Int,
-    val date: Date,
+    val date: Date?,
     val debtId: Int?,
-    val dateEntry: Date,
+    val dateEntry: Date?,
     val dateLastUpd: Date?
-)
+) : Parcelable

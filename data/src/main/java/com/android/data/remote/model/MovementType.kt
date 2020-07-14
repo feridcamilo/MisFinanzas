@@ -1,12 +1,12 @@
 package com.android.data.remote.model
 
-import java.io.Serializable
-
-enum class MovementType(val type: Int) : Serializable {
-    CASH_INCOME(1),
-    CASH_OUT(2),
-    CARD_INCOME(3),
-    CARD_OUT(4),
-    WITHDRAWAL(5),
-    CREDIT_CARD_BUY(6)
+class MovementType {
+    companion object {
+        const val CASH_INCOME = 1
+        const val CASH_OUT = 2
+        const val CARD_INCOME = 3
+        const val CARD_OUT = 4
+        const val WITHDRAWAL = 5
+        const val CREDIT_CARD_BUY = 6
+    }
 }

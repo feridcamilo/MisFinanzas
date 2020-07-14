@@ -1,26 +1,23 @@
 package com.android.data.local.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.android.data.local.model.CategoryVO
 
 @Dao
 interface CategoryDAO {
 
     @Query("SELECT * FROM Category WHERE id = :id")
-    fun getById(id: Int): CategoryVO
+    suspend fun getById(id: Int): CategoryVO
 
     @Query("SELECT * FROM Category")
-    fun getAll(): List<CategoryVO>
+    suspend fun getAll(): List<CategoryVO>
 
     @Query("SELECT * FROM Category WHERE enabled = 1")
-    fun getAllActivated(): List<CategoryVO>
+    suspend fun getAllActivated(): List<CategoryVO>
 
-    @Insert
-    fun insert(vararg category: CategoryVO)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(vararg category: CategoryVO)
 
     @Delete
-    fun delete(category: CategoryVO)
+    suspend fun delete(category: CategoryVO)
 }

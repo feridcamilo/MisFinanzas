@@ -1,20 +1,23 @@
 package com.android.data.local.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.android.data.local.model.MovementVO
 
 @Dao
 interface MovementDAO {
 
-    @Query("SELECT * FROM Movement WHERE id = :id")
-    fun getById(id: Int): MovementVO
+    @Query("SELECT * FROM Movement ORDER BY date desc, dateEntry desc")
+    suspend fun getAll(): List<MovementVO>
 
-    @Insert
-    fun insert(vararg movement: MovementVO)
+    @Query("SELECT * FROM Movement WHERE id = :id")
+    suspend fun getById(id: Int): MovementVO
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(movement: MovementVO)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(movements: List<MovementVO>)
 
     @Delete
-    fun delete(movement: MovementVO)
+    suspend fun delete(movement: MovementVO)
 }
