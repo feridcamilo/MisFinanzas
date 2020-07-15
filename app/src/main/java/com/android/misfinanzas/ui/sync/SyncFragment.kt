@@ -44,12 +44,17 @@ class SyncFragment : Fragment() {
     private var fromBalance: Boolean = false
     private var fromMovements: Boolean = false
 
+    private lateinit var getWebUserObserver: Observer<Result<User>>
+    private lateinit var getWebBalanceObserver: Observer<Result<Balance>>
+    private lateinit var getWebMovementsObserver: Observer<Result<List<Movement>>>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             fromBalance = it.getBoolean(FROM_BALANCE)
             fromMovements = it.getBoolean(FROM_MOVEMENTS)
         }
+        setupObservers()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -66,24 +71,8 @@ class SyncFragment : Fragment() {
         }
     }
 
-    private fun setupLogin() {
-        cardViewLogin = login_view
-        cardViewLogin.visibility = View.VISIBLE
-
-        cardViewLogin.btn_login.setOnClickListener {
-            val user = cardViewLogin.et_user.text.trim().toString()
-            val password = cardViewLogin.et_password.text.trim().toString()
-            if (user.isEmpty() || password.isEmpty()) {
-                Toast.makeText(requireContext(), getString(R.string.info_enter_user_and_password), Toast.LENGTH_SHORT).show()
-            } else {
-                getWebUser(user, password)
-            }
-        }
-    }
-
-    private fun getWebUser(user: String, password: String) {
-        viewModel.setCredential(UserCredential(user, password))
-        viewModel.getWebUser.observe(viewLifecycleOwner, Observer { result ->
+    private fun setupObservers() {
+        getWebUserObserver = Observer { result ->
             when (result) {
                 is Result.Loading -> {
                     progressBar.visibility = View.VISIBLE
@@ -108,7 +97,64 @@ class SyncFragment : Fragment() {
                     Log.e(TAG, getString(R.string.error_retrofit, result.exception))
                 }
             }
-        })
+        }
+
+        getWebBalanceObserver = Observer { result ->
+            when (result) {
+                is Result.Loading -> {
+                    progressBar.visibility = View.VISIBLE
+                }
+                is Result.Success -> {
+                    insertBalance(result.data)
+                    getWebMovements()
+                }
+                is Result.Error -> {
+                    progressBar.visibility = View.GONE
+                    Toast.makeText(requireContext(), getString(R.string.error_getting_balance, result.exception), Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, getString(R.string.error_retrofit, result.exception))
+                }
+            }
+        }
+
+        getWebMovementsObserver = Observer { result ->
+            when (result) {
+                is Result.Loading -> {
+                    progressBar.visibility = View.VISIBLE
+                }
+                is Result.Success -> {
+                    insertMovements(result.data)
+                    progressBar.visibility = View.GONE
+                }
+                is Result.Error -> {
+                    progressBar.visibility = View.GONE
+                    Toast.makeText(requireContext(), getString(R.string.error_getting_movements, result.exception), Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, getString(R.string.error_retrofit, result.exception))
+                }
+            }
+        }
+    }
+
+    private fun setupLogin() {
+        cardViewLogin = login_view
+        cardViewLogin.visibility = View.VISIBLE
+
+        cardViewLogin.btn_login.setOnClickListener {
+            val user = cardViewLogin.et_user.text.trim().toString()
+            val password = cardViewLogin.et_password.text.trim().toString()
+            if (user.isEmpty() || password.isEmpty()) {
+                Toast.makeText(requireContext(), getString(R.string.info_enter_user_and_password), Toast.LENGTH_SHORT).show()
+            } else {
+                getWebUser(user, password)
+            }
+        }
+    }
+
+    private fun getWebUser(user: String, password: String) {
+        viewModel.setCredential(UserCredential(user, password))
+
+        if (!viewModel.getWebUser.hasObservers()) {
+            viewModel.getWebUser.observe(viewLifecycleOwner, getWebUserObserver)
+        }
     }
 
     private fun insertUser(user: User) {
@@ -128,22 +174,10 @@ class SyncFragment : Fragment() {
     }
 
     private fun getWebBalance() {
-        viewModel.getWebBalance.observe(viewLifecycleOwner, Observer { result ->
-            when (result) {
-                is Result.Loading -> {
-                    progressBar.visibility = View.VISIBLE
-                }
-                is Result.Success -> {
-                    insertBalance(result.data)
-                    getWebMovements()
-                }
-                is Result.Error -> {
-                    progressBar.visibility = View.GONE
-                    Toast.makeText(requireContext(), getString(R.string.error_getting_balance, result.exception), Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, getString(R.string.error_retrofit, result.exception))
-                }
-            }
-        })
+        if (viewModel.getWebBalance.hasObservers()) {
+            viewModel.getWebBalance.removeObservers(viewLifecycleOwner)
+        }
+        viewModel.getWebBalance.observe(viewLifecycleOwner, getWebBalanceObserver)
     }
 
     private fun insertBalance(balance: Balance) {
@@ -152,22 +186,10 @@ class SyncFragment : Fragment() {
     }
 
     private fun getWebMovements() {
-        viewModel.getWebMovements.observe(viewLifecycleOwner, Observer { result ->
-            when (result) {
-                is Result.Loading -> {
-                    progressBar.visibility = View.VISIBLE
-                }
-                is Result.Success -> {
-                    insertMovements(result.data)
-                    progressBar.visibility = View.GONE
-                }
-                is Result.Error -> {
-                    progressBar.visibility = View.GONE
-                    Toast.makeText(requireContext(), getString(R.string.error_getting_movements, result.exception), Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, getString(R.string.error_retrofit, result.exception))
-                }
-            }
-        })
+        if (viewModel.getWebMovements.hasObservers()) {
+            viewModel.getWebMovements.removeObservers(viewLifecycleOwner)
+        }
+        viewModel.getWebMovements.observe(viewLifecycleOwner, getWebMovementsObserver)
     }
 
     private fun insertMovements(movements: List<Movement>) {
