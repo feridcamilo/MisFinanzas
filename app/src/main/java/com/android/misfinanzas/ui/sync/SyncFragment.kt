@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.android.data.local.RoomDataSource
@@ -19,12 +18,13 @@ import com.android.data.remote.model.User
 import com.android.data.remote.repository.WebRepositoryImp
 import com.android.domain.result.Result
 import com.android.misfinanzas.R
+import com.android.misfinanzas.base.BaseFragment
 import com.android.misfinanzas.base.BaseViewModelFactory
 import com.android.misfinanzas.ui.widgets.login.LoginView
 import kotlinx.android.synthetic.main.fragment_sync.*
 import kotlinx.android.synthetic.main.login_card_view.view.*
 
-class SyncFragment : Fragment() {
+class SyncFragment : BaseFragment() {
 
     companion object {
         val FROM_BALANCE: String = "FromBalance"
@@ -75,7 +75,7 @@ class SyncFragment : Fragment() {
         getWebUserObserver = Observer { result ->
             when (result) {
                 is Result.Loading -> {
-                    progressBar.visibility = View.VISIBLE
+                    progressListener.show()
                 }
                 is Result.Success -> {
                     if (result.data == null) {
@@ -86,13 +86,13 @@ class SyncFragment : Fragment() {
                         viewModel.setClientId(result.data.IdCliente.toString())
                         cardViewLogin.visibility = View.GONE
                         setupSync()
-                        progressBar.visibility = View.GONE
+                        progressListener.hide()
                     }
 
-                    progressBar.visibility = View.GONE
+                    progressListener.hide()
                 }
                 is Result.Error -> {
-                    progressBar.visibility = View.GONE
+                    progressListener.hide()
                     Toast.makeText(requireContext(), getString(R.string.error_getting_user, result.exception), Toast.LENGTH_SHORT).show()
                     Log.e(TAG, getString(R.string.error_retrofit, result.exception))
                 }
@@ -102,14 +102,14 @@ class SyncFragment : Fragment() {
         getWebBalanceObserver = Observer { result ->
             when (result) {
                 is Result.Loading -> {
-                    progressBar.visibility = View.VISIBLE
+                    progressListener.show()
                 }
                 is Result.Success -> {
                     insertBalance(result.data)
                     getWebMovements()
                 }
                 is Result.Error -> {
-                    progressBar.visibility = View.GONE
+                    progressListener.hide()
                     Toast.makeText(requireContext(), getString(R.string.error_getting_balance, result.exception), Toast.LENGTH_SHORT).show()
                     Log.e(TAG, getString(R.string.error_retrofit, result.exception))
                 }
@@ -119,14 +119,14 @@ class SyncFragment : Fragment() {
         getWebMovementsObserver = Observer { result ->
             when (result) {
                 is Result.Loading -> {
-                    progressBar.visibility = View.VISIBLE
+                    progressListener.show()
                 }
                 is Result.Success -> {
                     insertMovements(result.data)
-                    progressBar.visibility = View.GONE
+                    progressListener.hide()
                 }
                 is Result.Error -> {
-                    progressBar.visibility = View.GONE
+                    progressListener.hide()
                     Toast.makeText(requireContext(), getString(R.string.error_getting_movements, result.exception), Toast.LENGTH_SHORT).show()
                     Log.e(TAG, getString(R.string.error_retrofit, result.exception))
                 }

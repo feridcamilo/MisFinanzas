@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -18,11 +17,11 @@ import com.android.data.remote.RetrofitDataSource
 import com.android.data.remote.repository.WebRepositoryImp
 import com.android.domain.result.Result
 import com.android.misfinanzas.R
+import com.android.misfinanzas.base.BaseFragment
 import com.android.misfinanzas.base.BaseViewModelFactory
 import com.android.misfinanzas.ui.sync.SyncFragment
-import kotlinx.android.synthetic.main.fragment_balance.*
 
-class BalanceFragment : Fragment() {
+class BalanceFragment : BaseFragment() {
 
     val TAG = this.javaClass.name
 
@@ -46,7 +45,7 @@ class BalanceFragment : Fragment() {
         viewModel.getLocalUser.observe(viewLifecycleOwner, Observer { result ->
             when (result) {
                 is Result.Loading -> {
-                    progressBar.visibility = View.VISIBLE
+                    progressListener.show()
                 }
                 is Result.Success -> {
                     if (result.data == null) {
@@ -56,10 +55,10 @@ class BalanceFragment : Fragment() {
                         UserSesion.setUser(result.data)
                         getLocalBalance()
                     }
-                    progressBar.visibility = View.GONE
+                    progressListener.hide()
                 }
                 is Result.Error -> {
-                    progressBar.visibility = View.GONE
+                    progressListener.hide()
                     Toast.makeText(requireContext(), getString(R.string.error_getting_movements, result.exception), Toast.LENGTH_SHORT).show()
                     Log.e(TAG, getString(R.string.error_room, result.exception))
                 }
@@ -77,7 +76,7 @@ class BalanceFragment : Fragment() {
         viewModel.getLocalBalance.observe(viewLifecycleOwner, Observer { result ->
             when (result) {
                 is Result.Loading -> {
-                    progressBar.visibility = View.VISIBLE
+                    progressListener.show()
                 }
                 is Result.Success -> {
                     if (result.data == null) {
@@ -86,10 +85,10 @@ class BalanceFragment : Fragment() {
                     } else {
                         showBalance(result.data)
                     }
-                    progressBar.visibility = View.GONE
+                    progressListener.hide()
                 }
                 is Result.Error -> {
-                    progressBar.visibility = View.GONE
+                    progressListener.hide()
                     Toast.makeText(requireContext(), getString(R.string.error_getting_balance, result.exception), Toast.LENGTH_SHORT).show()
                     Log.e(TAG, getString(R.string.error_room, result.exception))
                 }
