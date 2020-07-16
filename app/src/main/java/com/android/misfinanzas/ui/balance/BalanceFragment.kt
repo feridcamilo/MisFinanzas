@@ -21,6 +21,7 @@ import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
 import com.android.misfinanzas.base.BaseViewModelFactory
 import com.android.misfinanzas.ui.sync.SyncFragment
+import kotlinx.android.synthetic.main.fragment_balance.*
 
 class BalanceFragment : BaseFragment() {
 
