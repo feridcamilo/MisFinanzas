@@ -98,6 +98,7 @@ class BalanceFragment : Fragment() {
     }
 
     private fun showBalance(balance: BalanceVO) {
-        Log.d(TAG, "$balance")
+        val balanceView = balance_view
+        balanceView.showBalance(balance)
     }
 }
