@@ -141,7 +141,8 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
                 it.FechaMovimiento,
                 it.IdDeuda,
                 it.FechaIngreso,
-                it.FechaActualizacion
+                it.FechaActualizacion,
+                true
             )
         }
 
