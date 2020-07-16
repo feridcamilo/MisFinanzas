@@ -1,12 +1,17 @@
 package com.android.data.local.repository
 
 import com.android.data.local.model.*
+import java.util.*
 
 interface ILocalRepository {
 
     suspend fun getUser(): UserVO
 
     suspend fun insertUser(user: UserVO)
+
+    suspend fun updateLastSync(date: Date)
+
+    suspend fun getLastSync(): Date?
 
     suspend fun getBalance(): BalanceVO
 

@@ -3,10 +3,19 @@ package com.android.data.local
 import android.content.Context
 import com.android.data.local.db.AppDatabase
 import com.android.data.local.model.*
+import java.util.*
 
 class RoomDataSource(private val context: Context) {
     suspend fun getUser(): UserVO {
         return AppDatabase.getDatabase(context).userDao().getUser()
+    }
+
+    suspend fun updateLastSync(date: Date) {
+        return AppDatabase.getDatabase(context).userDao().updateLastSync(date)
+    }
+
+    suspend fun getLastSync(): Date? {
+        return AppDatabase.getDatabase(context).userDao().getLastSync()
     }
 
     suspend fun insertUser(user: UserVO) {

@@ -12,6 +12,12 @@ interface MovementDAO {
     @Query("SELECT * FROM Movement WHERE id = :id")
     suspend fun getById(id: Int): MovementVO
 
+    @Query("SELECT * FROM Movement WHERE synced = 0")
+    suspend fun getAllToSync(): List<MovementVO>
+
+    @Query("UPDATE Movement SET synced = 1")
+    suspend fun updateAllSynced()
+    
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(movement: MovementVO)
 
