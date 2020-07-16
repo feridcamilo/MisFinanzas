@@ -4,6 +4,7 @@ import com.android.data.remote.model.Balance
 import com.android.data.remote.model.Master
 import com.android.data.remote.model.Movement
 import com.android.data.remote.model.User
+import java.util.*
 
 interface IWebRepository {
 
@@ -11,7 +12,7 @@ interface IWebRepository {
 
     suspend fun getBalance(clientId: String): Balance
 
-    suspend fun getMovements(clientId: String): List<Movement>
+    suspend fun getMovements(clientId: String, lastSync: Date?): List<Movement>
 
     suspend fun getCategories(clientId: String): List<Master>
 

@@ -2,6 +2,7 @@ package com.android.data.local.repository
 
 import com.android.data.local.model.UserVO
 import com.android.data.remote.model.User
+import java.util.*
 
 class UserSesion {
     companion object {
@@ -20,7 +21,7 @@ class UserSesion {
         }
 
         fun setUser(user: User) {
-            val userVO = UserVO(user.Usuario, user.IdCliente, user.Nombres, user.Apellidos, user.Correo)
+            val userVO = UserVO(user.Usuario, user.IdCliente, user.Nombres, user.Apellidos, user.Correo, Calendar.getInstance().time)
             this.INSTANCE = userVO
         }
     }

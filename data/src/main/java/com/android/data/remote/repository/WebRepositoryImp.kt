@@ -5,6 +5,7 @@ import com.android.data.remote.model.Balance
 import com.android.data.remote.model.Master
 import com.android.data.remote.model.Movement
 import com.android.data.remote.model.User
+import java.util.*
 
 class WebRepositoryImp(private val dataSource: RetrofitDataSource) : IWebRepository {
 
@@ -16,8 +17,8 @@ class WebRepositoryImp(private val dataSource: RetrofitDataSource) : IWebReposit
         return dataSource.getBalance(clientId)
     }
 
-    override suspend fun getMovements(clientId: String): List<Movement> {
-        return dataSource.getMovements(clientId)
+    override suspend fun getMovements(clientId: String, lastSync: Date?): List<Movement> {
+        return dataSource.getMovements(clientId, lastSync)
     }
 
     override suspend fun getCategories(clientId: String): List<Master> {

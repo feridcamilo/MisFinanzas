@@ -2,6 +2,7 @@ package com.android.data.local.repository
 
 import com.android.data.local.RoomDataSource
 import com.android.data.local.model.*
+import java.util.*
 
 class LocalRepositoryImp(private val dataSource: RoomDataSource) : ILocalRepository {
 
@@ -11,6 +12,14 @@ class LocalRepositoryImp(private val dataSource: RoomDataSource) : ILocalReposit
 
     override suspend fun insertUser(user: UserVO) {
         dataSource.insertUser(user)
+    }
+
+    override suspend fun updateLastSync(date: Date) {
+        dataSource.updateLastSync(date)
+    }
+
+    override suspend fun getLastSync(): Date? {
+        return dataSource.getLastSync()
     }
 
     override suspend fun getBalance(): BalanceVO {

@@ -2,6 +2,9 @@ package com.android.data.remote
 
 import com.android.data.remote.api.ApiClient
 import com.android.data.remote.model.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class RetrofitDataSource {
 
@@ -16,9 +19,15 @@ class RetrofitDataSource {
         return ApiClient.service.getSaldo(paramBody).result
     }
 
-    suspend fun getMovements(clientId: String): List<Movement> {
+    suspend fun getMovements(clientId: String, lastSync: Date?): List<Movement> {
         val params: MutableList<APIParameter> = ArrayList()
         params.add(APIParameter("@@IdCliente", clientId))
+        if (lastSync != null) {
+            val timeZone = TimeZone.getTimeZone("UTC")
+            val dateFormat = SimpleDateFormat("yyyy-MM-d HH:mm:ss", Locale.US)
+            dateFormat.timeZone = timeZone
+            params.add(APIParameter("@@UltimoUpdate", dateFormat.format(lastSync).replace(" ", "T")))
+        }
         val paramBody = APIParameterBody(params)
         return ApiClient.service.getMovements(paramBody).results
     }

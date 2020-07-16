@@ -12,6 +12,7 @@ import com.android.data.remote.repository.IWebRepository
 import com.android.domain.result.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
 class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: ILocalRepository) : ViewModel() {
 
@@ -45,10 +46,25 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
     }
 
     private fun insertLocalUser(user: User) {
-        val userToInsert = UserVO(user.Usuario, user.IdCliente, user.Nombres, user.Apellidos, user.Correo)
+        val userToInsert = UserVO(user.Usuario, user.IdCliente, user.Nombres, user.Apellidos, user.Correo, null)
 
         viewModelScope.launch {
             localRepo.insertUser(userToInsert)
+        }
+    }
+
+    fun updateLastSync(date: Date) {
+        viewModelScope.launch {
+            localRepo.updateLastSync(date)
+        }
+    }
+
+    fun getLastSync() = liveData {
+        emit(Result.Loading)
+        try {
+            emit(Result.Success(localRepo.getLastSync()))
+        } catch (e: Exception) {
+            emit(Result.Error(e))
         }
     }
 
@@ -99,10 +115,10 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
         }
     }
 
-    fun syncMovements() = liveData {
+    fun syncMovements(lastSync: Date?) = liveData {
         emit(Result.Loading)
         try {
-            val movements = webRepo.getMovements(clientId)
+            val movements = webRepo.getMovements(clientId, lastSync)
             if (movements.isNotEmpty()) {
                 insertLocalMovement(movements)
             }
@@ -125,7 +141,8 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
                 it.FechaMovimiento,
                 it.IdDeuda,
                 it.FechaIngreso,
-                it.FechaActualizacion
+                it.FechaActualizacion,
+                true
             )
         }
 

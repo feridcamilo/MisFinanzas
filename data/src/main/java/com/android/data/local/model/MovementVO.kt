@@ -41,5 +41,6 @@ data class MovementVO(
     val date: Date?,
     val debtId: Int?,
     val dateEntry: Date?,
-    val dateLastUpd: Date?
+    val dateLastUpd: Date?,
+    val synced: Boolean = false
 ) : Parcelable

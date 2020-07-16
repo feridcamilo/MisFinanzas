@@ -24,6 +24,7 @@ import com.android.misfinanzas.base.BaseViewModelFactory
 import com.android.misfinanzas.ui.widgets.login.LoginView
 import kotlinx.android.synthetic.main.fragment_sync.*
 import kotlinx.android.synthetic.main.login_card_view.view.*
+import java.util.*
 
 class SyncFragment : BaseFragment() {
 
@@ -52,6 +53,7 @@ class SyncFragment : BaseFragment() {
     private lateinit var syncDebtsObserver: Observer<Result<List<Master>>>
     private lateinit var syncPlacesObserver: Observer<Result<List<Master>>>
     private lateinit var syncPeopleObserver: Observer<Result<List<Master>>>
+    private lateinit var lasSyncObserver: Observer<Result<Date?>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,6 +120,22 @@ class SyncFragment : BaseFragment() {
             }
         }
 
+        lasSyncObserver = Observer { result ->
+            when (result) {
+                is Result.Loading -> {
+                    progressListener.show()
+                }
+                is Result.Success -> {
+                    viewModel.syncMovements(result.data).observe(viewLifecycleOwner, syncMovementsObserver)
+                    progressListener.hide()
+                }
+                is Result.Error -> {
+                    progressListener.hide()
+                    Log.e(TAG, getString(R.string.error_room, result.exception))
+                }
+            }
+        }
+
         syncMovementsObserver = Observer { result ->
             when (result) {
                 is Result.Loading -> {
@@ -125,6 +143,7 @@ class SyncFragment : BaseFragment() {
                 }
                 is Result.Success -> {
                     progressListener.hide()
+                    viewModel.updateLastSync(Calendar.getInstance().time)
                     Toast.makeText(requireContext(), R.string.info_movements_saved, Toast.LENGTH_SHORT).show()
                 }
                 is Result.Error -> {
@@ -192,6 +211,7 @@ class SyncFragment : BaseFragment() {
                 }
                 is Result.Success -> {
                     progressListener.hide()
+                    viewModel.updateLastSync(Calendar.getInstance().time)
                     Toast.makeText(requireContext(), R.string.info_masters_saved, Toast.LENGTH_SHORT).show()
                 }
                 is Result.Error -> {
@@ -209,6 +229,10 @@ class SyncFragment : BaseFragment() {
 
         cardViewLogin.visibility = View.GONE
         setupSync()
+
+        //Auto sync after login
+        syncBalance()
+        syncCategories()
     }
 
     private fun setupLogin() {
@@ -233,12 +257,14 @@ class SyncFragment : BaseFragment() {
         setupMovementsObservers()
         btn_sync_movements.visibility = View.VISIBLE
         btn_sync_movements.setOnClickListener {
+            //Manual movements sync
             syncBalance()
         }
 
         setupMastersObservers()
         btn_sync_masters.visibility = View.VISIBLE
         btn_sync_masters.setOnClickListener {
+            //Manual masters sync
             syncCategories()
         }
     }
@@ -252,7 +278,7 @@ class SyncFragment : BaseFragment() {
     }
 
     private fun syncMovements() {
-        viewModel.syncMovements().observe(viewLifecycleOwner, syncMovementsObserver)
+        viewModel.getLastSync().observe(viewLifecycleOwner, lasSyncObserver)
     }
 
     private fun syncCategories() {
