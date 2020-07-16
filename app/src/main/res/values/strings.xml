@@ -15,6 +15,12 @@
     <string name="login_cardview_password">Contraseña</string>
     <string name="login_cardview_enter">Ingresar</string>
 
+    <!--Balance CardView-->
+    <string name="balance_cardview_title">Actualmente tienes</string>
+    <string name="balance_cardview_cash">Efectivo: </string>
+    <string name="balance_cardview_card">Electrónico: </string>
+    <string name="balance_cardview_total">Total: </string>
+
     <!--Error messages-->
     <string name="error_getting_movements">Ocurrió un error obteniendo los movimientos: %1$s</string>
     <string name="error_getting_balance">Ocurrió un error obteniendo los saldos: %1$s</string>
