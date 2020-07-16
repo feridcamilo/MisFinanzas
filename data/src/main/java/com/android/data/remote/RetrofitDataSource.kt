@@ -22,4 +22,20 @@ class RetrofitDataSource {
         val paramBody = APIParameterBody(params)
         return ApiClient.service.getMovements(paramBody).results
     }
+
+    suspend fun getCategories(clientId: String): List<Master> {
+        return ApiClient.service.getCategories(clientId).results
+    }
+
+    suspend fun getDebts(clientId: String): List<Master> {
+        return ApiClient.service.getDebts(clientId).results
+    }
+
+    suspend fun getPlaces(clientId: String): List<Master> {
+        return ApiClient.service.getPlaces(clientId).results
+    }
+
+    suspend fun getPeople(clientId: String): List<Master> {
+        return ApiClient.service.getPeople(clientId).results
+    }
 }

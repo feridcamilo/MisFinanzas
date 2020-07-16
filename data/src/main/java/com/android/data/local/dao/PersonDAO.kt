@@ -18,6 +18,9 @@ interface PersonDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vararg person: PersonVO)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(movements: List<PersonVO>)
+
     @Delete
     suspend fun delete(person: PersonVO)
 }

@@ -6,7 +6,8 @@
     <string name="title_filters">Filtros</string>
     <string name="title_sync">Sincronizar</string>
 
-    <string name="sync_data">Sincronizar datos</string>
+    <string name="sync_movements">Sincronizar movimientos</string>
+    <string name="sync_masters">Sincronizar maestros</string>
     <string name="loading">Cargando…</string>
 
     <!--Login CardView-->
@@ -24,6 +25,10 @@
     <!--Error messages-->
     <string name="error_getting_movements">Ocurrió un error obteniendo los movimientos: %1$s</string>
     <string name="error_getting_balance">Ocurrió un error obteniendo los saldos: %1$s</string>
+    <string name="error_getting_categories">Ocurrió un error obteniendo las categorias: %1$s</string>
+    <string name="error_getting_debts">Ocurrió un error obteniendo las deudas: %1$s</string>
+    <string name="error_getting_places">Ocurrió un error obteniendo los lugares: %1$s</string>
+    <string name="error_getting_people">Ocurrió un error obteniendo las personas: %1$s</string>
     <string name="error_getting_user">Ocurrió un error obteniendo el usuario: %1$s</string>
     <string name="error_retrofit">Retrofit: %1$s</string>
     <string name="error_room">Room: %1$s</string>
@@ -36,7 +41,7 @@
     <string name="info_no_balance">No hay saldos para mostrar.</string>
     <string name="info_movements_saved">Movimientos guardados con éxito.</string>
     <string name="info_movement_saved">Movimiento guardado con éxito.</string>
+    <string name="info_masters_saved">Maestros guardados con éxito.</string>
     <string name="info_user_saved">Usuario guardado con éxito.</string>
-    <string name="info_balance_saved">Saldos guardados con éxito.</string>
 
 </resources>

@@ -18,6 +18,9 @@ interface DebtDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vararg debt: DebtVO)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(movements: List<DebtVO>)
+
     @Delete
     suspend fun delete(debt: DebtVO)
 }
