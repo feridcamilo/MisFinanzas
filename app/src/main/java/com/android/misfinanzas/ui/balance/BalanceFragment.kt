@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.android.data.local.RoomDataSource
 import com.android.data.local.model.BalanceVO
+import com.android.data.local.model.UserVO
 import com.android.data.local.repository.LocalRepositoryImp
 import com.android.data.local.repository.UserSesion
 import com.android.data.remote.RetrofitDataSource
@@ -23,7 +24,7 @@ import com.android.misfinanzas.ui.sync.SyncFragment
 
 class BalanceFragment : BaseFragment() {
 
-    val TAG = this.javaClass.name
+    private val TAG = this.javaClass.name
 
     private val viewModel by viewModels<BalanceViewModel> {
         BaseViewModelFactory(
@@ -32,30 +33,33 @@ class BalanceFragment : BaseFragment() {
         )
     }
 
+    private lateinit var userObserver: Observer<Result<UserVO>>
+    private lateinit var balanceObserver: Observer<Result<BalanceVO>>
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_balance, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupObservers()
         getLocalUser()
     }
 
-    private fun getLocalUser() {
-        viewModel.getLocalUser.observe(viewLifecycleOwner, Observer { result ->
+    private fun setupObservers() {
+        userObserver = Observer { result ->
             when (result) {
                 is Result.Loading -> {
                     progressListener.show()
                 }
                 is Result.Success -> {
                     if (result.data == null) {
-                        Toast.makeText(requireContext(), R.string.info_please_log_in, Toast.LENGTH_LONG).show()
+                        progressListener.hide()
                         navigateToSync()
                     } else {
                         UserSesion.setUser(result.data)
                         getLocalBalance()
                     }
-                    progressListener.hide()
                 }
                 is Result.Error -> {
                     progressListener.hide()
@@ -63,17 +67,9 @@ class BalanceFragment : BaseFragment() {
                     Log.e(TAG, getString(R.string.error_room, result.exception))
                 }
             }
-        })
-    }
+        }
 
-    private fun navigateToSync() {
-        val bundle = Bundle()
-        bundle.putBoolean(SyncFragment.FROM_BALANCE, true)
-        findNavController().navigate(R.id.action_balanceFragment_to_syncFragment, bundle)
-    }
-
-    private fun getLocalBalance() {
-        viewModel.getLocalBalance.observe(viewLifecycleOwner, Observer { result ->
+        balanceObserver = Observer { result ->
             when (result) {
                 is Result.Loading -> {
                     progressListener.show()
@@ -93,7 +89,21 @@ class BalanceFragment : BaseFragment() {
                     Log.e(TAG, getString(R.string.error_room, result.exception))
                 }
             }
-        })
+        }
+    }
+
+    private fun getLocalUser() {
+        viewModel.getLocalUser().observe(viewLifecycleOwner, userObserver)
+    }
+
+    private fun navigateToSync() {
+        val bundle = Bundle()
+        bundle.putBoolean(SyncFragment.FROM_BALANCE, true)
+        findNavController().navigate(R.id.action_balanceFragment_to_syncFragment, bundle)
+    }
+
+    private fun getLocalBalance() {
+        viewModel.getLocalBalance().observe(viewLifecycleOwner, balanceObserver)
     }
 
     private fun showBalance(balance: BalanceVO) {

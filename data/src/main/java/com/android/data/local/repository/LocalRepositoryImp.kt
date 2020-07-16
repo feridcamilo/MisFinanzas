@@ -4,11 +4,10 @@ import com.android.data.local.RoomDataSource
 import com.android.data.local.model.BalanceVO
 import com.android.data.local.model.MovementVO
 import com.android.data.local.model.UserVO
-import com.android.domain.result.Result
 
 class LocalRepositoryImp(private val dataSource: RoomDataSource) : ILocalRepository {
 
-    override suspend fun getUser(): Result<UserVO> {
+    override suspend fun getUser(): UserVO {
         return dataSource.getUser()
     }
 
@@ -16,7 +15,7 @@ class LocalRepositoryImp(private val dataSource: RoomDataSource) : ILocalReposit
         dataSource.insertUser(user)
     }
 
-    override suspend fun getBalance(): Result<BalanceVO> {
+    override suspend fun getBalance(): BalanceVO {
         return dataSource.getBalance()
     }
 
@@ -24,7 +23,7 @@ class LocalRepositoryImp(private val dataSource: RoomDataSource) : ILocalReposit
         dataSource.insertBalance(balance)
     }
 
-    override suspend fun getMovements(): Result<List<MovementVO>> {
+    override suspend fun getMovements(): List<MovementVO> {
         return dataSource.getMovements()
     }
 

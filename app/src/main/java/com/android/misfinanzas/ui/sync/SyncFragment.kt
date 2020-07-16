@@ -31,7 +31,7 @@ class SyncFragment : BaseFragment() {
         val FROM_MOVEMENTS: String = "FromMovements"
     }
 
-    val TAG = this.javaClass.name
+    private val TAG = this.javaClass.name
 
     private val viewModel by viewModels<SyncViewModel> {
         BaseViewModelFactory(
@@ -44,9 +44,9 @@ class SyncFragment : BaseFragment() {
     private var fromBalance: Boolean = false
     private var fromMovements: Boolean = false
 
-    private lateinit var getWebUserObserver: Observer<Result<User>>
-    private lateinit var getWebBalanceObserver: Observer<Result<Balance>>
-    private lateinit var getWebMovementsObserver: Observer<Result<List<Movement>>>
+    private lateinit var syncUserObserver: Observer<Result<User>>
+    private lateinit var syncBalanceObserver: Observer<Result<Balance>>
+    private lateinit var syncMovementsObserver: Observer<Result<List<Movement>>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +54,6 @@ class SyncFragment : BaseFragment() {
             fromBalance = it.getBoolean(FROM_BALANCE)
             fromMovements = it.getBoolean(FROM_MOVEMENTS)
         }
-        setupObservers()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -64,7 +63,9 @@ class SyncFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (UserSesion.getUser() == null) {
+        setupObservers()
+
+        if (!UserSesion.hasUser()) {
             setupLogin()
         } else {
             setupSync()
@@ -72,7 +73,7 @@ class SyncFragment : BaseFragment() {
     }
 
     private fun setupObservers() {
-        getWebUserObserver = Observer { result ->
+        syncUserObserver = Observer { result ->
             when (result) {
                 is Result.Loading -> {
                     progressListener.show()
@@ -81,14 +82,9 @@ class SyncFragment : BaseFragment() {
                     if (result.data == null) {
                         Toast.makeText(requireContext(), getString(R.string.info_wrong_user_or_password), Toast.LENGTH_SHORT).show()
                     } else {
-                        insertUser(result.data)
-                        UserSesion.setUser(result.data)
-                        viewModel.setClientId(result.data.IdCliente.toString())
-                        cardViewLogin.visibility = View.GONE
-                        setupSync()
-                        progressListener.hide()
+                        makeLogin(result.data)
+                        Toast.makeText(requireContext(), R.string.info_user_saved, Toast.LENGTH_SHORT).show()
                     }
-
                     progressListener.hide()
                 }
                 is Result.Error -> {
@@ -99,14 +95,16 @@ class SyncFragment : BaseFragment() {
             }
         }
 
-        getWebBalanceObserver = Observer { result ->
+        viewModel.syncUser.observe(viewLifecycleOwner, syncUserObserver)
+
+        syncBalanceObserver = Observer { result ->
             when (result) {
                 is Result.Loading -> {
                     progressListener.show()
                 }
                 is Result.Success -> {
-                    insertBalance(result.data)
-                    getWebMovements()
+                    syncMovements()
+                    Toast.makeText(requireContext(), R.string.info_balance_saved, Toast.LENGTH_SHORT).show()
                 }
                 is Result.Error -> {
                     progressListener.hide()
@@ -116,14 +114,14 @@ class SyncFragment : BaseFragment() {
             }
         }
 
-        getWebMovementsObserver = Observer { result ->
+        syncMovementsObserver = Observer { result ->
             when (result) {
                 is Result.Loading -> {
                     progressListener.show()
                 }
                 is Result.Success -> {
-                    insertMovements(result.data)
                     progressListener.hide()
+                    Toast.makeText(requireContext(), R.string.info_movements_saved, Toast.LENGTH_SHORT).show()
                 }
                 is Result.Error -> {
                     progressListener.hide()
@@ -132,6 +130,14 @@ class SyncFragment : BaseFragment() {
                 }
             }
         }
+    }
+
+    private fun makeLogin(user: User) {
+        UserSesion.setUser(user)
+        viewModel.setClientId(user.IdCliente.toString())
+
+        cardViewLogin.visibility = View.GONE
+        setupSync()
     }
 
     private fun setupLogin() {
@@ -144,22 +150,14 @@ class SyncFragment : BaseFragment() {
             if (user.isEmpty() || password.isEmpty()) {
                 Toast.makeText(requireContext(), getString(R.string.info_enter_user_and_password), Toast.LENGTH_SHORT).show()
             } else {
-                getWebUser(user, password)
+                syncUser(user, password)
             }
         }
+        Toast.makeText(requireContext(), R.string.info_please_log_in, Toast.LENGTH_SHORT).show()
     }
 
-    private fun getWebUser(user: String, password: String) {
+    private fun syncUser(user: String, password: String) {
         viewModel.setCredential(UserCredential(user, password))
-
-        if (!viewModel.getWebUser.hasObservers()) {
-            viewModel.getWebUser.observe(viewLifecycleOwner, getWebUserObserver)
-        }
-    }
-
-    private fun insertUser(user: User) {
-        viewModel.insertLocalUser(user)
-        Toast.makeText(requireContext(), R.string.info_user_saved, Toast.LENGTH_SHORT).show()
     }
 
     private fun setupSync() {
@@ -170,30 +168,15 @@ class SyncFragment : BaseFragment() {
     }
 
     private fun initSync() {
-        getWebBalance()
+        syncBalance()
     }
 
-    private fun getWebBalance() {
-        if (viewModel.getWebBalance.hasObservers()) {
-            viewModel.getWebBalance.removeObservers(viewLifecycleOwner)
-        }
-        viewModel.getWebBalance.observe(viewLifecycleOwner, getWebBalanceObserver)
+    private fun syncBalance() {
+        //viewModel.getWebBalance.observe(viewLifecycleOwner, syncBalanceObserver)
+        viewModel.syncBalance().observe(viewLifecycleOwner, syncBalanceObserver)
     }
 
-    private fun insertBalance(balance: Balance) {
-        viewModel.insertLocalBalance(balance)
-        Toast.makeText(requireContext(), R.string.info_balance_saved, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun getWebMovements() {
-        if (viewModel.getWebMovements.hasObservers()) {
-            viewModel.getWebMovements.removeObservers(viewLifecycleOwner)
-        }
-        viewModel.getWebMovements.observe(viewLifecycleOwner, getWebMovementsObserver)
-    }
-
-    private fun insertMovements(movements: List<Movement>) {
-        viewModel.insertLocalMovement(movements)
-        Toast.makeText(requireContext(), R.string.info_movements_saved, Toast.LENGTH_SHORT).show()
+    private fun syncMovements() {
+        viewModel.syncMovements().observe(viewLifecycleOwner, syncMovementsObserver)
     }
 }

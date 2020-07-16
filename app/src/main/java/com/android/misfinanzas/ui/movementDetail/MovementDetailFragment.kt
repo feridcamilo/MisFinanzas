@@ -15,7 +15,7 @@ class MovementDetailFragment : BaseFragment() {
         val MOVEMENT_DATA: String = "Movement"
     }
 
-    val TAG = this.javaClass.name
+    private val TAG = this.javaClass.name
     private lateinit var movement: MovementVO
 
     override fun onCreate(savedInstanceState: Bundle?) {

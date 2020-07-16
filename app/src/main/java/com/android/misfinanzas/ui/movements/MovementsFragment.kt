@@ -28,7 +28,7 @@ import kotlinx.android.synthetic.main.fragment_movements.*
 
 class MovementsFragment : BaseFragment(), MovementsAdapter.OnMovementClickListener {
 
-    val TAG = this.javaClass.name
+    private val TAG = this.javaClass.name
 
     private val viewModel by viewModels<MovementsViewModel> {
         BaseViewModelFactory(
@@ -37,6 +37,8 @@ class MovementsFragment : BaseFragment(), MovementsAdapter.OnMovementClickListen
         )
     }
 
+    private lateinit var movementsObserver: Observer<Result<List<MovementVO>>>
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_movements, container, false)
     }
@@ -44,11 +46,12 @@ class MovementsFragment : BaseFragment(), MovementsAdapter.OnMovementClickListen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (UserSesion.getUser() == null) {
+        if (!UserSesion.hasUser()) {
             navigateToSync()
         } else {
             setupRecyclerView()
             setupSearchView()
+            setupObservers()
             getLocalMovements()
 
             btn_filtros.setOnClickListener {
@@ -79,14 +82,8 @@ class MovementsFragment : BaseFragment(), MovementsAdapter.OnMovementClickListen
         })
     }
 
-    private fun navigateToSync() {
-        val bundle = Bundle()
-        bundle.putBoolean(SyncFragment.FROM_MOVEMENTS, true)
-        findNavController().navigate(R.id.action_movementsFragment_to_syncFragment, bundle)
-    }
-
-    private fun getLocalMovements() {
-        viewModel.getLocalMovements.observe(viewLifecycleOwner, Observer { result ->
+    private fun setupObservers() {
+        movementsObserver = Observer { result ->
             when (result) {
                 is Result.Loading -> {
                     progressListener.show()
@@ -105,7 +102,17 @@ class MovementsFragment : BaseFragment(), MovementsAdapter.OnMovementClickListen
                     Log.e(TAG, getString(R.string.error_room, result.exception))
                 }
             }
-        })
+        }
+    }
+
+    private fun navigateToSync() {
+        val bundle = Bundle()
+        bundle.putBoolean(SyncFragment.FROM_MOVEMENTS, true)
+        findNavController().navigate(R.id.action_movementsFragment_to_syncFragment, bundle)
+    }
+
+    private fun getLocalMovements() {
+        viewModel.getLocalMovements().observe(viewLifecycleOwner, movementsObserver)
     }
 
     override fun onMovementClicked(movement: MovementVO) {

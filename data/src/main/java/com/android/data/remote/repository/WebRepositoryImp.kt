@@ -4,19 +4,18 @@ import com.android.data.remote.RetrofitDataSource
 import com.android.data.remote.model.Balance
 import com.android.data.remote.model.Movement
 import com.android.data.remote.model.User
-import com.android.domain.result.Result
 
 class WebRepositoryImp(private val dataSource: RetrofitDataSource) : IWebRepository {
 
-    override suspend fun getUser(user: String, password: String): Result<User> {
+    override suspend fun getUser(user: String, password: String): User {
         return dataSource.getUser(user, password)
     }
 
-    override suspend fun getBalance(clientId: String): Result<Balance> {
+    override suspend fun getBalance(clientId: String): Balance {
         return dataSource.getBalance(clientId)
     }
 
-    override suspend fun getMovements(clientId: String): Result<List<Movement>> {
+    override suspend fun getMovements(clientId: String): List<Movement> {
         return dataSource.getMovements(clientId)
     }
 }
