@@ -1,12 +1,11 @@
 package com.android.misfinanzas.ui.sync
 
 import androidx.lifecycle.*
-import com.android.data.local.model.BalanceVO
-import com.android.data.local.model.MovementVO
-import com.android.data.local.model.UserVO
+import com.android.data.local.model.*
 import com.android.data.local.repository.ILocalRepository
 import com.android.data.local.repository.UserSesion
 import com.android.data.remote.model.Balance
+import com.android.data.remote.model.Master
 import com.android.data.remote.model.Movement
 import com.android.data.remote.model.User
 import com.android.data.remote.repository.IWebRepository
@@ -132,6 +131,98 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
 
         viewModelScope.launch {
             localRepo.insertMovements(movementsToInsert)
+        }
+    }
+
+    fun syncCategories() = liveData {
+        emit(Result.Loading)
+        try {
+            val categories = webRepo.getCategories(clientId)
+            if (categories.isNotEmpty()) {
+                insertLocalCategories(categories)
+            }
+            emit(Result.Success(categories))
+        } catch (e: Exception) {
+            emit(Result.Error(e))
+        }
+    }
+
+    private fun insertLocalCategories(categories: List<Master>) {
+        val categoriesToInsert = categories.map {
+            CategoryVO(it.Id, it.Nombre, it.Activo)
+        }
+
+        viewModelScope.launch {
+            localRepo.insertCategories(categoriesToInsert)
+        }
+    }
+
+    fun syncDebts() = liveData {
+        emit(Result.Loading)
+        try {
+            val debts = webRepo.getDebts(clientId)
+            if (debts.isNotEmpty()) {
+                insertLocalDebts(debts)
+            }
+            emit(Result.Success(debts))
+        } catch (e: Exception) {
+            emit(Result.Error(e))
+        }
+    }
+
+    private fun insertLocalDebts(debts: List<Master>) {
+        val debtsToInsert = debts.map {
+            DebtVO(it.Id, it.Nombre, it.Activo)
+        }
+
+        viewModelScope.launch {
+            localRepo.insertDebts(debtsToInsert)
+        }
+    }
+
+    fun syncPlaces() = liveData {
+        emit(Result.Loading)
+        try {
+            val places = webRepo.getPlaces(clientId)
+            if (places.isNotEmpty()) {
+                insertLocalPlaces(places)
+            }
+            emit(Result.Success(places))
+        } catch (e: Exception) {
+            emit(Result.Error(e))
+        }
+    }
+
+    private fun insertLocalPlaces(places: List<Master>) {
+        val placesToInsert = places.map {
+            PlaceVO(it.Id, it.Nombre, it.Activo)
+        }
+
+        viewModelScope.launch {
+            localRepo.insertPlaces(placesToInsert)
+        }
+    }
+
+    fun syncPeople() = liveData {
+        emit(Result.Loading)
+        try {
+            val people = webRepo.getPeople(clientId)
+            if (people.isNotEmpty()) {
+                insertLocalPeople(people)
+            }
+            emit(Result.Success(people))
+        } catch (e: Exception) {
+            emit(Result.Error(e))
+        }
+    }
+
+    private fun insertLocalPeople(people: List<Master>) {
+        val peopleToInsert = people.map {
+            PersonVO(it.Id, it.Nombre, it.Activo)
+        }
+
+        viewModelScope.launch {
+            localRepo.insertPeople(peopleToInsert)
         }
     }
 }

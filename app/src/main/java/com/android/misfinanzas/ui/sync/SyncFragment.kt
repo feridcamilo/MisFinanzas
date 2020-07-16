@@ -13,6 +13,7 @@ import com.android.data.local.repository.LocalRepositoryImp
 import com.android.data.local.repository.UserSesion
 import com.android.data.remote.RetrofitDataSource
 import com.android.data.remote.model.Balance
+import com.android.data.remote.model.Master
 import com.android.data.remote.model.Movement
 import com.android.data.remote.model.User
 import com.android.data.remote.repository.WebRepositoryImp
@@ -47,6 +48,10 @@ class SyncFragment : BaseFragment() {
     private lateinit var syncUserObserver: Observer<Result<User>>
     private lateinit var syncBalanceObserver: Observer<Result<Balance>>
     private lateinit var syncMovementsObserver: Observer<Result<List<Movement>>>
+    private lateinit var syncCategoriesObserver: Observer<Result<List<Master>>>
+    private lateinit var syncDebtsObserver: Observer<Result<List<Master>>>
+    private lateinit var syncPlacesObserver: Observer<Result<List<Master>>>
+    private lateinit var syncPeopleObserver: Observer<Result<List<Master>>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,8 +68,6 @@ class SyncFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupObservers()
-
         if (!UserSesion.hasUser()) {
             setupLogin()
         } else {
@@ -72,7 +75,7 @@ class SyncFragment : BaseFragment() {
         }
     }
 
-    private fun setupObservers() {
+    private fun setupUserObservers() {
         syncUserObserver = Observer { result ->
             when (result) {
                 is Result.Loading -> {
@@ -96,7 +99,9 @@ class SyncFragment : BaseFragment() {
         }
 
         viewModel.syncUser.observe(viewLifecycleOwner, syncUserObserver)
+    }
 
+    private fun setupMovementsObservers() {
         syncBalanceObserver = Observer { result ->
             when (result) {
                 is Result.Loading -> {
@@ -104,7 +109,6 @@ class SyncFragment : BaseFragment() {
                 }
                 is Result.Success -> {
                     syncMovements()
-                    Toast.makeText(requireContext(), R.string.info_balance_saved, Toast.LENGTH_SHORT).show()
                 }
                 is Result.Error -> {
                     progressListener.hide()
@@ -132,6 +136,73 @@ class SyncFragment : BaseFragment() {
         }
     }
 
+    private fun setupMastersObservers() {
+        syncCategoriesObserver = Observer { result ->
+            when (result) {
+                is Result.Loading -> {
+                    progressListener.show()
+                }
+                is Result.Success -> {
+                    syncDebts()
+                }
+                is Result.Error -> {
+                    progressListener.hide()
+                    Toast.makeText(requireContext(), getString(R.string.error_getting_categories, result.exception), Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, getString(R.string.error_retrofit, result.exception))
+                }
+            }
+        }
+
+        syncDebtsObserver = Observer { result ->
+            when (result) {
+                is Result.Loading -> {
+                    progressListener.show()
+                }
+                is Result.Success -> {
+                    syncPlaces()
+                }
+                is Result.Error -> {
+                    progressListener.hide()
+                    Toast.makeText(requireContext(), getString(R.string.error_getting_debts, result.exception), Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, getString(R.string.error_retrofit, result.exception))
+                }
+            }
+        }
+
+        syncPlacesObserver = Observer { result ->
+            when (result) {
+                is Result.Loading -> {
+                    progressListener.show()
+                }
+                is Result.Success -> {
+                    syncPeople()
+                }
+                is Result.Error -> {
+                    progressListener.hide()
+                    Toast.makeText(requireContext(), getString(R.string.error_getting_places, result.exception), Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, getString(R.string.error_retrofit, result.exception))
+                }
+            }
+        }
+
+        syncPeopleObserver = Observer { result ->
+            when (result) {
+                is Result.Loading -> {
+                    progressListener.show()
+                }
+                is Result.Success -> {
+                    progressListener.hide()
+                    Toast.makeText(requireContext(), R.string.info_masters_saved, Toast.LENGTH_SHORT).show()
+                }
+                is Result.Error -> {
+                    progressListener.hide()
+                    Toast.makeText(requireContext(), getString(R.string.error_getting_people, result.exception), Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, getString(R.string.error_retrofit, result.exception))
+                }
+            }
+        }
+    }
+
     private fun makeLogin(user: User) {
         UserSesion.setUser(user)
         viewModel.setClientId(user.IdCliente.toString())
@@ -141,6 +212,8 @@ class SyncFragment : BaseFragment() {
     }
 
     private fun setupLogin() {
+        setupUserObservers()
+
         cardViewLogin = login_view
         cardViewLogin.visibility = View.VISIBLE
 
@@ -156,27 +229,45 @@ class SyncFragment : BaseFragment() {
         Toast.makeText(requireContext(), R.string.info_please_log_in, Toast.LENGTH_SHORT).show()
     }
 
+    private fun setupSync() {
+        setupMovementsObservers()
+        btn_sync_movements.visibility = View.VISIBLE
+        btn_sync_movements.setOnClickListener {
+            syncBalance()
+        }
+
+        setupMastersObservers()
+        btn_sync_masters.visibility = View.VISIBLE
+        btn_sync_masters.setOnClickListener {
+            syncCategories()
+        }
+    }
+
     private fun syncUser(user: String, password: String) {
         viewModel.setCredential(UserCredential(user, password))
     }
 
-    private fun setupSync() {
-        btn_sync_data.visibility = View.VISIBLE
-        btn_sync_data.setOnClickListener {
-            initSync()
-        }
-    }
-
-    private fun initSync() {
-        syncBalance()
-    }
-
     private fun syncBalance() {
-        //viewModel.getWebBalance.observe(viewLifecycleOwner, syncBalanceObserver)
         viewModel.syncBalance().observe(viewLifecycleOwner, syncBalanceObserver)
     }
 
     private fun syncMovements() {
         viewModel.syncMovements().observe(viewLifecycleOwner, syncMovementsObserver)
+    }
+
+    private fun syncCategories() {
+        viewModel.syncCategories().observe(viewLifecycleOwner, syncCategoriesObserver)
+    }
+
+    private fun syncDebts() {
+        viewModel.syncDebts().observe(viewLifecycleOwner, syncDebtsObserver)
+    }
+
+    private fun syncPlaces() {
+        viewModel.syncPlaces().observe(viewLifecycleOwner, syncPlacesObserver)
+    }
+
+    private fun syncPeople() {
+        viewModel.syncPeople().observe(viewLifecycleOwner, syncPeopleObserver)
     }
 }

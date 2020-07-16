@@ -18,6 +18,9 @@ interface CategoryDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vararg category: CategoryVO)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(movements: List<CategoryVO>)
+
     @Delete
     suspend fun delete(category: CategoryVO)
 }

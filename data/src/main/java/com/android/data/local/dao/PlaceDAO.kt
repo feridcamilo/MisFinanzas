@@ -18,6 +18,9 @@ interface PlaceDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vararg place: PlaceVO)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(movements: List<PlaceVO>)
+
     @Delete
     suspend fun delete(place: PlaceVO)
 }
