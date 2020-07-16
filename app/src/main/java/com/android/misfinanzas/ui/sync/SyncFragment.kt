@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.android.data.local.RoomDataSource
@@ -19,19 +18,20 @@ import com.android.data.remote.model.User
 import com.android.data.remote.repository.WebRepositoryImp
 import com.android.domain.result.Result
 import com.android.misfinanzas.R
+import com.android.misfinanzas.base.BaseFragment
 import com.android.misfinanzas.base.BaseViewModelFactory
 import com.android.misfinanzas.ui.widgets.login.LoginView
 import kotlinx.android.synthetic.main.fragment_sync.*
 import kotlinx.android.synthetic.main.login_card_view.view.*
 
-class SyncFragment : Fragment() {
+class SyncFragment : BaseFragment() {
 
     companion object {
         val FROM_BALANCE: String = "FromBalance"
         val FROM_MOVEMENTS: String = "FromMovements"
     }
 
-    val TAG = this.javaClass.name
+    private val TAG = this.javaClass.name
 
     private val viewModel by viewModels<SyncViewModel> {
         BaseViewModelFactory(
@@ -43,6 +43,10 @@ class SyncFragment : Fragment() {
     private lateinit var cardViewLogin: LoginView
     private var fromBalance: Boolean = false
     private var fromMovements: Boolean = false
+
+    private lateinit var syncUserObserver: Observer<Result<User>>
+    private lateinit var syncBalanceObserver: Observer<Result<Balance>>
+    private lateinit var syncMovementsObserver: Observer<Result<List<Movement>>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,11 +63,81 @@ class SyncFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (UserSesion.getUser() == null) {
+        setupObservers()
+
+        if (!UserSesion.hasUser()) {
             setupLogin()
         } else {
             setupSync()
         }
+    }
+
+    private fun setupObservers() {
+        syncUserObserver = Observer { result ->
+            when (result) {
+                is Result.Loading -> {
+                    progressListener.show()
+                }
+                is Result.Success -> {
+                    if (result.data == null) {
+                        Toast.makeText(requireContext(), getString(R.string.info_wrong_user_or_password), Toast.LENGTH_SHORT).show()
+                    } else {
+                        makeLogin(result.data)
+                        Toast.makeText(requireContext(), R.string.info_user_saved, Toast.LENGTH_SHORT).show()
+                    }
+                    progressListener.hide()
+                }
+                is Result.Error -> {
+                    progressListener.hide()
+                    Toast.makeText(requireContext(), getString(R.string.error_getting_user, result.exception), Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, getString(R.string.error_retrofit, result.exception))
+                }
+            }
+        }
+
+        viewModel.syncUser.observe(viewLifecycleOwner, syncUserObserver)
+
+        syncBalanceObserver = Observer { result ->
+            when (result) {
+                is Result.Loading -> {
+                    progressListener.show()
+                }
+                is Result.Success -> {
+                    syncMovements()
+                    Toast.makeText(requireContext(), R.string.info_balance_saved, Toast.LENGTH_SHORT).show()
+                }
+                is Result.Error -> {
+                    progressListener.hide()
+                    Toast.makeText(requireContext(), getString(R.string.error_getting_balance, result.exception), Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, getString(R.string.error_retrofit, result.exception))
+                }
+            }
+        }
+
+        syncMovementsObserver = Observer { result ->
+            when (result) {
+                is Result.Loading -> {
+                    progressListener.show()
+                }
+                is Result.Success -> {
+                    progressListener.hide()
+                    Toast.makeText(requireContext(), R.string.info_movements_saved, Toast.LENGTH_SHORT).show()
+                }
+                is Result.Error -> {
+                    progressListener.hide()
+                    Toast.makeText(requireContext(), getString(R.string.error_getting_movements, result.exception), Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, getString(R.string.error_retrofit, result.exception))
+                }
+            }
+        }
+    }
+
+    private fun makeLogin(user: User) {
+        UserSesion.setUser(user)
+        viewModel.setClientId(user.IdCliente.toString())
+
+        cardViewLogin.visibility = View.GONE
+        setupSync()
     }
 
     private fun setupLogin() {
@@ -76,44 +150,14 @@ class SyncFragment : Fragment() {
             if (user.isEmpty() || password.isEmpty()) {
                 Toast.makeText(requireContext(), getString(R.string.info_enter_user_and_password), Toast.LENGTH_SHORT).show()
             } else {
-                getWebUser(user, password)
+                syncUser(user, password)
             }
         }
+        Toast.makeText(requireContext(), R.string.info_please_log_in, Toast.LENGTH_SHORT).show()
     }
 
-    private fun getWebUser(user: String, password: String) {
+    private fun syncUser(user: String, password: String) {
         viewModel.setCredential(UserCredential(user, password))
-        viewModel.getWebUser.observe(viewLifecycleOwner, Observer { result ->
-            when (result) {
-                is Result.Loading -> {
-                    progressBar.visibility = View.VISIBLE
-                }
-                is Result.Success -> {
-                    if (result.data == null) {
-                        Toast.makeText(requireContext(), getString(R.string.info_wrong_user_or_password), Toast.LENGTH_SHORT).show()
-                    } else {
-                        insertUser(result.data)
-                        UserSesion.setUser(result.data)
-                        viewModel.setClientId(result.data.IdCliente.toString())
-                        cardViewLogin.visibility = View.GONE
-                        setupSync()
-                        progressBar.visibility = View.GONE
-                    }
-
-                    progressBar.visibility = View.GONE
-                }
-                is Result.Error -> {
-                    progressBar.visibility = View.GONE
-                    Toast.makeText(requireContext(), getString(R.string.error_getting_user, result.exception), Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, getString(R.string.error_retrofit, result.exception))
-                }
-            }
-        })
-    }
-
-    private fun insertUser(user: User) {
-        viewModel.insertLocalUser(user)
-        Toast.makeText(requireContext(), R.string.info_user_saved, Toast.LENGTH_SHORT).show()
     }
 
     private fun setupSync() {
@@ -124,54 +168,15 @@ class SyncFragment : Fragment() {
     }
 
     private fun initSync() {
-        getWebBalance()
+        syncBalance()
     }
 
-    private fun getWebBalance() {
-        viewModel.getWebBalance.observe(viewLifecycleOwner, Observer { result ->
-            when (result) {
-                is Result.Loading -> {
-                    progressBar.visibility = View.VISIBLE
-                }
-                is Result.Success -> {
-                    insertBalance(result.data)
-                    getWebMovements()
-                }
-                is Result.Error -> {
-                    progressBar.visibility = View.GONE
-                    Toast.makeText(requireContext(), getString(R.string.error_getting_balance, result.exception), Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, getString(R.string.error_retrofit, result.exception))
-                }
-            }
-        })
+    private fun syncBalance() {
+        //viewModel.getWebBalance.observe(viewLifecycleOwner, syncBalanceObserver)
+        viewModel.syncBalance().observe(viewLifecycleOwner, syncBalanceObserver)
     }
 
-    private fun insertBalance(balance: Balance) {
-        viewModel.insertLocalBalance(balance)
-        Toast.makeText(requireContext(), R.string.info_balance_saved, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun getWebMovements() {
-        viewModel.getWebMovements.observe(viewLifecycleOwner, Observer { result ->
-            when (result) {
-                is Result.Loading -> {
-                    progressBar.visibility = View.VISIBLE
-                }
-                is Result.Success -> {
-                    insertMovements(result.data)
-                    progressBar.visibility = View.GONE
-                }
-                is Result.Error -> {
-                    progressBar.visibility = View.GONE
-                    Toast.makeText(requireContext(), getString(R.string.error_getting_movements, result.exception), Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, getString(R.string.error_retrofit, result.exception))
-                }
-            }
-        })
-    }
-
-    private fun insertMovements(movements: List<Movement>) {
-        viewModel.insertLocalMovement(movements)
-        Toast.makeText(requireContext(), R.string.info_movements_saved, Toast.LENGTH_SHORT).show()
+    private fun syncMovements() {
+        viewModel.syncMovements().observe(viewLifecycleOwner, syncMovementsObserver)
     }
 }

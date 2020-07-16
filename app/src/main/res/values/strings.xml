@@ -7,6 +7,7 @@
     <string name="title_sync">Sincronizar</string>
 
     <string name="sync_data">Sincronizar datos</string>
+    <string name="loading">Cargando…</string>
 
     <!--Login CardView-->
     <string name="login_cardview_title">Ingreso Mis Finanzas</string>

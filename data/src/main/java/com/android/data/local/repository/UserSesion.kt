@@ -11,6 +11,10 @@ class UserSesion {
             return INSTANCE
         }
 
+        fun hasUser(): Boolean {
+            return INSTANCE != null
+        }
+
         fun setUser(user: UserVO) {
             this.INSTANCE = user
         }

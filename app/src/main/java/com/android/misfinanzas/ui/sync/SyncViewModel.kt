@@ -28,18 +28,24 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
         this.clientId = clientId
     }
 
-    val getWebUser = credential.distinctUntilChanged().switchMap {
+    val syncUser = credential.distinctUntilChanged().switchMap {
         liveData(Dispatchers.IO) {
-            emit(Result.Loading)
-            try {
-                emit(webRepo.getUser(it.user, it.password))
-            } catch (e: Exception) {
-                emit(Result.Error(e))
+            if (it.user.isNotEmpty() && it.password.isNotEmpty()) {
+                emit(Result.Loading)
+                try {
+                    val user = webRepo.getUser(it.user, it.password)
+                    if (user != null) {
+                        insertLocalUser(user)
+                    }
+                    emit(Result.Success(user))
+                } catch (e: Exception) {
+                    emit(Result.Error(e))
+                }
             }
         }
     }
 
-    fun insertLocalUser(user: User) {
+    private fun insertLocalUser(user: User) {
         val userToInsert = UserVO(user.Usuario, user.IdCliente, user.Nombres, user.Apellidos, user.Correo)
 
         viewModelScope.launch {
@@ -47,16 +53,31 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
         }
     }
 
+    /* TODO consultar por qué al declarar como val solo se dispara la primera vez, y cuando es fun se dispara siempre que se llama
     val getWebBalance = liveData(Dispatchers.IO) {
         emit(Result.Loading)
         try {
-            emit(webRepo.getBalance(clientId))
+            emit(Result.Success(webRepo.getBalance(clientId)))
+        } catch (e: Exception) {
+            emit(Result.Error(e))
+        }
+    }
+    */
+
+    fun syncBalance() = liveData {
+        emit(Result.Loading)
+        try {
+            val balance = webRepo.getBalance(clientId)
+            if (balance != null) {
+                insertLocalBalance(balance)
+            }
+            emit(Result.Success(balance))
         } catch (e: Exception) {
             emit(Result.Error(e))
         }
     }
 
-    fun insertLocalBalance(balance: Balance) {
+    private fun insertLocalBalance(balance: Balance) {
         val balanceToInsert = BalanceVO(
             0,
             balance.IngresosEfectivo,
@@ -79,16 +100,20 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
         }
     }
 
-    val getWebMovements = liveData(Dispatchers.IO) {
+    fun syncMovements() = liveData {
         emit(Result.Loading)
         try {
-            emit(webRepo.getMovements(clientId))
+            val movements = webRepo.getMovements(clientId)
+            if (movements.isNotEmpty()) {
+                insertLocalMovement(movements)
+            }
+            emit(Result.Success(movements))
         } catch (e: Exception) {
             emit(Result.Error(e))
         }
     }
 
-    fun insertLocalMovement(movements: List<Movement>) {
+    private fun insertLocalMovement(movements: List<Movement>) {
         val movementsToInsert = movements.map {
             MovementVO(
                 it.IdMovimiento,

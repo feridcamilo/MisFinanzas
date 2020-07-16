@@ -5,17 +5,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.android.data.local.model.MovementVO
 import com.android.misfinanzas.R
+import com.android.misfinanzas.base.BaseFragment
 
-class MovementDetailFragment : Fragment() {
+class MovementDetailFragment : BaseFragment() {
 
     companion object {
         val MOVEMENT_DATA: String = "Movement"
     }
 
-    val TAG = this.javaClass.name
+    private val TAG = this.javaClass.name
     private lateinit var movement: MovementVO
 
     override fun onCreate(savedInstanceState: Bundle?) {
