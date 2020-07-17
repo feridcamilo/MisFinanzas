@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.android.data.local.model.MovementVO
-import com.android.data.remote.model.MovementType
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseViewHolder
+import com.android.misfinanzas.base.MovementType
 import kotlinx.android.synthetic.main.movement_row.view.*
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -45,29 +45,10 @@ class MovementsAdapter(
     inner class MovementsViewHolder(itemView: View) : BaseViewHolder<MovementVO>(itemView) {
 
         private var moneyFormat: NumberFormat = DecimalFormat("$ ###,###,##0.00")
-        private var dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+        private var dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.US)
 
         override fun bind(item: MovementVO, position: Int) {
-            when (item.idType) {
-                MovementType.CASH_INCOME -> {
-                    itemView.iv_tipo_movimiento.setImageResource(R.mipmap.ic_cash_income)
-                }
-                MovementType.CASH_OUT -> {
-                    itemView.iv_tipo_movimiento.setImageResource(R.mipmap.ic_cash_out)
-                }
-                MovementType.CARD_INCOME -> {
-                    itemView.iv_tipo_movimiento.setImageResource(R.mipmap.ic_card_income)
-                }
-                MovementType.CARD_OUT -> {
-                    itemView.iv_tipo_movimiento.setImageResource(R.mipmap.ic_card_out)
-                }
-                MovementType.WITHDRAWAL -> {
-                    itemView.iv_tipo_movimiento.setImageResource(R.mipmap.ic_transfer)
-                }
-                MovementType.CREDIT_CARD_BUY -> {
-                    itemView.iv_tipo_movimiento.setImageResource(R.mipmap.ic_credit_card_buy)
-                }
-            }
+            itemView.iv_tipo_movimiento.setImageResource((MovementType.getImage(item.idType)))
             itemView.tv_valor.text = moneyFormat.format(item.value)
             itemView.tv_fecha.text = dateFormat.format(item.date!!)
             itemView.tv_descripcion.text = item.description

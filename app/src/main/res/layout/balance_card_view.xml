@@ -12,14 +12,12 @@
 
         <TextView
             android:id="@+id/tv_title"
+            style="@style/title_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
             android:gravity="center_horizontal"
             android:text="@string/balance_cardview_title"
-            android:textColor="@color/gray"
-            android:textSize="@dimen/text_size_24"
-            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/img_cash"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,14 +35,12 @@
 
         <TextView
             android:id="@+id/tv_cash_title"
+            style="@style/subtitle_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
             android:gravity="center_horizontal"
             android:text="@string/balance_cardview_cash"
-            android:textColor="@color/gray"
-            android:textSize="@dimen/text_size_20"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/img_cash"
             app:layout_constraintStart_toEndOf="@id/img_cash"
             app:layout_constraintTop_toTopOf="@id/img_cash" />
@@ -73,14 +69,12 @@
 
         <TextView
             android:id="@+id/tv_card_title"
+            style="@style/subtitle_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
             android:gravity="center_horizontal"
             android:text="@string/balance_cardview_card"
-            android:textColor="@color/gray"
-            android:textSize="@dimen/text_size_20"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/img_card"
             app:layout_constraintStart_toEndOf="@id/img_card"
             app:layout_constraintTop_toTopOf="@id/img_card" />
@@ -109,14 +103,12 @@
 
         <TextView
             android:id="@+id/tv_total_title"
+            style="@style/subtitle_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
             android:gravity="center_horizontal"
             android:text="@string/balance_cardview_total"
-            android:textColor="@color/gray"
-            android:textSize="@dimen/text_size_20"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/img_total"
             app:layout_constraintStart_toEndOf="@id/img_total"
             app:layout_constraintTop_toTopOf="@id/img_total" />

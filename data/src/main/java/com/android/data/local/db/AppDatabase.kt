@@ -9,7 +9,6 @@ import com.android.data.local.dao.*
 import com.android.data.local.model.*
 import com.android.data.local.model.converters.BigDecimalConverter
 import com.android.data.local.model.converters.DateConverter
-import com.android.data.local.model.converters.MovementTypeConverter
 
 @Database(
     entities = [
@@ -22,7 +21,7 @@ import com.android.data.local.model.converters.MovementTypeConverter
         UserVO::class
     ], version = 1
 )
-@TypeConverters(MovementTypeConverter::class, DateConverter::class, BigDecimalConverter::class)
+@TypeConverters(DateConverter::class, BigDecimalConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun balanceDAO(): BalanceDAO
     abstract fun categoryDAO(): CategoryDAO
