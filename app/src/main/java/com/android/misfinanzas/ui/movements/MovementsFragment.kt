@@ -75,6 +75,11 @@ class MovementsFragment : BaseFragment(), MovementsAdapter.OnMovementClickListen
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        rv_movimientos.adapter?.notifyDataSetChanged()
+    }
+
     private fun setupRecyclerView() {
         rv_movimientos.layoutManager = LinearLayoutManager(requireContext())
         rv_movimientos.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))

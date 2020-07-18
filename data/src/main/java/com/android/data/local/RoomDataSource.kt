@@ -34,6 +34,10 @@ class RoomDataSource(private val context: Context) {
         return AppDatabase.getDatabase(context).movementDAO().getAll()
     }
 
+    suspend fun insertMovement(movement: MovementVO) {
+        AppDatabase.getDatabase(context).movementDAO().insert(movement)
+    }
+
     suspend fun insertMovements(movements: List<MovementVO>) {
         AppDatabase.getDatabase(context).movementDAO().insertAll(movements)
     }

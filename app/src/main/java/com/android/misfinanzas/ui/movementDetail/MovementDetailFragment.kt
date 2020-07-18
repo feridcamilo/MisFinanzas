@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import com.android.data.local.RoomDataSource
 import com.android.data.local.model.*
@@ -13,7 +14,9 @@ import com.android.data.remote.repository.WebRepositoryImp
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
 import com.android.misfinanzas.base.BaseViewModelFactory
+import com.android.misfinanzas.ui.widgets.movementDetail.MovementDetailView
 import kotlinx.android.synthetic.main.fragment_movement_detail.*
+import kotlinx.android.synthetic.main.movement_detail_view.view.*
 
 class MovementDetailFragment : BaseFragment() {
 
@@ -35,6 +38,7 @@ class MovementDetailFragment : BaseFragment() {
         )
     }
 
+    private lateinit var movementDetailView: MovementDetailView
     private var movement: MovementVO? = null
     private var descriptions: List<String>? = null
     private var people: List<PersonVO>? = null
@@ -60,14 +64,38 @@ class MovementDetailFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        showMovement()
+
+        initMovementDetailView()
+
+        ib_save.setOnClickListener {
+            try {
+                val movementToSave = movementDetailView.getMovement()
+                viewModel.insertLocalMovement(movementToSave)
+                if (movementToSave.id == null) { //Is insert
+                    movementDetailView.cleanFormAfterSave()
+                    Toast.makeText(requireContext(), getString(R.string.info_movement_saved), Toast.LENGTH_SHORT).show()
+                } else { //Is update
+                    activity?.onBackPressed()
+                    Toast.makeText(requireContext(), getString(R.string.info_movement_updated), Toast.LENGTH_SHORT).show()
+                }
+
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
-    private fun showMovement() {
-        val movementDetailView = movement_detail_view
+    private fun initMovementDetailView() {
+        movementDetailView = movement_detail_view
         movementDetailView.initView(descriptions, people, places, categories, debts)
         if (movement != null) {
             movementDetailView.showMovement(movement!!)
+        } else {
+            movementDetailView.tv_fecha_ingreso.visibility = View.GONE
+            movementDetailView.tv_fecha_ingreso_value.visibility = View.GONE
+            movementDetailView.tv_fecha_upd.visibility = View.GONE
+            movementDetailView.tv_fecha_upd_value.visibility = View.GONE
+            ib_delete.visibility = View.GONE
         }
     }
 }

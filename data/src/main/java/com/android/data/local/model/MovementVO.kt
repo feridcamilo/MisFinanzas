@@ -31,7 +31,7 @@ import java.util.*
 @Parcelize
 data class MovementVO(
     @PrimaryKey
-    val id: Int,
+    val id: Int?,
     val idType: Int,
     val value: BigDecimal,
     val description: String,

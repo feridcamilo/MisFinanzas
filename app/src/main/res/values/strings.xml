@@ -5,10 +5,11 @@
     <string name="title_movements_details">Detalle del movimiento</string>
     <string name="title_filters">Filtros</string>
     <string name="title_sync">Sincronizar</string>
+    <string name="loading">Cargando…</string>
 
+    <!--SyncFragment-->
     <string name="sync_movements">Sincronizar movimientos</string>
     <string name="sync_masters">Sincronizar maestros</string>
-    <string name="loading">Cargando…</string>
 
     <!--Login CardView-->
     <string name="login_cardview_title">Ingreso Mis Finanzas</string>
@@ -48,7 +49,6 @@
     <string name="mt_withdrawal">Retiro</string>
     <string name="mt_card_buy">Compra con TC</string>
 
-
     <!--Error messages-->
     <string name="error_getting_movements">Ocurrió un error obteniendo los movimientos: %1$s</string>
     <string name="error_getting_balance">Ocurrió un error obteniendo los saldos: %1$s</string>
@@ -68,7 +68,14 @@
     <string name="info_no_balance">No hay saldos para mostrar.</string>
     <string name="info_movements_saved">Movimientos guardados con éxito.</string>
     <string name="info_movement_saved">Movimiento guardado con éxito.</string>
+    <string name="info_movement_updated">Movimiento actualizado con éxito.</string>
     <string name="info_masters_saved">Maestros guardados con éxito.</string>
     <string name="info_user_saved">Usuario guardado con éxito.</string>
-
+    <string name="info_select_movement_type">Por favor seleccione el tipo de movimiento.</string>
+    <string name="info_select_debt_by_cc_buy">Una compra con TC debe estar relacionada con una deuda. Por favor seleccione una deuda.</string>
+    <string name="info_enter_value">Por favor ingrese el valor del movimiento.</string>
+    <string name="info_only_numbers">Solo se permiten valores numéricos.</string>
+    <string name="info_select_category">Por favor seleccione la categoría.</string>
+    <string name="info_select_date">Por favor seleccione la fecha del movimiento.</string>
+    <string name="info_enter_valid_date">Por favor ingrese una fecha válida.</string>
 </resources>
