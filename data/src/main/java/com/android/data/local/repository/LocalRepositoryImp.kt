@@ -34,6 +34,10 @@ class LocalRepositoryImp(private val dataSource: RoomDataSource) : ILocalReposit
         return dataSource.getMovements()
     }
 
+    override suspend fun insertMovement(movement: MovementVO) {
+        dataSource.insertMovement(movement)
+    }
+
     override suspend fun insertMovements(movements: List<MovementVO>) {
         dataSource.insertMovements(movements)
     }

@@ -16,11 +16,11 @@ import com.android.data.local.model.*
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.MovementType
 import kotlinx.android.synthetic.main.movement_detail_view.view.*
+import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(context, attrs) {
 
@@ -35,6 +35,7 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
     private var categories: List<CategoryVO>? = null
     private var debts: List<DebtVO>? = null
 
+    private var movementId: Int? = null
     private var selectedMovementType: Int = MovementType.NOT_SELECTED
 
     fun initView(
@@ -83,6 +84,9 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
 
         val debtsAdapter = ArrayAdapter<DebtVO>(context, android.R.layout.simple_list_item_1, debts!!)
         tv_deuda_value.setAdapter(debtsAdapter)
+
+        val currentDate: Date = Calendar.getInstance().time
+        et_fecha_movimiento.setText(dateFormat.format(currentDate))
     }
 
     private fun setControlsRules() {
@@ -107,6 +111,7 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
     private var dateTimeFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US)
 
     fun showMovement(movement: MovementVO) {
+        movementId = movement.id
         val notAssociated = context.getString(R.string.md_view_not_associated)
         val date = if (movement.date == null) notAssociated else dateFormat.format(checkNotNull(movement.date)).toString()
         val entryDate = if (movement.dateEntry == null) notAssociated else dateTimeFormat.format(checkNotNull(movement.dateEntry)).toString()
@@ -122,7 +127,87 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
         et_fecha_movimiento.setText(date)
         tv_deuda_value.setText(getDebtName(movement.debtId))
         tv_fecha_ingreso_value.text = entryDate
-        tv_fecha_upd_value.text = lastUpdate
+        if (lastUpdate == notAssociated) {
+            tv_fecha_upd.visibility = View.GONE
+            tv_fecha_upd_value.visibility = View.GONE
+        } else {
+            tv_fecha_upd_value.text = lastUpdate
+        }
+    }
+
+    @Throws(Exception::class)
+    fun getMovement(): MovementVO {
+        return validateForm()
+    }
+
+    @Throws(Exception::class)
+    private fun validateForm(): MovementVO {
+        if (selectedMovementType == MovementType.NOT_SELECTED) {
+            throw Exception(context.getString(R.string.info_select_movement_type))
+        }
+
+        val debtId = getDebtId(tv_deuda_value.text.toString())
+        if (selectedMovementType == MovementType.CREDIT_CARD_BUY && debtId == 0) {
+            throw Exception(context.getString(R.string.info_select_movement_type))
+        }
+
+        val strValue = et_valor.text.toString()
+        if (strValue.isEmpty()) {
+            throw Exception(context.getString(R.string.info_enter_value))
+        }
+        val value: BigDecimal
+        try {
+            value = BigDecimal(strValue)
+        } catch (e: Exception) {
+            throw Exception(context.getString(R.string.info_only_numbers))
+        }
+
+        val description = tv_descripcion_value.text.toString()
+        val personId = getPersonId(tv_persona_value.text.toString())
+        val placeId = getPlaceId(tv_lugar_value.text.toString())
+
+        val categoryId = getCategoryId(tv_categoria_value.text.toString())
+        if ((categoryId ?: 0) == 0) {
+            throw Exception(context.getString(R.string.info_select_category))
+        }
+
+        val strDate = et_fecha_movimiento.text.toString()
+        if (strDate.isEmpty()) {
+            throw Exception(context.getString(R.string.info_select_date))
+        }
+        val date: Date
+        try {
+            date = dateFormat.parse(strDate)
+        } catch (e: Exception) {
+            throw Exception(context.getString(R.string.info_only_numbers))
+        }
+
+        val currentDateTime: Date = Calendar.getInstance().time
+        var dateLastUpdate: Date? = null
+        if (movementId != null) {
+            dateLastUpdate = currentDateTime
+        }
+
+        return MovementVO(
+            movementId,
+            selectedMovementType,
+            value,
+            description,
+            personId,
+            placeId,
+            categoryId!!,
+            date,
+            debtId,
+            currentDateTime,
+            dateLastUpdate,
+            false
+        )
+    }
+
+    fun cleanFormAfterSave() {
+        et_valor.setText("")
+        tv_persona_value.setText("")
+        tv_deuda_value.setText("")
     }
 
     private fun getMovementType(id: Int): MovementType? {

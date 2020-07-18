@@ -1,280 +1,275 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/tv_tipo_movimiento"
+        style="@style/subtitle_text_view_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="@string/md_view_movement_type"
+        app:layout_constraintBottom_toTopOf="@id/tv_valor"
+        app:layout_constraintEnd_toStartOf="@id/iv_tipo_movimiento"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_tipo_movimiento"
-            style="@style/subtitle_text_view_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:text="@string/md_view_movement_type"
-            app:layout_constraintBottom_toTopOf="@id/tv_valor"
-            app:layout_constraintEnd_toStartOf="@id/iv_tipo_movimiento"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/iv_tipo_movimiento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_quarter_margin"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_quarter_margin"
+        android:layout_marginBottom="@dimen/default_margin"
+        app:layout_constraintBottom_toBottomOf="@id/tv_tipo_movimiento"
+        app:layout_constraintStart_toEndOf="@id/tv_tipo_movimiento"
+        app:layout_constraintTop_toTopOf="@id/tv_tipo_movimiento"
+        tools:src="@mipmap/ic_money" />
 
-        <ImageView
-            android:id="@+id/iv_tipo_movimiento"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_quarter_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginEnd="@dimen/default_quarter_margin"
-            android:layout_marginBottom="@dimen/default_margin"
-            app:layout_constraintBottom_toBottomOf="@id/tv_tipo_movimiento"
-            app:layout_constraintStart_toEndOf="@id/tv_tipo_movimiento"
-            app:layout_constraintTop_toTopOf="@id/tv_tipo_movimiento"
-            tools:src="@mipmap/ic_money" />
+    <Spinner
+        android:id="@+id/sp_tipo_movimiento"
+        android:layout_width="@dimen/zero"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_quarter_margin"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin"
+        app:layout_constraintBottom_toBottomOf="@id/tv_tipo_movimiento"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iv_tipo_movimiento"
+        app:layout_constraintTop_toTopOf="@id/tv_tipo_movimiento" />
 
-        <Spinner
-            android:id="@+id/sp_tipo_movimiento"
-            android:layout_width="@dimen/zero"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_quarter_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:layout_marginBottom="@dimen/default_margin"
-            app:layout_constraintBottom_toBottomOf="@id/tv_tipo_movimiento"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/iv_tipo_movimiento"
-            app:layout_constraintTop_toTopOf="@id/tv_tipo_movimiento" />
+    <TextView
+        android:id="@+id/tv_valor"
+        style="@style/subtitle_text_view_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="@string/md_view_value"
+        app:layout_constraintBottom_toTopOf="@id/tv_descripcion"
+        app:layout_constraintEnd_toStartOf="@id/et_valor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_tipo_movimiento" />
 
-        <TextView
-            android:id="@+id/tv_valor"
-            style="@style/subtitle_text_view_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:text="@string/md_view_value"
-            app:layout_constraintBottom_toTopOf="@id/tv_descripcion"
-            app:layout_constraintEnd_toStartOf="@id/et_valor"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_tipo_movimiento" />
+    <EditText
+        android:id="@+id/et_valor"
+        android:layout_width="@dimen/zero"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:hint="@string/md_view_enter"
+        android:inputType="numberDecimal"
+        android:maxLength="12"
+        app:layout_constraintBottom_toBottomOf="@id/tv_valor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_valor"
+        app:layout_constraintTop_toTopOf="@id/tv_valor" />
 
-        <EditText
-            android:id="@+id/et_valor"
-            android:layout_width="@dimen/zero"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:hint="@string/md_view_enter"
-            android:inputType="numberDecimal"
-            android:maxLength="12"
-            app:layout_constraintBottom_toBottomOf="@id/tv_valor"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_valor"
-            app:layout_constraintTop_toTopOf="@id/tv_valor" />
+    <TextView
+        android:id="@+id/tv_descripcion"
+        style="@style/subtitle_text_view_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="@string/md_view_description"
+        app:layout_constraintBottom_toTopOf="@id/tv_persona"
+        app:layout_constraintEnd_toStartOf="@id/tv_descripcion_value"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_valor" />
 
-        <TextView
-            android:id="@+id/tv_descripcion"
-            style="@style/subtitle_text_view_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:text="@string/md_view_description"
-            app:layout_constraintBottom_toTopOf="@id/tv_persona"
-            app:layout_constraintEnd_toStartOf="@id/tv_descripcion_value"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_valor" />
+    <AutoCompleteTextView
+        android:id="@+id/tv_descripcion_value"
+        android:layout_width="@dimen/zero"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:completionThreshold="1"
+        android:hint="@string/md_view_enter"
+        android:inputType="text"
+        android:maxLength="50"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="@id/tv_descripcion"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_descripcion"
+        app:layout_constraintTop_toTopOf="@id/tv_descripcion"
+        tools:text="" />
 
-        <AutoCompleteTextView
-            android:id="@+id/tv_descripcion_value"
-            android:layout_width="@dimen/zero"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:completionThreshold="1"
-            android:hint="@string/md_view_enter"
-            android:inputType="text"
-            android:maxLength="50"
-            android:maxLines="1"
-            app:layout_constraintBottom_toBottomOf="@id/tv_descripcion"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_descripcion"
-            app:layout_constraintTop_toTopOf="@id/tv_descripcion"
-            tools:text="" />
+    <TextView
+        android:id="@+id/tv_persona"
+        style="@style/subtitle_text_view_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="@string/md_view_person"
+        app:layout_constraintBottom_toTopOf="@id/tv_lugar"
+        app:layout_constraintEnd_toStartOf="@id/tv_persona_value"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_descripcion" />
 
-        <TextView
-            android:id="@+id/tv_persona"
-            style="@style/subtitle_text_view_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:text="@string/md_view_person"
-            app:layout_constraintBottom_toTopOf="@id/tv_lugar"
-            app:layout_constraintEnd_toStartOf="@id/tv_persona_value"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_descripcion" />
+    <AutoCompleteTextView
+        android:id="@+id/tv_persona_value"
+        android:layout_width="@dimen/zero"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:completionThreshold="1"
+        android:hint="@string/md_view_enter"
+        android:maxLength="50"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="@id/tv_persona"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_persona"
+        app:layout_constraintTop_toTopOf="@id/tv_persona" />
 
-        <AutoCompleteTextView
-            android:id="@+id/tv_persona_value"
-            android:layout_width="@dimen/zero"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:completionThreshold="1"
-            android:hint="@string/md_view_enter"
-            android:maxLength="50"
-            android:maxLines="1"
-            app:layout_constraintBottom_toBottomOf="@id/tv_persona"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_persona"
-            app:layout_constraintTop_toTopOf="@id/tv_persona" />
+    <TextView
+        android:id="@+id/tv_lugar"
+        style="@style/subtitle_text_view_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="@string/md_view_place"
+        app:layout_constraintBottom_toTopOf="@id/tv_categoria"
+        app:layout_constraintEnd_toStartOf="@id/tv_lugar_value"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_persona" />
 
-        <TextView
-            android:id="@+id/tv_lugar"
-            style="@style/subtitle_text_view_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:text="@string/md_view_place"
-            app:layout_constraintBottom_toTopOf="@id/tv_categoria"
-            app:layout_constraintEnd_toStartOf="@id/tv_lugar_value"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_persona" />
+    <AutoCompleteTextView
+        android:id="@+id/tv_lugar_value"
+        android:layout_width="@dimen/zero"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:completionThreshold="1"
+        android:hint="@string/md_view_enter"
+        android:maxLength="50"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="@id/tv_lugar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_lugar"
+        app:layout_constraintTop_toTopOf="@id/tv_lugar" />
 
-        <AutoCompleteTextView
-            android:id="@+id/tv_lugar_value"
-            android:layout_width="@dimen/zero"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:completionThreshold="1"
-            android:hint="@string/md_view_enter"
-            android:maxLength="50"
-            android:maxLines="1"
-            app:layout_constraintBottom_toBottomOf="@id/tv_lugar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_lugar"
-            app:layout_constraintTop_toTopOf="@id/tv_lugar" />
+    <TextView
+        android:id="@+id/tv_categoria"
+        style="@style/subtitle_text_view_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="@string/md_view_category"
+        app:layout_constraintBottom_toTopOf="@id/tv_fecha_movimiento"
+        app:layout_constraintEnd_toStartOf="@id/tv_categoria_value"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_lugar" />
 
-        <TextView
-            android:id="@+id/tv_categoria"
-            style="@style/subtitle_text_view_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:text="@string/md_view_category"
-            app:layout_constraintBottom_toTopOf="@id/tv_fecha_movimiento"
-            app:layout_constraintEnd_toStartOf="@id/tv_categoria_value"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_lugar" />
+    <AutoCompleteTextView
+        android:id="@+id/tv_categoria_value"
+        android:layout_width="@dimen/zero"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:completionThreshold="1"
+        android:hint="@string/md_view_enter"
+        android:maxLength="50"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="@id/tv_categoria"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_categoria"
+        app:layout_constraintTop_toTopOf="@id/tv_categoria" />
 
-        <AutoCompleteTextView
-            android:id="@+id/tv_categoria_value"
-            android:layout_width="@dimen/zero"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:completionThreshold="1"
-            android:hint="@string/md_view_enter"
-            android:maxLength="50"
-            android:maxLines="1"
-            app:layout_constraintBottom_toBottomOf="@id/tv_categoria"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_categoria"
-            app:layout_constraintTop_toTopOf="@id/tv_categoria" />
+    <TextView
+        android:id="@+id/tv_fecha_movimiento"
+        style="@style/subtitle_text_view_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="@string/md_view_mov_date"
+        app:layout_constraintBottom_toTopOf="@id/tv_deuda"
+        app:layout_constraintEnd_toStartOf="@id/et_fecha_movimiento"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_categoria" />
 
-        <TextView
-            android:id="@+id/tv_fecha_movimiento"
-            style="@style/subtitle_text_view_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:text="@string/md_view_mov_date"
-            app:layout_constraintBottom_toTopOf="@id/tv_deuda"
-            app:layout_constraintEnd_toStartOf="@id/et_fecha_movimiento"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_categoria" />
+    <EditText
+        android:id="@+id/et_fecha_movimiento"
+        android:layout_width="@dimen/zero"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner"
+        android:hint="@string/md_view_select"
+        android:inputType="date"
+        android:maxLength="10"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="@id/tv_fecha_movimiento"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_fecha_movimiento"
+        app:layout_constraintTop_toTopOf="@id/tv_fecha_movimiento" />
 
-        <EditText
-            android:id="@+id/et_fecha_movimiento"
-            android:layout_width="@dimen/zero"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:calendarViewShown="false"
-            android:datePickerMode="spinner"
-            android:hint="@string/md_view_select"
-            android:inputType="date"
-            android:maxLength="10"
-            android:maxLines="1"
-            app:layout_constraintBottom_toBottomOf="@id/tv_fecha_movimiento"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_fecha_movimiento"
-            app:layout_constraintTop_toTopOf="@id/tv_fecha_movimiento" />
+    <TextView
+        android:id="@+id/tv_deuda"
+        style="@style/subtitle_text_view_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="@string/md_view_debt"
+        app:layout_constraintBottom_toTopOf="@id/tv_fecha_ingreso"
+        app:layout_constraintEnd_toStartOf="@id/tv_deuda_value"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_fecha_movimiento" />
 
-        <TextView
-            android:id="@+id/tv_deuda"
-            style="@style/subtitle_text_view_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:text="@string/md_view_debt"
-            app:layout_constraintBottom_toTopOf="@id/tv_fecha_ingreso"
-            app:layout_constraintEnd_toStartOf="@id/tv_deuda_value"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_fecha_movimiento" />
+    <AutoCompleteTextView
+        android:id="@+id/tv_deuda_value"
+        android:layout_width="@dimen/zero"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:completionThreshold="1"
+        android:hint="@string/md_view_enter"
+        android:maxLength="50"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="@id/tv_deuda"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_deuda"
+        app:layout_constraintTop_toTopOf="@id/tv_deuda" />
 
-        <AutoCompleteTextView
-            android:id="@+id/tv_deuda_value"
-            android:layout_width="@dimen/zero"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:completionThreshold="1"
-            android:hint="@string/md_view_enter"
-            android:maxLength="50"
-            android:maxLines="1"
-            app:layout_constraintBottom_toBottomOf="@id/tv_deuda"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_deuda"
-            app:layout_constraintTop_toTopOf="@id/tv_deuda" />
+    <TextView
+        android:id="@+id/tv_fecha_ingreso"
+        style="@style/subtitle_text_view_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="@string/md_view_entry_date"
+        app:layout_constraintBottom_toTopOf="@id/tv_fecha_upd"
+        app:layout_constraintEnd_toStartOf="@id/tv_fecha_ingreso_value"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_deuda" />
 
-        <TextView
-            android:id="@+id/tv_fecha_ingreso"
-            style="@style/subtitle_text_view_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:text="@string/md_view_entry_date"
-            app:layout_constraintBottom_toTopOf="@id/tv_fecha_upd"
-            app:layout_constraintEnd_toStartOf="@id/tv_fecha_ingreso_value"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_deuda" />
+    <TextView
+        android:id="@+id/tv_fecha_ingreso_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="@string/md_view_not_associated"
+        app:layout_constraintBottom_toBottomOf="@id/tv_fecha_ingreso"
+        app:layout_constraintStart_toEndOf="@id/tv_fecha_ingreso"
+        app:layout_constraintTop_toTopOf="@id/tv_fecha_ingreso" />
 
-        <TextView
-            android:id="@+id/tv_fecha_ingreso_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:text="@string/md_view_not_associated"
-            app:layout_constraintBottom_toBottomOf="@id/tv_fecha_ingreso"
-            app:layout_constraintStart_toEndOf="@id/tv_fecha_ingreso"
-            app:layout_constraintTop_toTopOf="@id/tv_fecha_ingreso" />
+    <TextView
+        android:id="@+id/tv_fecha_upd"
+        style="@style/subtitle_text_view_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="@string/md_view_lastUpd_date"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_fecha_upd_value"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_fecha_ingreso" />
 
-        <TextView
-            android:id="@+id/tv_fecha_upd"
-            style="@style/subtitle_text_view_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:text="@string/md_view_lastUpd_date"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_fecha_upd_value"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_fecha_ingreso" />
+    <TextView
+        android:id="@+id/tv_fecha_upd_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="@string/md_view_not_associated"
+        app:layout_constraintBottom_toBottomOf="@id/tv_fecha_upd"
+        app:layout_constraintStart_toEndOf="@id/tv_fecha_upd"
+        app:layout_constraintTop_toTopOf="@id/tv_fecha_upd" />
 
-        <TextView
-            android:id="@+id/tv_fecha_upd_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:text="@string/md_view_not_associated"
-            app:layout_constraintBottom_toBottomOf="@id/tv_fecha_upd"
-            app:layout_constraintStart_toEndOf="@id/tv_fecha_upd"
-            app:layout_constraintTop_toTopOf="@id/tv_fecha_upd" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
