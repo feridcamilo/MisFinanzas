@@ -16,4 +16,40 @@ class MovementsViewModel(private val webRepo: IWebRepository, private val localR
             emit(Result.Error(e))
         }
     }
+
+    fun getLocalPeople() = liveData {
+        emit(Result.Loading)
+        try {
+            emit(Result.Success(localRepo.getPeople()))
+        } catch (e: Exception) {
+            emit(Result.Error(e))
+        }
+    }
+
+    fun getLocalPlaces() = liveData {
+        emit(Result.Loading)
+        try {
+            emit(Result.Success(localRepo.getPlaces()))
+        } catch (e: Exception) {
+            emit(Result.Error(e))
+        }
+    }
+
+    fun getLocalCategories() = liveData {
+        emit(Result.Loading)
+        try {
+            emit(Result.Success(localRepo.getCategories()))
+        } catch (e: Exception) {
+            emit(Result.Error(e))
+        }
+    }
+
+    fun getLocalDebts() = liveData {
+        emit(Result.Loading)
+        try {
+            emit(Result.Success(localRepo.getDebts()))
+        } catch (e: Exception) {
+            emit(Result.Error(e))
+        }
+    }
 }

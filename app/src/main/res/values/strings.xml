@@ -22,6 +22,33 @@
     <string name="balance_cardview_card">Electrónico: </string>
     <string name="balance_cardview_total">Total: </string>
 
+    <!--Movement Detail View-->
+    <string name="md_view_select">Seleccione</string>
+    <string name="md_view_enter">Ingrese</string>
+    <string name="md_view_money_hint">$ 0.00</string>
+    <string name="md_view_not_associated">No asociada</string>
+    <string name="md_view_movement_type">Tipo de movimiento:</string>
+    <string name="md_view_value">Valor:</string>
+    <string name="md_view_description">Descripción:</string>
+    <string name="md_view_person">Persona:</string>
+    <string name="md_view_place">Lugar:</string>
+    <string name="md_view_category">Categoría:</string>
+    <string name="md_view_mov_date">Fecha del movimiento:</string>
+    <string name="md_view_debt">Deuda:</string>
+    <string name="md_view_entry_date">Fecha de ingreso:</string>
+    <string name="md_view_lastUpd_date">Fecha de actualización:</string>
+    <string name="md_date">%1$s/%2$s/%3$s</string>
+
+    <!--MovementTypeList-->
+    <string name="mt_not_selected">Seleccione</string>
+    <string name="mt_cash_income">Ingreso en efectivo</string>
+    <string name="mt_cash_out">Egreso en efectivo</string>
+    <string name="mt_card_income">Ingreso electrónico</string>
+    <string name="mt_card_out">Egreso electrónico</string>
+    <string name="mt_withdrawal">Retiro</string>
+    <string name="mt_card_buy">Compra con TC</string>
+
+
     <!--Error messages-->
     <string name="error_getting_movements">Ocurrió un error obteniendo los movimientos: %1$s</string>
     <string name="error_getting_balance">Ocurrió un error obteniendo los saldos: %1$s</string>
