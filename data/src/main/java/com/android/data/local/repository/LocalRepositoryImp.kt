@@ -38,6 +38,10 @@ class LocalRepositoryImp(private val dataSource: RoomDataSource) : ILocalReposit
         dataSource.insertMovement(movement)
     }
 
+    override suspend fun deleteMovement(movement: MovementVO) {
+        dataSource.deleteMovement(movement)
+    }
+
     override suspend fun insertMovements(movements: List<MovementVO>) {
         dataSource.insertMovements(movements)
     }

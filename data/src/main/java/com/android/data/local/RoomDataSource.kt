@@ -38,6 +38,13 @@ class RoomDataSource(private val context: Context) {
         AppDatabase.getDatabase(context).movementDAO().insert(movement)
     }
 
+    suspend fun deleteMovement(movement: MovementVO) {
+        AppDatabase.getDatabase(context).movementDAO().delete(movement)
+        if (movement.idMovement != 0) {
+            AppDatabase.getDatabase(context).deletedMovementDAO().insert(DeletedMovementVO(0, movement.idMovement))
+        }
+    }
+
     suspend fun insertMovements(movements: List<MovementVO>) {
         AppDatabase.getDatabase(context).movementDAO().insertAll(movements)
     }

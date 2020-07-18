@@ -9,9 +9,6 @@ interface MovementDAO {
     @Query("SELECT * FROM Movement ORDER BY date desc, dateEntry desc")
     suspend fun getAll(): List<MovementVO>
 
-    @Query("SELECT * FROM Movement WHERE id = :id")
-    suspend fun getById(id: Int): MovementVO
-
     @Query("SELECT * FROM Movement WHERE synced = 0")
     suspend fun getAllToSync(): List<MovementVO>
 

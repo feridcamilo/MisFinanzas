@@ -14,4 +14,10 @@ class MovementDetailViewModel(private val webRepo: IWebRepository, private val l
             localRepo.insertMovement(movement)
         }
     }
+
+    fun deleteLocalMovement(movement: MovementVO) {
+        viewModelScope.launch {
+            localRepo.deleteMovement(movement)
+        }
+    }
 }

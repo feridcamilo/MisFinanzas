@@ -35,7 +35,7 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
     private var categories: List<CategoryVO>? = null
     private var debts: List<DebtVO>? = null
 
-    private var movementId: Int? = null
+    private var movement: MovementVO? = null
     private var selectedMovementType: Int = MovementType.NOT_SELECTED
 
     fun initView(
@@ -111,7 +111,7 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
     private var dateTimeFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US)
 
     fun showMovement(movement: MovementVO) {
-        movementId = movement.id
+        this.movement = movement
         val notAssociated = context.getString(R.string.md_view_not_associated)
         val date = if (movement.date == null) notAssociated else dateFormat.format(checkNotNull(movement.date)).toString()
         val entryDate = if (movement.dateEntry == null) notAssociated else dateTimeFormat.format(checkNotNull(movement.dateEntry)).toString()
@@ -184,12 +184,13 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
 
         val currentDateTime: Date = Calendar.getInstance().time
         var dateLastUpdate: Date? = null
-        if (movementId != null) {
+        if (movement != null) {
             dateLastUpdate = currentDateTime
         }
 
         return MovementVO(
-            movementId,
+            movement?.id ?: 0,
+            movement?.idMovement ?: 0,
             selectedMovementType,
             value,
             description,

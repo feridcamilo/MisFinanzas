@@ -68,6 +68,7 @@
     <string name="info_no_balance">No hay saldos para mostrar.</string>
     <string name="info_movements_saved">Movimientos guardados con éxito.</string>
     <string name="info_movement_saved">Movimiento guardado con éxito.</string>
+    <string name="info_movement_deleted">Movimiento eliminado con éxito.</string>
     <string name="info_movement_updated">Movimiento actualizado con éxito.</string>
     <string name="info_masters_saved">Maestros guardados con éxito.</string>
     <string name="info_user_saved">Usuario guardado con éxito.</string>
@@ -78,4 +79,10 @@
     <string name="info_select_category">Por favor seleccione la categoría.</string>
     <string name="info_select_date">Por favor seleccione la fecha del movimiento.</string>
     <string name="info_enter_valid_date">Por favor ingrese una fecha válida.</string>
+
+    <!--Confirm Dialog-->
+    <string name="cd_title_delete">Eliminar movimiento</string>
+    <string name="cd_desc_delete">¿Está seguro que desea eliminar el movimiento?</string>
+    <string name="cd_yes">Si</string>
+    <string name="cd_no">No</string>
 </resources>

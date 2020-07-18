@@ -131,6 +131,7 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
     private fun insertLocalMovement(movements: List<Movement>) {
         val movementsToInsert = movements.map {
             MovementVO(
+                0,
                 it.IdMovimiento,
                 it.IdTipoMovimiento,
                 it.Valor,

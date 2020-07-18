@@ -27,11 +27,11 @@ import java.util.*
         childColumns = arrayOf("debtId")
     )]*/
 )
-
 @Parcelize
 data class MovementVO(
-    @PrimaryKey
-    val id: Int?,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
+    val idMovement: Int,
     val idType: Int,
     val value: BigDecimal,
     val description: String,

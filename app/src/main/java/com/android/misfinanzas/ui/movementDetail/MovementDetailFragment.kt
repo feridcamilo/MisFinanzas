@@ -1,5 +1,6 @@
 package com.android.misfinanzas.ui.movementDetail
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,12 +22,12 @@ import kotlinx.android.synthetic.main.movement_detail_view.view.*
 class MovementDetailFragment : BaseFragment() {
 
     companion object {
-        val MOVEMENT_DATA: String = "Movement"
-        val DESCRIPTIONS_DATA: String = "Descriptions"
-        val PEOPLE_DATA: String = "People"
-        val PLACES_DATA: String = "Places"
-        val CATEGORIES_DATA: String = "Categories"
-        val DEBTS_DATA: String = "Debts"
+        const val MOVEMENT_DATA: String = "Movement"
+        const val DESCRIPTIONS_DATA: String = "Descriptions"
+        const val PEOPLE_DATA: String = "People"
+        const val PLACES_DATA: String = "Places"
+        const val CATEGORIES_DATA: String = "Categories"
+        const val DEBTS_DATA: String = "Debts"
     }
 
     private val TAG = this.javaClass.name
@@ -68,21 +69,43 @@ class MovementDetailFragment : BaseFragment() {
         initMovementDetailView()
 
         ib_save.setOnClickListener {
-            try {
-                val movementToSave = movementDetailView.getMovement()
-                viewModel.insertLocalMovement(movementToSave)
-                if (movementToSave.id == null) { //Is insert
-                    movementDetailView.cleanFormAfterSave()
-                    Toast.makeText(requireContext(), getString(R.string.info_movement_saved), Toast.LENGTH_SHORT).show()
-                } else { //Is update
-                    activity?.onBackPressed()
-                    Toast.makeText(requireContext(), getString(R.string.info_movement_updated), Toast.LENGTH_SHORT).show()
-                }
-
-            } catch (e: Exception) {
-                Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
-            }
+            save()
         }
+
+        ib_delete.setOnClickListener {
+            delete()
+        }
+    }
+
+    private fun save() {
+        try {
+            val movementToSave = movementDetailView.getMovement()
+            viewModel.insertLocalMovement(movementToSave)
+            if (movementToSave.dateLastUpd == null) { //Is insert
+                movementDetailView.cleanFormAfterSave()
+                Toast.makeText(requireContext(), getString(R.string.info_movement_saved), Toast.LENGTH_SHORT).show()
+            } else { //Is update
+                activity?.onBackPressed()
+                Toast.makeText(requireContext(), getString(R.string.info_movement_updated), Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun delete() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle(getString(R.string.cd_title_delete))
+        builder.setMessage(getString(R.string.cd_desc_delete))
+
+        builder.setPositiveButton(R.string.cd_yes) { dialog, which ->
+            movement?.let { viewModel.deleteLocalMovement(it) }
+            activity?.onBackPressed()
+            Toast.makeText(requireContext(), R.string.info_movement_deleted, Toast.LENGTH_SHORT).show()
+        }
+
+        builder.setNeutralButton(R.string.cd_no) { dialog, which -> }
+        builder.show()
     }
 
     private fun initMovementDetailView() {

@@ -19,6 +19,8 @@ interface ILocalRepository {
 
     suspend fun getMovements(): List<MovementVO>
 
+    suspend fun deleteMovement(movement: MovementVO)
+
     suspend fun insertMovement(movement: MovementVO)
 
     suspend fun insertMovements(movements: List<MovementVO>)
