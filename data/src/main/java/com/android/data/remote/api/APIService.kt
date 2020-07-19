@@ -28,4 +28,13 @@ interface APIService {
 
     @POST("Movimientos.svc/getMovimientos")
     suspend fun getMovements(@Body parametros: APIParameterBody): MovementDTO
+
+    @POST("Movimientos.svc/getMovimientosEliminados")
+    suspend fun getDeletedMovements(@Body parametros: APIParameterBody): DeletedMovementDTO
+
+    @POST("Movimientos.svc/eliminarMovimientos")
+    suspend fun deleteMovements(@Body deletedMovement: DeletedMovement): DeletedMovementDTO
+
+    @POST("Movimientos.svc/recibirMovimientos")
+    suspend fun sendMovements(@Body sendMovement: SendMovement): SendMovementDTO
 }

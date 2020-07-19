@@ -7,19 +7,16 @@ import android.text.InputType
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import androidx.cardview.widget.CardView
+import com.android.data.UserSesion
 import com.android.data.local.model.*
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.MovementType
 import kotlinx.android.synthetic.main.movement_detail_view.view.*
 import java.math.BigDecimal
-import java.text.DecimalFormat
-import java.text.NumberFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
 class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(context, attrs) {
@@ -85,13 +82,13 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
         val debtsAdapter = ArrayAdapter<DebtVO>(context, android.R.layout.simple_list_item_1, debts!!)
         tv_deuda_value.setAdapter(debtsAdapter)
 
-        val currentDate: Date = Calendar.getInstance().time
-        et_fecha_movimiento.setText(dateFormat.format(currentDate))
+        val currentDate: Date = UserSesion.getCurrentDateTime()
+        et_fecha_movimiento.setText(UserSesion.getDateFormat().format(currentDate))
     }
 
     private fun setControlsRules() {
         et_fecha_movimiento.inputType = InputType.TYPE_NULL
-        et_fecha_movimiento.setOnClickListener(OnClickListener {
+        et_fecha_movimiento.setOnClickListener {
             val cldr = Calendar.getInstance()
             val day = cldr[Calendar.DAY_OF_MONTH]
             val month = cldr[Calendar.MONTH]
@@ -103,19 +100,17 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
                 }, year, month, day
             )
             picker.show()
-        })
+        }
     }
-
-    private var moneyFormat: NumberFormat = DecimalFormat("$ ###,###")
-    private var dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.US)
-    private var dateTimeFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US)
 
     fun showMovement(movement: MovementVO) {
         this.movement = movement
         val notAssociated = context.getString(R.string.md_view_not_associated)
-        val date = if (movement.date == null) notAssociated else dateFormat.format(checkNotNull(movement.date)).toString()
-        val entryDate = if (movement.dateEntry == null) notAssociated else dateTimeFormat.format(checkNotNull(movement.dateEntry)).toString()
-        val lastUpdate = if (movement.dateLastUpd == null) notAssociated else dateTimeFormat.format(checkNotNull(movement.dateLastUpd)).toString()
+        val date = if (movement.date == null) notAssociated else UserSesion.getDateFormat().format(checkNotNull(movement.date)).toString()
+        val entryDate =
+            if (movement.dateEntry == null) notAssociated else UserSesion.getDateTimeFormat().format(checkNotNull(movement.dateEntry)).toString()
+        val lastUpdate =
+            if (movement.dateLastUpd == null) notAssociated else UserSesion.getDateTimeFormat().format(checkNotNull(movement.dateLastUpd)).toString()
 
         iv_tipo_movimiento.setImageResource(MovementType.getImage(movement.idType))
         sp_tipo_movimiento.setSelection(getMovementTypeIndex(movement.idType))
@@ -177,20 +172,19 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
         }
         val date: Date
         try {
-            date = dateFormat.parse(strDate)
+            date = UserSesion.getDateFormat().parse(strDate)
         } catch (e: Exception) {
             throw Exception(context.getString(R.string.info_only_numbers))
         }
 
-        val currentDateTime: Date = Calendar.getInstance().time
+        val currentDateTime: Date = UserSesion.getCurrentDateTime()
         var dateLastUpdate: Date? = null
         if (movement != null) {
             dateLastUpdate = currentDateTime
         }
 
         return MovementVO(
-            movement?.id ?: 0,
-            movement?.idMovement ?: 0,
+            movement?.idMovement ?: 0,//Autoincrement
             selectedMovementType,
             value,
             description,
@@ -200,8 +194,7 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
             date,
             debtId,
             currentDateTime,
-            dateLastUpdate,
-            false
+            dateLastUpdate
         )
     }
 

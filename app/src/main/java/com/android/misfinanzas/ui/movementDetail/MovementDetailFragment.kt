@@ -99,7 +99,9 @@ class MovementDetailFragment : BaseFragment() {
         builder.setMessage(getString(R.string.cd_desc_delete))
 
         builder.setPositiveButton(R.string.cd_yes) { dialog, which ->
-            movement?.let { viewModel.deleteLocalMovement(it) }
+            movement?.let {
+                viewModel.deleteLocalMovement(it)
+            }
             activity?.onBackPressed()
             Toast.makeText(requireContext(), R.string.info_movement_deleted, Toast.LENGTH_SHORT).show()
         }

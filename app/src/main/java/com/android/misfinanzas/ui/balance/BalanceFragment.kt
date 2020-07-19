@@ -13,7 +13,7 @@ import com.android.data.local.RoomDataSource
 import com.android.data.local.model.BalanceVO
 import com.android.data.local.model.UserVO
 import com.android.data.local.repository.LocalRepositoryImp
-import com.android.data.local.repository.UserSesion
+import com.android.data.UserSesion
 import com.android.data.remote.RetrofitDataSource
 import com.android.data.remote.repository.WebRepositoryImp
 import com.android.domain.result.Result
@@ -104,7 +104,7 @@ class BalanceFragment : BaseFragment() {
     }
 
     private fun getLocalBalance() {
-        viewModel.getLocalBalance().observe(viewLifecycleOwner, balanceObserver)
+        viewModel.getLocalBalance(getString(R.string.query_balance)).observe(viewLifecycleOwner, balanceObserver)
     }
 
     private fun showBalance(balance: BalanceVO) {

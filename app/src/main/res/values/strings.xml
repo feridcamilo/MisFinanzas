@@ -85,4 +85,50 @@
     <string name="cd_desc_delete">¿Está seguro que desea eliminar el movimiento?</string>
     <string name="cd_yes">Si</string>
     <string name="cd_no">No</string>
+
+    <string name="query_balance">
+        SELECT
+            *,
+            Totales.[TengoEfectivo] + Totales.[TengoElectronico] as [TengoTotal],
+            Totales.[IngresosElectronico] - Totales.[IngresosEfectivo] as [DiferenciaIngresos],
+            Totales.[EgresosElectronico] - Totales.[EgresosEfectivo] as [DiferenciaEgresos],
+            Totales.[IngresosEfectivo] + Totales.[IngresosElectronico] as [TotalIngresos],
+            Totales.[EgresosEfectivo] + Totales.[EgresosElectronico] [TotalEgresos]
+        FROM (
+            SELECT
+                IEF.[IngresosEfectivo], EEF.[EgresosEfectivo], IEL.[IngresosElectronico], EEL.[EgresosElectronico], R.Retiros, CTC.[ComprasTC],
+                (IEF.[IngresosEfectivo] - EEF.[EgresosEfectivo]) + R.Retiros as [TengoEfectivo],
+                (IEL.[IngresosElectronico] - EEL.[EgresosElectronico]) - R.Retiros as [TengoElectronico]
+            FROM (
+                SELECT
+                    COALESCE(SUM(value), 0) as [IngresosEfectivo]
+                FROM Movement WHERE idType = 1
+            ) AS IEF,
+            (SELECT
+                    COALESCE(SUM(value), 0) as [EgresosEfectivo]
+                FROM Movement
+                WHERE idType = 2
+            ) AS EEF,
+            (SELECT
+                    COALESCE(SUM(value), 0) as [IngresosElectronico]
+                FROM Movement
+                WHERE idType = 3
+            ) AS IEL,
+            (SELECT
+                    COALESCE(SUM(value), 0) as [EgresosElectronico]
+                FROM Movement
+                WHERE idType = 4
+            ) AS EEL,
+            (SELECT
+                    COALESCE(SUM(value), 0) as [Retiros]
+                FROM Movement
+                WHERE idType = 5
+            ) AS R,
+            (SELECT
+                    COALESCE(SUM(value), 0) as [ComprasTC]
+                FROM Movement
+                WHERE idType = 6
+            ) AS CTC
+        ) AS Totales
+    </string>
 </resources>

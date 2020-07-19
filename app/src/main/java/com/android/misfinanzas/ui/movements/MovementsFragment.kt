@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.data.local.RoomDataSource
 import com.android.data.local.model.*
 import com.android.data.local.repository.LocalRepositoryImp
-import com.android.data.local.repository.UserSesion
+import com.android.data.UserSesion
 import com.android.data.remote.RetrofitDataSource
 import com.android.data.remote.repository.WebRepositoryImp
 import com.android.domain.result.Result

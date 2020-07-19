@@ -12,7 +12,6 @@ import com.android.data.local.model.converters.DateConverter
 
 @Database(
     entities = [
-        BalanceVO::class,
         CategoryVO::class,
         DebtVO::class,
         DeletedMovementVO::class,
@@ -24,7 +23,6 @@ import com.android.data.local.model.converters.DateConverter
 )
 @TypeConverters(DateConverter::class, BigDecimalConverter::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun balanceDAO(): BalanceDAO
     abstract fun categoryDAO(): CategoryDAO
     abstract fun debtDAO(): DebtDAO
     abstract fun deletedMovementDAO(): DeletedMovementDAO
