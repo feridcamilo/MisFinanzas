@@ -67,20 +67,30 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
             override fun onNothingSelected(arg0: AdapterView<*>?) {}
         }
 
-        val descriptionsAdapter = ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, descriptions!!)
-        tv_descripcion_value.setAdapter(descriptionsAdapter)
+        descriptions?.let {
+            val descriptionsAdapter = ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, it)
+            tv_descripcion_value.setAdapter(descriptionsAdapter)
+        }
 
-        val peopleAdapter = ArrayAdapter<PersonVO>(context, android.R.layout.simple_list_item_1, people!!)
-        tv_persona_value.setAdapter(peopleAdapter)
+        people?.let {
+            val peopleAdapter = ArrayAdapter<PersonVO>(context, android.R.layout.simple_list_item_1, it)
+            tv_persona_value.setAdapter(peopleAdapter)
+        }
 
-        val placesAdapter = ArrayAdapter<PlaceVO>(context, android.R.layout.simple_list_item_1, places!!)
-        tv_lugar_value.setAdapter(placesAdapter)
+        places?.let {
+            val placesAdapter = ArrayAdapter<PlaceVO>(context, android.R.layout.simple_list_item_1, it)
+            tv_lugar_value.setAdapter(placesAdapter)
+        }
 
-        val categoriesAdapter = ArrayAdapter<CategoryVO>(context, android.R.layout.simple_list_item_1, categories!!)
-        tv_categoria_value.setAdapter(categoriesAdapter)
+        categories?.let {
+            val categoriesAdapter = ArrayAdapter<CategoryVO>(context, android.R.layout.simple_list_item_1, it)
+            tv_categoria_value.setAdapter(categoriesAdapter)
+        }
 
-        val debtsAdapter = ArrayAdapter<DebtVO>(context, android.R.layout.simple_list_item_1, debts!!)
-        tv_deuda_value.setAdapter(debtsAdapter)
+        debts?.let {
+            val debtsAdapter = ArrayAdapter<DebtVO>(context, android.R.layout.simple_list_item_1, it)
+            tv_deuda_value.setAdapter(debtsAdapter)
+        }
 
         val currentDate: Date = UserSesion.getCurrentDateTime()
         et_fecha_movimiento.setText(UserSesion.getDateFormat().format(currentDate))
@@ -103,30 +113,40 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
         }
     }
 
-    fun showMovement(movement: MovementVO) {
+    fun showMovement(movement: MovementVO?) {
         this.movement = movement
-        val notAssociated = context.getString(R.string.md_view_not_associated)
-        val date = if (movement.date == null) notAssociated else UserSesion.getDateFormat().format(checkNotNull(movement.date)).toString()
-        val entryDate =
-            if (movement.dateEntry == null) notAssociated else UserSesion.getDateTimeFormat().format(checkNotNull(movement.dateEntry)).toString()
-        val lastUpdate =
-            if (movement.dateLastUpd == null) notAssociated else UserSesion.getDateTimeFormat().format(checkNotNull(movement.dateLastUpd)).toString()
 
-        iv_tipo_movimiento.setImageResource(MovementType.getImage(movement.idType))
-        sp_tipo_movimiento.setSelection(getMovementTypeIndex(movement.idType))
-        et_valor.setText(movement.value.toString())
-        tv_descripcion_value.setText(movement.description)
-        tv_persona_value.setText(getPersonName(movement.personId))
-        tv_lugar_value.setText(getPlaceName(movement.placeId))
-        tv_categoria_value.setText(getCategoryName(movement.categoryId))
-        et_fecha_movimiento.setText(date)
-        tv_deuda_value.setText(getDebtName(movement.debtId))
-        tv_fecha_ingreso_value.text = entryDate
-        if (lastUpdate == notAssociated) {
+        if (movement == null) {
+            tv_fecha_ingreso.visibility = View.GONE
+            tv_fecha_ingreso_value.visibility = View.GONE
             tv_fecha_upd.visibility = View.GONE
             tv_fecha_upd_value.visibility = View.GONE
-        } else {
-            tv_fecha_upd_value.text = lastUpdate
+        }
+
+        movement?.let {
+            val notAssociated = context.getString(R.string.md_view_not_associated)
+            val date = if (it.date == null) notAssociated else UserSesion.getDateFormat().format(checkNotNull(it.date)).toString()
+            val entryDate =
+                if (it.dateEntry == null) notAssociated else UserSesion.getDateTimeFormat().format(checkNotNull(it.dateEntry)).toString()
+            val lastUpdate =
+                if (it.dateLastUpd == null) notAssociated else UserSesion.getDateTimeFormat().format(checkNotNull(it.dateLastUpd)).toString()
+
+            iv_tipo_movimiento.setImageResource(MovementType.getImage(it.idType))
+            sp_tipo_movimiento.setSelection(getMovementTypeIndex(it.idType))
+            et_valor.setText(it.value.toString())
+            tv_descripcion_value.setText(it.description)
+            tv_persona_value.setText(getPersonName(it.personId))
+            tv_lugar_value.setText(getPlaceName(it.placeId))
+            tv_categoria_value.setText(getCategoryName(it.categoryId))
+            et_fecha_movimiento.setText(date)
+            tv_deuda_value.setText(getDebtName(it.debtId))
+            tv_fecha_ingreso_value.text = entryDate
+            if (lastUpdate == notAssociated) {
+                tv_fecha_upd.visibility = View.GONE
+                tv_fecha_upd_value.visibility = View.GONE
+            } else {
+                tv_fecha_upd_value.text = lastUpdate
+            }
         }
     }
 
@@ -143,17 +163,20 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
 
         val debtId = getDebtId(tv_deuda_value.text.toString())
         if (selectedMovementType == MovementType.CREDIT_CARD_BUY && debtId == 0) {
+            sp_tipo_movimiento.requestFocus()
             throw Exception(context.getString(R.string.info_select_movement_type))
         }
 
         val strValue = et_valor.text.toString()
         if (strValue.isEmpty()) {
+            et_valor.requestFocus()
             throw Exception(context.getString(R.string.info_enter_value))
         }
         val value: BigDecimal
         try {
             value = BigDecimal(strValue)
         } catch (e: Exception) {
+            et_valor.requestFocus()
             throw Exception(context.getString(R.string.info_only_numbers))
         }
 
@@ -163,6 +186,7 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
 
         val categoryId = getCategoryId(tv_categoria_value.text.toString())
         if ((categoryId ?: 0) == 0) {
+            tv_categoria_value.requestFocus()
             throw Exception(context.getString(R.string.info_select_category))
         }
 
@@ -174,13 +198,17 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
         try {
             date = UserSesion.getDateFormat().parse(strDate)
         } catch (e: Exception) {
-            throw Exception(context.getString(R.string.info_only_numbers))
+            et_fecha_movimiento.requestFocus()
+            throw Exception(context.getString(R.string.info_enter_valid_date))
         }
 
         val currentDateTime: Date = UserSesion.getCurrentDateTime()
+
         var dateLastUpdate: Date? = null
+        var dateEntry: Date? = currentDateTime
         if (movement != null) {
             dateLastUpdate = currentDateTime
+            dateEntry = movement?.dateEntry
         }
 
         return MovementVO(
@@ -193,13 +221,14 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
             categoryId!!,
             date,
             debtId,
-            currentDateTime,
+            dateEntry,
             dateLastUpdate
         )
     }
 
     fun cleanFormAfterSave() {
         et_valor.setText("")
+        et_valor.requestFocus()
         tv_persona_value.setText("")
         tv_deuda_value.setText("")
     }

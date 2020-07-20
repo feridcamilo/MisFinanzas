@@ -13,10 +13,10 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.android.data.UserSesion
 import com.android.data.local.RoomDataSource
 import com.android.data.local.model.*
 import com.android.data.local.repository.LocalRepositoryImp
-import com.android.data.UserSesion
 import com.android.data.remote.RetrofitDataSource
 import com.android.data.remote.repository.WebRepositoryImp
 import com.android.domain.result.Result
@@ -199,11 +199,11 @@ class MovementsFragment : BaseFragment(), MovementsAdapter.OnMovementClickListen
     private fun navigateToDetails(movement: MovementVO?) {
         val bundle = Bundle()
         bundle.putParcelable(MovementDetailFragment.MOVEMENT_DATA, movement)
-        bundle.putStringArrayList(MovementDetailFragment.DESCRIPTIONS_DATA, descriptions as ArrayList<String>)
-        bundle.putParcelableArrayList(MovementDetailFragment.PEOPLE_DATA, people as ArrayList<out Parcelable>)
-        bundle.putParcelableArrayList(MovementDetailFragment.PLACES_DATA, places as ArrayList<out Parcelable>)
-        bundle.putParcelableArrayList(MovementDetailFragment.CATEGORIES_DATA, categories as ArrayList<out Parcelable>)
-        bundle.putParcelableArrayList(MovementDetailFragment.DEBTS_DATA, debts as ArrayList<out Parcelable>)
+        descriptions?.let { bundle.putStringArrayList(MovementDetailFragment.DESCRIPTIONS_DATA, it as ArrayList<String>) }
+        people?.let { bundle.putParcelableArrayList(MovementDetailFragment.PEOPLE_DATA, it as ArrayList<out Parcelable>) }
+        places?.let { bundle.putParcelableArrayList(MovementDetailFragment.PLACES_DATA, it as ArrayList<out Parcelable>) }
+        categories?.let { bundle.putParcelableArrayList(MovementDetailFragment.CATEGORIES_DATA, it as ArrayList<out Parcelable>) }
+        debts?.let { bundle.putParcelableArrayList(MovementDetailFragment.DEBTS_DATA, it as ArrayList<out Parcelable>) }
         findNavController().navigate(R.id.action_movementsFragment_to_movementDetailFragment, bundle)
     }
 

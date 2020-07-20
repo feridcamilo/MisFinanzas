@@ -51,6 +51,7 @@
 
     <!--Error messages-->
     <string name="error_getting_movements">Ocurrió un error obteniendo los movimientos: %1$s</string>
+    <string name="error_getting_masters">Ocurrió un error obteniendo las maestros: %1$s</string>
     <string name="error_getting_balance">Ocurrió un error obteniendo los saldos: %1$s</string>
     <string name="error_getting_categories">Ocurrió un error obteniendo las categorias: %1$s</string>
     <string name="error_getting_debts">Ocurrió un error obteniendo las deudas: %1$s</string>

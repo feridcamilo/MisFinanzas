@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.android.data.UserSesion
 import com.android.data.local.RoomDataSource
 import com.android.data.local.repository.LocalRepositoryImp
-import com.android.data.UserSesion
 import com.android.data.remote.RetrofitDataSource
 import com.android.data.remote.model.User
 import com.android.data.remote.repository.WebRepositoryImp
@@ -126,7 +126,7 @@ class SyncFragment : BaseFragment() {
                 }
                 is Result.Error -> {
                     progressListener.hide()
-                    Toast.makeText(requireContext(), getString(R.string.error_getting_categories, result.exception), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.error_getting_masters, result.exception), Toast.LENGTH_SHORT).show()
                     Log.e(TAG, getString(R.string.error_retrofit, result.exception))
                 }
             }

@@ -17,7 +17,6 @@ import com.android.misfinanzas.base.BaseFragment
 import com.android.misfinanzas.base.BaseViewModelFactory
 import com.android.misfinanzas.ui.widgets.movementDetail.MovementDetailView
 import kotlinx.android.synthetic.main.fragment_movement_detail.*
-import kotlinx.android.synthetic.main.movement_detail_view.view.*
 
 class MovementDetailFragment : BaseFragment() {
 
@@ -113,13 +112,8 @@ class MovementDetailFragment : BaseFragment() {
     private fun initMovementDetailView() {
         movementDetailView = movement_detail_view
         movementDetailView.initView(descriptions, people, places, categories, debts)
-        if (movement != null) {
-            movementDetailView.showMovement(movement!!)
-        } else {
-            movementDetailView.tv_fecha_ingreso.visibility = View.GONE
-            movementDetailView.tv_fecha_ingreso_value.visibility = View.GONE
-            movementDetailView.tv_fecha_upd.visibility = View.GONE
-            movementDetailView.tv_fecha_upd_value.visibility = View.GONE
+        movementDetailView.showMovement(movement)
+        if (movement == null) {
             ib_delete.visibility = View.GONE
         }
     }
