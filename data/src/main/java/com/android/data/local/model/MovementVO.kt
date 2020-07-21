@@ -30,7 +30,6 @@ import java.util.*
 @Parcelize
 data class MovementVO(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
     val idMovement: Int,
     val idType: Int,
     val value: BigDecimal,
@@ -41,6 +40,5 @@ data class MovementVO(
     val date: Date?,
     val debtId: Int?,
     val dateEntry: Date?,
-    val dateLastUpd: Date?,
-    val synced: Boolean = false
+    val dateLastUpd: Date?
 ) : Parcelable

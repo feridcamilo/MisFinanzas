@@ -21,6 +21,18 @@ class WebRepositoryImp(private val dataSource: RetrofitDataSource) : IWebReposit
         return dataSource.getMovements(clientId, lastSync)
     }
 
+    override suspend fun getDeletedMovements(clientId: String, lastSync: Date?): List<Int> {
+        return dataSource.getDeletedMovements(clientId, lastSync)
+    }
+
+    override suspend fun deleteMovements(ids: List<Int>): Boolean {
+        return dataSource.deleteMovements(ids)
+    }
+
+    override suspend fun sendMovements(clientId: String, movements: List<Movement>): Boolean {
+        return dataSource.sendMovements(clientId, movements)
+    }
+
     override suspend fun getCategories(clientId: String): List<Master> {
         return dataSource.getCategories(clientId)
     }

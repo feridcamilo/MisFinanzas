@@ -3,8 +3,7 @@ package com.android.misfinanzas.ui.sync
 import androidx.lifecycle.*
 import com.android.data.local.model.*
 import com.android.data.local.repository.ILocalRepository
-import com.android.data.local.repository.UserSesion
-import com.android.data.remote.model.Balance
+import com.android.data.UserSesion
 import com.android.data.remote.model.Master
 import com.android.data.remote.model.Movement
 import com.android.data.remote.model.User
@@ -59,15 +58,6 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
         }
     }
 
-    fun getLastSync() = liveData {
-        emit(Result.Loading)
-        try {
-            emit(Result.Success(localRepo.getLastSync()))
-        } catch (e: Exception) {
-            emit(Result.Error(e))
-        }
-    }
-
     /* TODO consultar por qué al declarar como val solo se dispara la primera vez, y cuando es fun se dispara siempre que se llama
     val getWebBalance = liveData(Dispatchers.IO) {
         emit(Result.Loading)
@@ -79,59 +69,81 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
     }
     */
 
-    fun syncBalance() = liveData {
+    fun syncMovements() = liveData {
         emit(Result.Loading)
         try {
-            val balance = webRepo.getBalance(clientId)
-            if (balance != null) {
-                insertLocalBalance(balance)
+            val lastSync = localRepo.getLastSync()
+
+            if (lastSync != null) {
+                val idsWebToDelete = localRepo.getMovementsToDelete()
+                if (sendDeletedMovements(idsWebToDelete)) {
+                    localRepo.clearDeletedMovements()
+                } else {
+                    emit(Result.Error(Exception("Error al eliminar los movimientos en web")))
+                }
+
+                val idsLocalToDelete = webRepo.getDeletedMovements(clientId, lastSync)
+                deleteLocalMovementsFromWeb(idsLocalToDelete)
+
+                if (sendLocalMovements(lastSync)) {
+                    //Delete all news local movements to allow download them with the right movementId from web
+                    localRepo.clearSyncedMovements(lastSync)
+                } else {
+                    emit(Result.Error(Exception("Error al enviar los movimientos a web")))
+                }
             }
-            emit(Result.Success(balance))
-        } catch (e: Exception) {
-            emit(Result.Error(e))
-        }
-    }
 
-    private fun insertLocalBalance(balance: Balance) {
-        val balanceToInsert = BalanceVO(
-            0,
-            balance.IngresosEfectivo,
-            balance.EgresosEfectivo,
-            balance.IngresosElectronico,
-            balance.EgresosElectronico,
-            balance.Retiros,
-            balance.CompraTC,
-            balance.TengoEfectivo,
-            balance.TengoElectronico,
-            balance.TengoTotal,
-            balance.DiferenciaIngresos,
-            balance.DiferenciaEgresos,
-            balance.TotalIngresos,
-            balance.TotalEgresos
-        )
-
-        viewModelScope.launch {
-            localRepo.insertBalance(balanceToInsert)
-        }
-    }
-
-    fun syncMovements(lastSync: Date?) = liveData {
-        emit(Result.Loading)
-        try {
             val movements = webRepo.getMovements(clientId, lastSync)
             if (movements.isNotEmpty()) {
                 insertLocalMovement(movements)
             }
-            emit(Result.Success(movements))
+
+            emit(Result.Success(true))
         } catch (e: Exception) {
             emit(Result.Error(e))
+        }
+    }
+
+    private suspend fun sendDeletedMovements(ids: List<Int>): Boolean {
+        if (ids.isNotEmpty()) {
+            return webRepo.deleteMovements(ids)
+        }
+        return true
+    }
+
+    private suspend fun sendLocalMovements(lastSync: Date): Boolean {
+        val movements = localRepo.getMovementsToSync(lastSync)
+        if (movements.isNotEmpty()) {
+            val movementsToSend = movements.map {
+                Movement(
+                    if (it.dateEntry!! > lastSync) 0 else it.idMovement, //if 0 is a new movement, else is a old mov updated
+                    it.value,
+                    it.description,
+                    it.date!!,
+                    it.dateEntry,
+                    it.dateLastUpd,
+                    it.idType, "",
+                    it.categoryId, "",
+                    it.debtId, "",
+                    it.personId, "",
+                    it.placeId, ""
+                )
+            }
+            return webRepo.sendMovements(clientId, movementsToSend)
+        }
+
+        return true
+    }
+
+    private suspend fun deleteLocalMovementsFromWeb(ids: List<Int>) {
+        if (ids != null && ids.isNotEmpty()) {
+            localRepo.deleteMovementsFromWeb(ids)
         }
     }
 
     private fun insertLocalMovement(movements: List<Movement>) {
         val movementsToInsert = movements.map {
             MovementVO(
-                0,
                 it.IdMovimiento,
                 it.IdTipoMovimiento,
                 it.Valor,
@@ -142,8 +154,7 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
                 it.FechaMovimiento,
                 it.IdDeuda,
                 it.FechaIngreso,
-                it.FechaActualizacion,
-                true
+                it.FechaActualizacion
             )
         }
 
@@ -152,14 +163,30 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
         }
     }
 
-    fun syncCategories() = liveData {
+    fun syncMasters() = liveData {
         emit(Result.Loading)
         try {
             val categories = webRepo.getCategories(clientId)
             if (categories.isNotEmpty()) {
                 insertLocalCategories(categories)
             }
-            emit(Result.Success(categories))
+
+            val debts = webRepo.getDebts(clientId)
+            if (debts.isNotEmpty()) {
+                insertLocalDebts(debts)
+            }
+
+            val places = webRepo.getPlaces(clientId)
+            if (places.isNotEmpty()) {
+                insertLocalPlaces(places)
+            }
+
+            val people = webRepo.getPeople(clientId)
+            if (people.isNotEmpty()) {
+                insertLocalPeople(people)
+            }
+
+            emit(Result.Success(true))
         } catch (e: Exception) {
             emit(Result.Error(e))
         }
@@ -175,19 +202,6 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
         }
     }
 
-    fun syncDebts() = liveData {
-        emit(Result.Loading)
-        try {
-            val debts = webRepo.getDebts(clientId)
-            if (debts.isNotEmpty()) {
-                insertLocalDebts(debts)
-            }
-            emit(Result.Success(debts))
-        } catch (e: Exception) {
-            emit(Result.Error(e))
-        }
-    }
-
     private fun insertLocalDebts(debts: List<Master>) {
         val debtsToInsert = debts.map {
             DebtVO(it.Id, it.Nombre, it.Activo)
@@ -198,19 +212,6 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
         }
     }
 
-    fun syncPlaces() = liveData {
-        emit(Result.Loading)
-        try {
-            val places = webRepo.getPlaces(clientId)
-            if (places.isNotEmpty()) {
-                insertLocalPlaces(places)
-            }
-            emit(Result.Success(places))
-        } catch (e: Exception) {
-            emit(Result.Error(e))
-        }
-    }
-
     private fun insertLocalPlaces(places: List<Master>) {
         val placesToInsert = places.map {
             PlaceVO(it.Id, it.Nombre, it.Activo)
@@ -218,19 +219,6 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
 
         viewModelScope.launch {
             localRepo.insertPlaces(placesToInsert)
-        }
-    }
-
-    fun syncPeople() = liveData {
-        emit(Result.Loading)
-        try {
-            val people = webRepo.getPeople(clientId)
-            if (people.isNotEmpty()) {
-                insertLocalPeople(people)
-            }
-            emit(Result.Success(people))
-        } catch (e: Exception) {
-            emit(Result.Error(e))
         }
     }
 

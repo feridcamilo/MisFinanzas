@@ -7,13 +7,13 @@ import java.math.BigDecimal
 @Entity(tableName = "Balance")
 data class BalanceVO(
     @PrimaryKey
-    val id: Int,
+    val id: Int = 0,
     val IngresosEfectivo: BigDecimal,
     val EgresosEfectivo: BigDecimal,
     val IngresosElectronico: BigDecimal,
     val EgresosElectronico: BigDecimal,
     val Retiros: BigDecimal,
-    val CompraTC: BigDecimal,
+    val ComprasTC: BigDecimal,
     val TengoEfectivo: BigDecimal,
     val TengoElectronico: BigDecimal,
     val TengoTotal: BigDecimal,

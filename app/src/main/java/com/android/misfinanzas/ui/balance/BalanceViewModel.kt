@@ -17,10 +17,10 @@ class BalanceViewModel(private val webRepo: IWebRepository, private val localRep
         }
     }
 
-    fun getLocalBalance() = liveData {
+    fun getLocalBalance(query: String) = liveData {
         emit(Result.Loading)
         try {
-            emit(Result.Success(localRepo.getBalance()))
+            emit(Result.Success(localRepo.getBalance(query)))
         } catch (e: Exception) {
             emit(Result.Error(e))
         }

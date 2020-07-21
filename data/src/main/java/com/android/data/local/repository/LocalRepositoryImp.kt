@@ -22,29 +22,48 @@ class LocalRepositoryImp(private val dataSource: RoomDataSource) : ILocalReposit
         return dataSource.getLastSync()
     }
 
-    override suspend fun getBalance(): BalanceVO {
-        return dataSource.getBalance()
-    }
 
-    override suspend fun insertBalance(balance: BalanceVO) {
-        dataSource.insertBalance(balance)
+    override suspend fun getBalance(query: String): BalanceVO {
+        return dataSource.getBalance(query)
     }
 
     override suspend fun getMovements(): List<MovementVO> {
         return dataSource.getMovements()
     }
 
-    override suspend fun insertMovement(movement: MovementVO) {
-        dataSource.insertMovement(movement)
+    override suspend fun getMovementsToSync(lastSync: Date): List<MovementVO> {
+        return dataSource.getMovementsToSync(lastSync)
+    }
+
+    override suspend fun getMovementsToDelete(): List<Int> {
+        return dataSource.getMovementsToDelete()
+    }
+
+    override suspend fun deleteMovementsFromWeb(ids: List<Int>) {
+        dataSource.deleteMovementsFromWeb(ids)
     }
 
     override suspend fun deleteMovement(movement: MovementVO) {
         dataSource.deleteMovement(movement)
     }
 
+    override suspend fun clearSyncedMovements(lastSync: Date) {
+        dataSource.clearSyncedMovements(lastSync)
+    }
+
+    override suspend fun insertMovement(movement: MovementVO) {
+        dataSource.insertMovement(movement)
+    }
+
     override suspend fun insertMovements(movements: List<MovementVO>) {
         dataSource.insertMovements(movements)
     }
+
+
+    override suspend fun clearDeletedMovements() {
+        dataSource.clearDeletedMovements()
+    }
+
 
     override suspend fun getCategories(): List<CategoryVO> {
         return dataSource.getCategories()
