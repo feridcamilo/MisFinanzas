@@ -8,17 +8,17 @@ import retrofit2.http.Path
 
 interface APIService {
 
-    @GET("Maestros.svc/getCategorias/{clientId}")
-    suspend fun getCategories(@Path("clientId") clientId: String): CategoryDTO
+    @GET("Maestros.svc/getCategorias/{clientId}/{lastsync}")
+    suspend fun getCategories(@Path("clientId") clientId: String, @Path("lastsync") lastSync: String): CategoryDTO
 
-    @GET("Maestros.svc/getDeudas/{clientId}")
-    suspend fun getDebts(@Path("clientId") clientId: String): DebtDTO
+    @GET("Maestros.svc/getDeudas/{clientId}/{lastsync}")
+    suspend fun getDebts(@Path("clientId") clientId: String, @Path("lastsync") lastSync: String): DebtDTO
 
-    @GET("Maestros.svc/getLugares/{clientId}")
-    suspend fun getPlaces(@Path("clientId") clientId: String): PlaceDTO
+    @GET("Maestros.svc/getLugares/{clientId}/{lastsync}")
+    suspend fun getPlaces(@Path("clientId") clientId: String, @Path("lastsync") lastSync: String): PlaceDTO
 
-    @GET("Maestros.svc/getPersonas/{clientId}")
-    suspend fun getPeople(@Path("clientId") clientId: String): PersonaDTO
+    @GET("Maestros.svc/getPersonas/{clientId}/{lastsync}")
+    suspend fun getPeople(@Path("clientId") clientId: String, @Path("lastsync") lastSync: String): PersonaDTO
 
     @GET("Maestros.svc/getUsuario/{user}/{password}")
     suspend fun getUser(@Path("user") user: String, @Path("password") password: String): UserDTO

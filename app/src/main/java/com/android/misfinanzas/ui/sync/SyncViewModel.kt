@@ -1,13 +1,14 @@
 package com.android.misfinanzas.ui.sync
 
 import androidx.lifecycle.*
+import com.android.data.UserSesion
 import com.android.data.local.model.*
 import com.android.data.local.repository.ILocalRepository
-import com.android.data.UserSesion
 import com.android.data.remote.model.Master
 import com.android.data.remote.model.Movement
 import com.android.data.remote.model.User
 import com.android.data.remote.repository.IWebRepository
+import com.android.data.utils.DateUtils
 import com.android.domain.result.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -166,22 +167,24 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
     fun syncMasters() = liveData {
         emit(Result.Loading)
         try {
-            val categories = webRepo.getCategories(clientId)
+            val dateLastSync = localRepo.getLastSync()
+
+            val categories = webRepo.getCategories(clientId, dateLastSync)
             if (categories.isNotEmpty()) {
                 insertLocalCategories(categories)
             }
 
-            val debts = webRepo.getDebts(clientId)
+            val debts = webRepo.getDebts(clientId, dateLastSync)
             if (debts.isNotEmpty()) {
                 insertLocalDebts(debts)
             }
 
-            val places = webRepo.getPlaces(clientId)
+            val places = webRepo.getPlaces(clientId, dateLastSync)
             if (places.isNotEmpty()) {
                 insertLocalPlaces(places)
             }
 
-            val people = webRepo.getPeople(clientId)
+            val people = webRepo.getPeople(clientId, dateLastSync)
             if (people.isNotEmpty()) {
                 insertLocalPeople(people)
             }

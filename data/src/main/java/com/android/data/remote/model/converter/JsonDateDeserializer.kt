@@ -1,6 +1,5 @@
 package com.android.data.remote.model.converter
 
-import com.android.data.UserSesion
 import com.google.gson.*
 import java.lang.reflect.Type
 import java.util.*
@@ -12,12 +11,8 @@ class JsonDateDeserializer : JsonDeserializer<Date>, JsonSerializer<Date> {
         val date = json.asJsonPrimitive.asString
         val cleanDate = date.replace("/Date(", "").replace(")/", "")
         val longDate = cleanDate.substring(0, cleanDate.length - 5).toLong()
-        /* get the GMT from the JSONDate
-        var strTimeZone = cleanDate.substring(cleanDate.length - 5, cleanDate.length)
-        strTimeZone =  strTimeZone.substring(0, 3) + ":" + strTimeZone.substring(3, strTimeZone.length)
-        val timeZone = TimeZone.getTimeZone("GMT" + strTimeZone)
-        */
-        return Date(longDate + UserSesion.getTimeZone().getOffset(longDate))
+        //return DateUtils.getDateTimeToWebService(Date(longDate))
+        return Date(longDate)
     }
 
     @Throws(JsonParseException::class)

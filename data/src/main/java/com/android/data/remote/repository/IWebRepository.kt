@@ -20,11 +20,11 @@ interface IWebRepository {
 
     suspend fun sendMovements(clientId: String, movements: List<Movement>): Boolean
 
-    suspend fun getCategories(clientId: String): List<Master>
+    suspend fun getCategories(clientId: String, lastSync: Date?): List<Master>
 
-    suspend fun getDebts(clientId: String): List<Master>
+    suspend fun getDebts(clientId: String, lastSync: Date?): List<Master>
 
-    suspend fun getPlaces(clientId: String): List<Master>
+    suspend fun getPlaces(clientId: String, lastSync: Date?): List<Master>
 
-    suspend fun getPeople(clientId: String): List<Master>
+    suspend fun getPeople(clientId: String, lastSync: Date?): List<Master>
 }

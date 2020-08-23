@@ -14,13 +14,14 @@ import com.android.data.local.repository.LocalRepositoryImp
 import com.android.data.remote.RetrofitDataSource
 import com.android.data.remote.model.User
 import com.android.data.remote.repository.WebRepositoryImp
+import com.android.data.utils.DateUtils
 import com.android.domain.result.Result
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
 import com.android.misfinanzas.base.BaseViewModelFactory
 import com.android.misfinanzas.ui.widgets.login.LoginView
 import kotlinx.android.synthetic.main.fragment_sync.*
-import kotlinx.android.synthetic.main.login_card_view.view.*
+import kotlinx.android.synthetic.main.card_view_login.view.*
 
 class SyncFragment : BaseFragment() {
 
@@ -102,7 +103,7 @@ class SyncFragment : BaseFragment() {
                 }
                 is Result.Success -> {
                     progressListener.hide()
-                    viewModel.updateLastSync(UserSesion.getCurrentDateTime())
+                    viewModel.updateLastSync(DateUtils.getCurrentDateTime())
                     Toast.makeText(requireContext(), R.string.info_movements_saved, Toast.LENGTH_SHORT).show()
                 }
                 is Result.Error -> {

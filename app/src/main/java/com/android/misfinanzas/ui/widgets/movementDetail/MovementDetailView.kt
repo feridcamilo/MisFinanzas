@@ -11,18 +11,20 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import androidx.cardview.widget.CardView
-import com.android.data.UserSesion
 import com.android.data.local.model.*
+import com.android.data.utils.DateUtils.Companion.getCurrentDateTime
+import com.android.data.utils.DateUtils.Companion.getDateFormat
+import com.android.data.utils.DateUtils.Companion.getDateTimeFormat
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.MovementType
-import kotlinx.android.synthetic.main.movement_detail_view.view.*
+import kotlinx.android.synthetic.main.view_movement_detail.view.*
 import java.math.BigDecimal
 import java.util.*
 
 class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(context, attrs) {
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.movement_detail_view, this)
+        LayoutInflater.from(context).inflate(R.layout.view_movement_detail, this)
     }
 
     private lateinit var movementTypes: List<MovementType>
@@ -92,8 +94,8 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
             tv_deuda_value.setAdapter(debtsAdapter)
         }
 
-        val currentDate: Date = UserSesion.getCurrentDateTime()
-        et_fecha_movimiento.setText(UserSesion.getDateFormat().format(currentDate))
+        val currentDate: Date = getCurrentDateTime()
+        et_fecha_movimiento.setText(getDateFormat().format(currentDate))
     }
 
     private fun setControlsRules() {
@@ -124,12 +126,12 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
         }
 
         movement?.let {
-            val notAssociated = context.getString(R.string.md_view_not_associated)
-            val date = if (it.date == null) notAssociated else UserSesion.getDateFormat().format(checkNotNull(it.date)).toString()
+            val notAssociated = context.getString(R.string.view_md_not_associated)
+            val date = if (it.date == null) notAssociated else getDateFormat().format(checkNotNull(it.date)).toString()
             val entryDate =
-                if (it.dateEntry == null) notAssociated else UserSesion.getDateTimeFormat().format(checkNotNull(it.dateEntry)).toString()
+                if (it.dateEntry == null) notAssociated else getDateTimeFormat().format(checkNotNull(it.dateEntry)).toString()
             val lastUpdate =
-                if (it.dateLastUpd == null) notAssociated else UserSesion.getDateTimeFormat().format(checkNotNull(it.dateLastUpd)).toString()
+                if (it.dateLastUpd == null) notAssociated else getDateTimeFormat().format(checkNotNull(it.dateLastUpd)).toString()
 
             iv_tipo_movimiento.setImageResource(MovementType.getImage(it.idType))
             sp_tipo_movimiento.setSelection(getMovementTypeIndex(it.idType))
@@ -196,13 +198,13 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
         }
         val date: Date
         try {
-            date = UserSesion.getDateFormat().parse(strDate)
+            date = getDateFormat().parse(strDate)
         } catch (e: Exception) {
             et_fecha_movimiento.requestFocus()
             throw Exception(context.getString(R.string.info_enter_valid_date))
         }
 
-        val currentDateTime: Date = UserSesion.getCurrentDateTime()
+        val currentDateTime: Date = getCurrentDateTime()
 
         var dateLastUpdate: Date? = null
         var dateEntry: Date? = currentDateTime
