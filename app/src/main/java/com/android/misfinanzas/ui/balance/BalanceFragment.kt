@@ -60,6 +60,7 @@ class BalanceFragment : BaseFragment() {
                     } else {
                         UserSesion.setUser(result.data)
                         if (UserSesion.isFirstOpen()) {
+                            UserSesion.setFirstOpen(false)
                             //Makes an autosync
                             navigateToSync(true)
                         } else {
@@ -105,7 +106,7 @@ class BalanceFragment : BaseFragment() {
     private fun navigateToSync(auto: Boolean) {
         val bundle = Bundle()
         bundle.putBoolean(SyncFragment.FROM_BALANCE, true)
-        bundle.putBoolean(SyncFragment.FROM_BALANCE_AUTO, auto)
+        bundle.putBoolean(SyncFragment.AUTO_SYNC, auto)
         findNavController().navigate(R.id.action_balanceFragment_to_syncFragment, bundle)
     }
 

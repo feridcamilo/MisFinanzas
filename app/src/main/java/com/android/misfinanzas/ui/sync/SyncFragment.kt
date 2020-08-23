@@ -28,7 +28,7 @@ class SyncFragment : BaseFragment() {
 
     companion object {
         val FROM_BALANCE: String = "FromBalance"
-        val FROM_BALANCE_AUTO: String = "FromBalanceAuto"
+        val AUTO_SYNC: String = "AutoSync"
         val FROM_MOVEMENTS: String = "FromMovements"
     }
 
@@ -43,7 +43,7 @@ class SyncFragment : BaseFragment() {
 
     private lateinit var cardViewLogin: LoginView
     private var fromBalance: Boolean = false
-    private var fromBalanceAuto: Boolean = false
+    private var autoSync: Boolean = false
     private var fromMovements: Boolean = false
 
     private lateinit var syncUserObserver: Observer<Result<User>>
@@ -54,7 +54,7 @@ class SyncFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             fromBalance = it.getBoolean(FROM_BALANCE)
-            fromBalanceAuto = it.getBoolean(FROM_BALANCE_AUTO)
+            autoSync = it.getBoolean(AUTO_SYNC)
             fromMovements = it.getBoolean(FROM_MOVEMENTS)
         }
     }
@@ -69,7 +69,7 @@ class SyncFragment : BaseFragment() {
         if (!UserSesion.hasUser()) {
             setupLogin()
         } else {
-            if (fromBalanceAuto) {
+            if (autoSync) {
                 makeAutoSync()
             } else {
                 setupSync()
@@ -113,9 +113,8 @@ class SyncFragment : BaseFragment() {
                     progressListener.hide()
                     viewModel.updateLastSync(DateUtils.getCurrentDateTime())
                     Toast.makeText(requireContext(), R.string.info_movements_synced, Toast.LENGTH_SHORT).show()
-                    if (fromBalanceAuto) {
-                        UserSesion.setFirstOpen(false)
-                        navigateToBalance()
+                    if (autoSync) {
+                        syncMasters()
                     }
                 }
                 is Result.Error -> {
@@ -136,6 +135,10 @@ class SyncFragment : BaseFragment() {
                 is Result.Success -> {
                     progressListener.hide()
                     Toast.makeText(requireContext(), R.string.info_masters_synced, Toast.LENGTH_SHORT).show()
+                    if (autoSync) {
+                        UserSesion.setFirstOpen(false)
+                        navigateToBalance()
+                    }
                 }
                 is Result.Error -> {
                     progressListener.hide()
@@ -152,13 +155,12 @@ class SyncFragment : BaseFragment() {
         cardViewLogin.visibility = View.GONE
 
         //Auto sync after login
+        autoSync = true
         makeAutoSync()
     }
 
     private fun makeAutoSync() {
         setupSync()
-
-        syncMasters()
         syncMovements()
     }
 
