@@ -56,10 +56,15 @@ class BalanceFragment : BaseFragment() {
                 is Result.Success -> {
                     if (result.data == null) {
                         progressListener.hide()
-                        navigateToSync()
+                        navigateToSync(false)
                     } else {
                         UserSesion.setUser(result.data)
-                        getLocalBalance()
+                        if (UserSesion.isFirstOpen()) {
+                            //Makes an autosync
+                            navigateToSync(true)
+                        } else {
+                            getLocalBalance()
+                        }
                     }
                 }
                 is Result.Error -> {
@@ -78,7 +83,7 @@ class BalanceFragment : BaseFragment() {
                 is Result.Success -> {
                     if (result.data == null) {
                         Toast.makeText(requireContext(), R.string.info_no_balance, Toast.LENGTH_SHORT).show()
-                        navigateToSync()
+                        navigateToSync(false)
                     } else {
                         showBalance(result.data)
                     }
@@ -97,9 +102,10 @@ class BalanceFragment : BaseFragment() {
         viewModel.getLocalUser().observe(viewLifecycleOwner, userObserver)
     }
 
-    private fun navigateToSync() {
+    private fun navigateToSync(auto: Boolean) {
         val bundle = Bundle()
         bundle.putBoolean(SyncFragment.FROM_BALANCE, true)
+        bundle.putBoolean(SyncFragment.FROM_BALANCE_AUTO, auto)
         findNavController().navigate(R.id.action_balanceFragment_to_syncFragment, bundle)
     }
 

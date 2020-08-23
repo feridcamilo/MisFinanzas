@@ -8,8 +8,8 @@
     <string name="loading">Cargando…</string>
 
     <!--SyncFragment-->
-    <string name="sync_movements">Sincronizar movimientos</string>
-    <string name="sync_masters">Sincronizar maestros</string>
+    <string name="sync_movements">Movimientos</string>
+    <string name="sync_masters">Maestros</string>
 
     <!--CardView Login-->
     <string name="cardview_login_title">Ingreso Mis Finanzas</string>
@@ -70,11 +70,11 @@
     <string name="info_please_log_in">Por favor inicie sesión.</string>
     <string name="info_no_movements">No hay movimientos para mostrar.</string>
     <string name="info_no_balance">No hay saldos para mostrar.</string>
-    <string name="info_movements_saved">Movimientos guardados con éxito.</string>
+    <string name="info_movements_synced">Movimientos sincronizados con éxito.</string>
     <string name="info_movement_saved">Movimiento guardado con éxito.</string>
     <string name="info_movement_deleted">Movimiento eliminado con éxito.</string>
     <string name="info_movement_updated">Movimiento actualizado con éxito.</string>
-    <string name="info_masters_saved">Maestros guardados con éxito.</string>
+    <string name="info_masters_synced">Maestros sincronizados con éxito.</string>
     <string name="info_user_saved">Usuario guardado con éxito.</string>
     <string name="info_select_movement_type">Por favor seleccione el tipo de movimiento.</string>
     <string name="info_select_debt_by_cc_buy">Una compra con TC debe estar relacionada con una deuda. Por favor seleccione una deuda.</string>

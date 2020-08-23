@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.android.data.UserSesion
 import com.android.data.local.RoomDataSource
 import com.android.data.local.repository.LocalRepositoryImp
@@ -20,13 +21,14 @@ import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
 import com.android.misfinanzas.base.BaseViewModelFactory
 import com.android.misfinanzas.ui.widgets.login.LoginView
-import kotlinx.android.synthetic.main.fragment_sync.*
 import kotlinx.android.synthetic.main.card_view_login.view.*
+import kotlinx.android.synthetic.main.fragment_sync.*
 
 class SyncFragment : BaseFragment() {
 
     companion object {
         val FROM_BALANCE: String = "FromBalance"
+        val FROM_BALANCE_AUTO: String = "FromBalanceAuto"
         val FROM_MOVEMENTS: String = "FromMovements"
     }
 
@@ -41,6 +43,7 @@ class SyncFragment : BaseFragment() {
 
     private lateinit var cardViewLogin: LoginView
     private var fromBalance: Boolean = false
+    private var fromBalanceAuto: Boolean = false
     private var fromMovements: Boolean = false
 
     private lateinit var syncUserObserver: Observer<Result<User>>
@@ -51,6 +54,7 @@ class SyncFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             fromBalance = it.getBoolean(FROM_BALANCE)
+            fromBalanceAuto = it.getBoolean(FROM_BALANCE_AUTO)
             fromMovements = it.getBoolean(FROM_MOVEMENTS)
         }
     }
@@ -65,7 +69,11 @@ class SyncFragment : BaseFragment() {
         if (!UserSesion.hasUser()) {
             setupLogin()
         } else {
-            setupSync()
+            if (fromBalanceAuto) {
+                makeAutoSync()
+            } else {
+                setupSync()
+            }
         }
     }
 
@@ -104,7 +112,11 @@ class SyncFragment : BaseFragment() {
                 is Result.Success -> {
                     progressListener.hide()
                     viewModel.updateLastSync(DateUtils.getCurrentDateTime())
-                    Toast.makeText(requireContext(), R.string.info_movements_saved, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), R.string.info_movements_synced, Toast.LENGTH_SHORT).show()
+                    if (fromBalanceAuto) {
+                        UserSesion.setFirstOpen(false)
+                        navigateToBalance()
+                    }
                 }
                 is Result.Error -> {
                     progressListener.hide()
@@ -123,7 +135,7 @@ class SyncFragment : BaseFragment() {
                 }
                 is Result.Success -> {
                     progressListener.hide()
-                    Toast.makeText(requireContext(), R.string.info_masters_saved, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), R.string.info_masters_synced, Toast.LENGTH_SHORT).show()
                 }
                 is Result.Error -> {
                     progressListener.hide()
@@ -139,11 +151,20 @@ class SyncFragment : BaseFragment() {
         viewModel.setClientId(user.IdCliente.toString())
         cardViewLogin.visibility = View.GONE
 
+        //Auto sync after login
+        makeAutoSync()
+    }
+
+    private fun makeAutoSync() {
         setupSync()
 
-        //Auto sync after login
-        syncMovements()
         syncMasters()
+        syncMovements()
+    }
+
+    private fun navigateToBalance() {
+        val bundle = Bundle()
+        findNavController().navigate(R.id.action_syncFragment_to_balanceFragment, bundle)
     }
 
     private fun setupLogin() {
@@ -185,5 +206,4 @@ class SyncFragment : BaseFragment() {
     private fun syncMasters() {
         viewModel.syncMasters().observe(viewLifecycleOwner, syncMastersObserver)
     }
-
 }
