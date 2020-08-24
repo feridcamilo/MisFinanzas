@@ -1,8 +1,8 @@
 package com.android.data.remote
 
-import com.android.data.UserSesion
 import com.android.data.remote.api.ApiClient
 import com.android.data.remote.model.*
+import com.android.data.utils.ParamsUtils
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -20,44 +20,34 @@ class RetrofitDataSource {
     }
 
     suspend fun getMovements(clientId: String, lastSync: Date?): List<Movement> {
-        return ApiClient.service.getMovements(getParamsBody(clientId, lastSync)).results
+        return ApiClient.service.getMovements(ParamsUtils.getParamsBody(clientId, lastSync)).results
     }
 
     suspend fun getDeletedMovements(clientId: String, lastSync: Date?): List<Int> {
-        return ApiClient.service.getDeletedMovements(getParamsBody(clientId, lastSync)).results
-    }
-
-    private fun getParamsBody(clientId: String, lastSync: Date?): APIParameterBody {
-        val params: MutableList<APIParameter> = ArrayList()
-        params.add(APIParameter("@@IdCliente", clientId))
-        if (lastSync != null) {
-            val stringDate = UserSesion.getDateTimeFormatWeb().format(lastSync).replace(" ", "T")
-            params.add(APIParameter("@@UltimoUpdate", stringDate))
-        }
-        return APIParameterBody(params)
+        return ApiClient.service.getDeletedMovements(ParamsUtils.getParamsBody(clientId, lastSync)).results
     }
 
     suspend fun deleteMovements(ids: List<Int>): Boolean {
         return ApiClient.service.deleteMovements(DeletedMovement(ids)).result
     }
 
-    suspend fun sendMovements(cliendId: String, movements: List<Movement>): Boolean {
-        return ApiClient.service.sendMovements(SendMovement(Integer.parseInt(cliendId), movements)).results
+    suspend fun sendMovements(clientId: String, movements: List<Movement>): Boolean {
+        return ApiClient.service.sendMovements(SendMovement(Integer.parseInt(clientId), movements)).results
     }
 
-    suspend fun getCategories(clientId: String): List<Master> {
-        return ApiClient.service.getCategories(clientId).results
+    suspend fun getCategories(clientId: String, lastSync: Date?): List<Master> {
+        return ApiClient.service.getCategories(clientId, ParamsUtils.getLastSyncToWeb(lastSync)).results
     }
 
-    suspend fun getDebts(clientId: String): List<Master> {
-        return ApiClient.service.getDebts(clientId).results
+    suspend fun getDebts(clientId: String, lastSync: Date?): List<Master> {
+        return ApiClient.service.getDebts(clientId, ParamsUtils.getLastSyncToWeb(lastSync)).results
     }
 
-    suspend fun getPlaces(clientId: String): List<Master> {
-        return ApiClient.service.getPlaces(clientId).results
+    suspend fun getPlaces(clientId: String, lastSync: Date?): List<Master> {
+        return ApiClient.service.getPlaces(clientId, ParamsUtils.getLastSyncToWeb(lastSync)).results
     }
 
-    suspend fun getPeople(clientId: String): List<Master> {
-        return ApiClient.service.getPeople(clientId).results
+    suspend fun getPeople(clientId: String, lastSync: Date?): List<Master> {
+        return ApiClient.service.getPeople(clientId, ParamsUtils.getLastSyncToWeb(lastSync)).results
     }
 }

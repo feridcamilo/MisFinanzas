@@ -1,9 +1,9 @@
 package com.android.misfinanzas.ui.sync
 
 import androidx.lifecycle.*
+import com.android.data.UserSesion
 import com.android.data.local.model.*
 import com.android.data.local.repository.ILocalRepository
-import com.android.data.UserSesion
 import com.android.data.remote.model.Master
 import com.android.data.remote.model.Movement
 import com.android.data.remote.model.User
@@ -45,16 +45,22 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
     }
 
     private fun insertLocalUser(user: User) {
-        val userToInsert = UserVO(user.Usuario, user.IdCliente, user.Nombres, user.Apellidos, user.Correo, null)
+        val userToInsert = UserVO(user.Usuario, user.IdCliente, user.Nombres, user.Apellidos, user.Correo, null, null)
 
         viewModelScope.launch {
             localRepo.insertUser(userToInsert)
         }
     }
 
-    fun updateLastSync(date: Date) {
+    fun updateLastSyncMovements(date: Date) {
         viewModelScope.launch {
-            localRepo.updateLastSync(date)
+            localRepo.updateLastSyncMovements(date)
+        }
+    }
+
+    fun updateLastSyncMasters(date: Date) {
+        viewModelScope.launch {
+            localRepo.updateLastSyncMasters(date)
         }
     }
 
@@ -72,7 +78,7 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
     fun syncMovements() = liveData {
         emit(Result.Loading)
         try {
-            val lastSync = localRepo.getLastSync()
+            val lastSync = localRepo.getLastSyncMovements()
 
             if (lastSync != null) {
                 val idsWebToDelete = localRepo.getMovementsToDelete()
@@ -166,22 +172,24 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
     fun syncMasters() = liveData {
         emit(Result.Loading)
         try {
-            val categories = webRepo.getCategories(clientId)
+            val dateLastSync = localRepo.getLastSyncMasters()
+
+            val categories = webRepo.getCategories(clientId, dateLastSync)
             if (categories.isNotEmpty()) {
                 insertLocalCategories(categories)
             }
 
-            val debts = webRepo.getDebts(clientId)
+            val debts = webRepo.getDebts(clientId, dateLastSync)
             if (debts.isNotEmpty()) {
                 insertLocalDebts(debts)
             }
 
-            val places = webRepo.getPlaces(clientId)
+            val places = webRepo.getPlaces(clientId, dateLastSync)
             if (places.isNotEmpty()) {
                 insertLocalPlaces(places)
             }
 
-            val people = webRepo.getPeople(clientId)
+            val people = webRepo.getPeople(clientId, dateLastSync)
             if (people.isNotEmpty()) {
                 insertLocalPeople(people)
             }

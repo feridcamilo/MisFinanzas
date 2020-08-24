@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
             android:gravity="center_horizontal"
-            android:text="@string/balance_cardview_title"
+            android:text="@string/cardview_balance_title"
             app:layout_constraintBottom_toTopOf="@id/img_cash"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
             android:gravity="center_horizontal"
-            android:text="@string/balance_cardview_cash"
+            android:text="@string/cardview_balance_cash"
             app:layout_constraintBottom_toBottomOf="@id/img_cash"
             app:layout_constraintStart_toEndOf="@id/img_cash"
             app:layout_constraintTop_toTopOf="@id/img_cash" />
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
             android:gravity="center_horizontal"
-            android:text="@string/balance_cardview_card"
+            android:text="@string/cardview_balance_card"
             app:layout_constraintBottom_toBottomOf="@id/img_card"
             app:layout_constraintStart_toEndOf="@id/img_card"
             app:layout_constraintTop_toTopOf="@id/img_card" />
@@ -108,7 +108,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
             android:gravity="center_horizontal"
-            android:text="@string/balance_cardview_total"
+            android:text="@string/cardview_balance_total"
             app:layout_constraintBottom_toBottomOf="@id/img_total"
             app:layout_constraintStart_toEndOf="@id/img_total"
             app:layout_constraintTop_toTopOf="@id/img_total" />

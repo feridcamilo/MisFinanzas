@@ -9,11 +9,11 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.android.data.UserSesion
 import com.android.data.local.RoomDataSource
 import com.android.data.local.model.BalanceVO
 import com.android.data.local.model.UserVO
 import com.android.data.local.repository.LocalRepositoryImp
-import com.android.data.UserSesion
 import com.android.data.remote.RetrofitDataSource
 import com.android.data.remote.repository.WebRepositoryImp
 import com.android.domain.result.Result
@@ -56,10 +56,16 @@ class BalanceFragment : BaseFragment() {
                 is Result.Success -> {
                     if (result.data == null) {
                         progressListener.hide()
-                        navigateToSync()
+                        navigateToSync(false)
                     } else {
                         UserSesion.setUser(result.data)
-                        getLocalBalance()
+                        if (UserSesion.isFirstOpen()) {
+                            UserSesion.setFirstOpen(false)
+                            //Makes an autosync
+                            navigateToSync(true)
+                        } else {
+                            getLocalBalance()
+                        }
                     }
                 }
                 is Result.Error -> {
@@ -78,7 +84,7 @@ class BalanceFragment : BaseFragment() {
                 is Result.Success -> {
                     if (result.data == null) {
                         Toast.makeText(requireContext(), R.string.info_no_balance, Toast.LENGTH_SHORT).show()
-                        navigateToSync()
+                        navigateToSync(false)
                     } else {
                         showBalance(result.data)
                     }
@@ -97,9 +103,10 @@ class BalanceFragment : BaseFragment() {
         viewModel.getLocalUser().observe(viewLifecycleOwner, userObserver)
     }
 
-    private fun navigateToSync() {
+    private fun navigateToSync(auto: Boolean) {
         val bundle = Bundle()
         bundle.putBoolean(SyncFragment.FROM_BALANCE, true)
+        bundle.putBoolean(SyncFragment.AUTO_SYNC, auto)
         findNavController().navigate(R.id.action_balanceFragment_to_syncFragment, bundle)
     }
 

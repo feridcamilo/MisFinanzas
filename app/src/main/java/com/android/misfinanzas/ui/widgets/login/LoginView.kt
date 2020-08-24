@@ -7,12 +7,12 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import com.android.misfinanzas.R
 import com.android.misfinanzas.ui.sync.UserCredential
-import kotlinx.android.synthetic.main.login_card_view.view.*
+import kotlinx.android.synthetic.main.card_view_login.view.*
 
 class LoginView(context: Context, attrs: AttributeSet?) : CardView(context, attrs) {
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.login_card_view, this)
+        LayoutInflater.from(context).inflate(R.layout.card_view_login, this)
     }
 
     fun getCredential(): UserCredential? {

@@ -47,7 +47,11 @@
         android:id="@+id/syncFragment"
         android:name="com.android.misfinanzas.ui.sync.SyncFragment"
         android:label="@string/title_sync"
-        tools:layout="@layout/fragment_sync" />
+        tools:layout="@layout/fragment_sync">
+        <action
+            android:id="@+id/action_syncFragment_to_balanceFragment"
+            app:destination="@id/balanceFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/movementDetailFragment"

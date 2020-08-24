@@ -14,12 +14,20 @@ class LocalRepositoryImp(private val dataSource: RoomDataSource) : ILocalReposit
         dataSource.insertUser(user)
     }
 
-    override suspend fun updateLastSync(date: Date) {
-        dataSource.updateLastSync(date)
+    override suspend fun updateLastSyncMovements(date: Date) {
+        dataSource.updateLastSyncMovements(date)
     }
 
-    override suspend fun getLastSync(): Date? {
-        return dataSource.getLastSync()
+    override suspend fun getLastSyncMovements(): Date? {
+        return dataSource.getLastSyncMovements()
+    }
+
+    override suspend fun updateLastSyncMasters(date: Date) {
+        dataSource.updateLastSyncMasters(date)
+    }
+
+    override suspend fun getLastSyncMasters(): Date? {
+        return dataSource.getLastSyncMasters()
     }
 
 

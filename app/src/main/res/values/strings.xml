@@ -8,36 +8,39 @@
     <string name="loading">Cargando…</string>
 
     <!--SyncFragment-->
-    <string name="sync_movements">Sincronizar movimientos</string>
-    <string name="sync_masters">Sincronizar maestros</string>
+    <string name="sync_movements">Movimientos</string>
+    <string name="sync_masters">Maestros</string>
 
-    <!--Login CardView-->
-    <string name="login_cardview_title">Ingreso Mis Finanzas</string>
-    <string name="login_cardview_user">Usuario</string>
-    <string name="login_cardview_password">Contraseña</string>
-    <string name="login_cardview_enter">Ingresar</string>
+    <!--CardView Login-->
+    <string name="cardview_login_title">Ingreso Mis Finanzas</string>
+    <string name="cardview_login_user">Usuario</string>
+    <string name="cardview_login_password">Contraseña</string>
+    <string name="cardview_login_enter">Ingresar</string>
 
-    <!--Balance CardView-->
-    <string name="balance_cardview_title">Actualmente tienes</string>
-    <string name="balance_cardview_cash">Efectivo: </string>
-    <string name="balance_cardview_card">Electrónico: </string>
-    <string name="balance_cardview_total">Total: </string>
+    <!--CardView Balance -->
+    <string name="cardview_balance_title">Actualmente tienes</string>
+    <string name="cardview_balance_cash">Efectivo: </string>
+    <string name="cardview_balance_card">Electrónico: </string>
+    <string name="cardview_balance_total">Total: </string>
 
-    <!--Movement Detail View-->
-    <string name="md_view_select">Seleccione</string>
-    <string name="md_view_enter">Ingrese</string>
-    <string name="md_view_money_hint">$ 0.00</string>
-    <string name="md_view_not_associated">No asociada</string>
-    <string name="md_view_movement_type">Tipo de movimiento:</string>
-    <string name="md_view_value">Valor:</string>
-    <string name="md_view_description">Descripción:</string>
-    <string name="md_view_person">Persona:</string>
-    <string name="md_view_place">Lugar:</string>
-    <string name="md_view_category">Categoría:</string>
-    <string name="md_view_mov_date">Fecha del movimiento:</string>
-    <string name="md_view_debt">Deuda:</string>
-    <string name="md_view_entry_date">Fecha de ingreso:</string>
-    <string name="md_view_lastUpd_date">Fecha de actualización:</string>
+    <!--View Movement Detail-->
+    <string name="view_md_select">Seleccione</string>
+    <string name="view_md_enter">Ingrese</string>
+    <string name="view_md_not_associated_male">No asociado</string>
+    <string name="view_md_not_associated_female">No asociada</string>
+    <string name="view_md_myself_enter">Yo (Ingrese para asociar)</string>
+    <string name="view_md_money_hint">$ 0.00</string>
+    <string name="view_md_not_associated">No asociada</string>
+    <string name="view_md_movement_type">Tipo de movimiento:</string>
+    <string name="view_md_value">Valor:</string>
+    <string name="view_md_description">Descripción:</string>
+    <string name="view_md_person">Persona:</string>
+    <string name="view_md_place">Lugar:</string>
+    <string name="view_md_category">Categoría:</string>
+    <string name="view_md_mov_date">Fecha del movimiento:</string>
+    <string name="view_md_debt">Deuda:</string>
+    <string name="view_md_entry_date">Fecha de ingreso:</string>
+    <string name="view_md_lastUpd_date">Fecha de actualización:</string>
     <string name="md_date">%1$s/%2$s/%3$s</string>
 
     <!--MovementTypeList-->
@@ -67,11 +70,11 @@
     <string name="info_please_log_in">Por favor inicie sesión.</string>
     <string name="info_no_movements">No hay movimientos para mostrar.</string>
     <string name="info_no_balance">No hay saldos para mostrar.</string>
-    <string name="info_movements_saved">Movimientos guardados con éxito.</string>
+    <string name="info_movements_synced">Movimientos sincronizados con éxito.</string>
     <string name="info_movement_saved">Movimiento guardado con éxito.</string>
     <string name="info_movement_deleted">Movimiento eliminado con éxito.</string>
     <string name="info_movement_updated">Movimiento actualizado con éxito.</string>
-    <string name="info_masters_saved">Maestros guardados con éxito.</string>
+    <string name="info_masters_synced">Maestros sincronizados con éxito.</string>
     <string name="info_user_saved">Usuario guardado con éxito.</string>
     <string name="info_select_movement_type">Por favor seleccione el tipo de movimiento.</string>
     <string name="info_select_debt_by_cc_buy">Una compra con TC debe estar relacionada con una deuda. Por favor seleccione una deuda.</string>

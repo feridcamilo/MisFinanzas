@@ -6,14 +6,14 @@ import android.view.LayoutInflater
 import androidx.cardview.widget.CardView
 import com.android.data.local.model.BalanceVO
 import com.android.misfinanzas.R
-import kotlinx.android.synthetic.main.balance_card_view.view.*
+import kotlinx.android.synthetic.main.card_view_balance.view.*
 import java.text.DecimalFormat
 import java.text.NumberFormat
 
 class BalanceView(context: Context, attrs: AttributeSet?) : CardView(context, attrs) {
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.balance_card_view, this)
+        LayoutInflater.from(context).inflate(R.layout.card_view_balance, this)
     }
 
     private var moneyFormat: NumberFormat = DecimalFormat("$ ###,###")
