@@ -111,7 +111,7 @@ class SyncFragment : BaseFragment() {
                 }
                 is Result.Success -> {
                     progressListener.hide()
-                    viewModel.updateLastSync(DateUtils.getCurrentDateTime())
+                    viewModel.updateLastSyncMovements(DateUtils.getCurrentDateTime())
                     Toast.makeText(requireContext(), R.string.info_movements_synced, Toast.LENGTH_SHORT).show()
                     if (autoSync) {
                         syncMasters()
@@ -134,6 +134,7 @@ class SyncFragment : BaseFragment() {
                 }
                 is Result.Success -> {
                     progressListener.hide()
+                    viewModel.updateLastSyncMasters(DateUtils.getCurrentDateTime())
                     Toast.makeText(requireContext(), R.string.info_masters_synced, Toast.LENGTH_SHORT).show()
                     if (autoSync) {
                         UserSesion.setFirstOpen(false)

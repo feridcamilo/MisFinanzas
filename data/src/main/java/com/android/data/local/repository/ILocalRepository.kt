@@ -7,8 +7,10 @@ interface ILocalRepository {
 
     suspend fun getUser(): UserVO
     suspend fun insertUser(user: UserVO)
-    suspend fun updateLastSync(date: Date)
-    suspend fun getLastSync(): Date?
+    suspend fun updateLastSyncMovements(date: Date)
+    suspend fun getLastSyncMovements(): Date?
+    suspend fun updateLastSyncMasters(date: Date)
+    suspend fun getLastSyncMasters(): Date?
 
     suspend fun getBalance(query: String): BalanceVO
     suspend fun getMovements(): List<MovementVO>

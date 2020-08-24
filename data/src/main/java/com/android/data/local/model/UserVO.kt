@@ -12,5 +12,6 @@ data class UserVO(
     val name: String,
     val lastName: String,
     val email: String,
-    val lastSync: Date?
+    val lastSyncMovements: Date?,
+    val lastSyncMasters: Date?
 )

@@ -8,5 +8,13 @@ class MoneyUtils {
         fun getMoneyFormat(): NumberFormat {
             return DecimalFormat("$ ###,###,##0.00")
         }
+
+        fun getBigDecimalStringValue(value: String): String {
+            return try {
+                value.toBigDecimal().toString()
+            } catch (e: Exception) {
+                ""
+            }
+        }
     }
 }

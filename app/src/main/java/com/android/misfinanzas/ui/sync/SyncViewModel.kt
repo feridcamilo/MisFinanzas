@@ -45,16 +45,22 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
     }
 
     private fun insertLocalUser(user: User) {
-        val userToInsert = UserVO(user.Usuario, user.IdCliente, user.Nombres, user.Apellidos, user.Correo, null)
+        val userToInsert = UserVO(user.Usuario, user.IdCliente, user.Nombres, user.Apellidos, user.Correo, null, null)
 
         viewModelScope.launch {
             localRepo.insertUser(userToInsert)
         }
     }
 
-    fun updateLastSync(date: Date) {
+    fun updateLastSyncMovements(date: Date) {
         viewModelScope.launch {
-            localRepo.updateLastSync(date)
+            localRepo.updateLastSyncMovements(date)
+        }
+    }
+
+    fun updateLastSyncMasters(date: Date) {
+        viewModelScope.launch {
+            localRepo.updateLastSyncMasters(date)
         }
     }
 
@@ -72,7 +78,7 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
     fun syncMovements() = liveData {
         emit(Result.Loading)
         try {
-            val lastSync = localRepo.getLastSync()
+            val lastSync = localRepo.getLastSyncMovements()
 
             if (lastSync != null) {
                 val idsWebToDelete = localRepo.getMovementsToDelete()
@@ -166,7 +172,7 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
     fun syncMasters() = liveData {
         emit(Result.Loading)
         try {
-            val dateLastSync = localRepo.getLastSync()
+            val dateLastSync = localRepo.getLastSyncMasters()
 
             val categories = webRepo.getCategories(clientId, dateLastSync)
             if (categories.isNotEmpty()) {

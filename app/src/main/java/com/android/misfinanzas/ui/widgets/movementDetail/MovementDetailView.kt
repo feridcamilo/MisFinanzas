@@ -15,6 +15,7 @@ import com.android.data.local.model.*
 import com.android.data.utils.DateUtils.Companion.getCurrentDateTime
 import com.android.data.utils.DateUtils.Companion.getDateFormat
 import com.android.data.utils.DateUtils.Companion.getDateTimeFormat
+import com.android.data.utils.DateUtils.Companion.getDateToWebService
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.MovementType
 import kotlinx.android.synthetic.main.view_movement_detail.view.*
@@ -198,7 +199,7 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
         }
         val date: Date
         try {
-            date = getDateFormat().parse(strDate)
+            date = getDateToWebService(getDateFormat().parse(strDate))
         } catch (e: Exception) {
             et_fecha_movimiento.requestFocus()
             throw Exception(context.getString(R.string.info_enter_valid_date))

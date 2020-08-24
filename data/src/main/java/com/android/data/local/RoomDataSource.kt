@@ -16,12 +16,20 @@ class RoomDataSource(private val context: Context) {
         return AppDatabase.getDatabase(context).userDao().insert(user)
     }
 
-    suspend fun updateLastSync(date: Date) {
-        return AppDatabase.getDatabase(context).userDao().updateLastSync(date)
+    suspend fun updateLastSyncMovements(date: Date) {
+        return AppDatabase.getDatabase(context).userDao().updateLastSyncMovements(date)
     }
 
-    suspend fun getLastSync(): Date? {
-        return AppDatabase.getDatabase(context).userDao().getLastSync()
+    suspend fun getLastSyncMovements(): Date? {
+        return AppDatabase.getDatabase(context).userDao().getLastSyncMovements()
+    }
+
+    suspend fun updateLastSyncMasters(date: Date) {
+        return AppDatabase.getDatabase(context).userDao().updateLastSyncMasters(date)
+    }
+
+    suspend fun getLastSyncMasters(): Date? {
+        return AppDatabase.getDatabase(context).userDao().getLastSyncMasters()
     }
 
 
@@ -48,7 +56,7 @@ class RoomDataSource(private val context: Context) {
 
     suspend fun deleteMovement(movement: MovementVO) {
         AppDatabase.getDatabase(context).movementDAO().delete(movement)
-        val isLocal = movement.dateEntry!! > UserSesion.getUser()?.lastSync
+        val isLocal = movement.dateEntry!! > UserSesion.getUser()?.lastSyncMovements
         if (!isLocal) {
             AppDatabase.getDatabase(context).deletedMovementDAO().insert(DeletedMovementVO(0, movement.idMovement))
         }

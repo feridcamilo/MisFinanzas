@@ -22,7 +22,15 @@ class UserSesion {
         }
 
         fun setUser(user: User) {
-            val userVO = UserVO(user.Usuario, user.IdCliente, user.Nombres, user.Apellidos, user.Correo, DateUtils.getCurrentDateTime())
+            val userVO = UserVO(
+                user.Usuario,
+                user.IdCliente,
+                user.Nombres,
+                user.Apellidos,
+                user.Correo,
+                DateUtils.getCurrentDateTime(),
+                DateUtils.getCurrentDateTime()
+            )
             INSTANCE = userVO
         }
 

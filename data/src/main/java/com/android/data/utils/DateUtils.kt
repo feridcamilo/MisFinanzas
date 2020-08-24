@@ -11,9 +11,15 @@ class DateUtils {
         }
 
         fun getDateTimeToWebService(date: Date): Date {
-            val longDate = date.time
-            val serverOffset = getTimeZone().getOffset(longDate)
-            return Date(longDate + serverOffset)
+            return Date(date.time + getServerTimeOffset(date))
+        }
+
+        fun getDateToWebService(date: Date): Date {
+            return Date(date.time - getServerTimeOffset(date))
+        }
+
+        fun getServerTimeOffset(date: Date): Int {
+            return getTimeZone().getOffset(date.time)
         }
 
         private fun getTimeZone(): TimeZone {
