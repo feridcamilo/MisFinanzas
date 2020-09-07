@@ -10,6 +10,7 @@
         android:id="@+id/sv_search"
         android:layout_width="@dimen/zero"
         android:layout_height="wrap_content"
+        android:queryHint="@string/search"
         app:layout_constraintBottom_toTopOf="@id/rv_movimientos"
         app:layout_constraintEnd_toStartOf="@id/btn_filtros"
         app:layout_constraintStart_toStartOf="parent"

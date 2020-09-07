@@ -16,6 +16,7 @@ import com.android.data.remote.RetrofitDataSource
 import com.android.data.remote.model.User
 import com.android.data.remote.repository.WebRepositoryImp
 import com.android.data.utils.DateUtils
+import com.android.data.utils.NetworkUtils
 import com.android.domain.result.Result
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
@@ -133,13 +134,13 @@ class SyncFragment : BaseFragment() {
                     progressListener.show()
                 }
                 is Result.Success -> {
-                    progressListener.hide()
                     viewModel.updateLastSyncMasters(DateUtils.getCurrentDateTime())
                     Toast.makeText(requireContext(), R.string.info_masters_synced, Toast.LENGTH_SHORT).show()
                     if (autoSync) {
                         UserSesion.setFirstOpen(false)
                         navigateToBalance()
                     }
+                    progressListener.hide()
                 }
                 is Result.Error -> {
                     progressListener.hide()
@@ -177,9 +178,13 @@ class SyncFragment : BaseFragment() {
         cardViewLogin.visibility = View.VISIBLE
 
         cardViewLogin.btn_login.setOnClickListener {
-            val credential = cardViewLogin.getCredential()
-            if (credential != null) {
-                viewModel.setCredential(credential)
+            if (NetworkUtils.isConnected(requireContext())) {
+                val credential = cardViewLogin.getCredential()
+                if (credential != null) {
+                    viewModel.setCredential(credential)
+                }
+            } else {
+                Toast.makeText(requireContext(), R.string.error_not_network_no_login, Toast.LENGTH_SHORT).show()
             }
         }
         Toast.makeText(requireContext(), R.string.info_please_log_in, Toast.LENGTH_SHORT).show()
@@ -191,14 +196,22 @@ class SyncFragment : BaseFragment() {
 
         setupMovementsObserver()
         btn_sync_movements.setOnClickListener {
-            //Manual movements sync
-            syncMovements()
+            if (NetworkUtils.isConnected(requireContext())) {
+                //Manual movements sync
+                syncMovements()
+            } else {
+                Toast.makeText(requireContext(), R.string.error_not_network_no_sync, Toast.LENGTH_SHORT).show()
+            }
         }
 
         setupMastersObserver()
         btn_sync_masters.setOnClickListener {
-            //Manual masters sync
-            syncMasters()
+            if (NetworkUtils.isConnected(requireContext())) {
+                //Manual masters sync
+                syncMasters()
+            } else {
+                Toast.makeText(requireContext(), R.string.error_not_network_no_sync, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

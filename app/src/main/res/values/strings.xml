@@ -6,6 +6,7 @@
     <string name="title_filters">Filtros</string>
     <string name="title_sync">Sincronizar</string>
     <string name="loading">Cargando…</string>
+    <string name="search">Buscar</string>
 
     <!--SyncFragment-->
     <string name="sync_movements">Movimientos</string>
@@ -53,6 +54,8 @@
     <string name="mt_card_buy">Compra con TC</string>
 
     <!--Error messages-->
+    <string name="error_not_network_no_sync">No hay conexión a internet. No se puede sincronizar.</string>
+    <string name="error_not_network_no_login">No hay conexión a internet. No se puede iniciar sesión.</string>
     <string name="error_getting_movements">Ocurrió un error obteniendo los movimientos: %1$s</string>
     <string name="error_getting_masters">Ocurrió un error obteniendo las maestros: %1$s</string>
     <string name="error_getting_balance">Ocurrió un error obteniendo los saldos: %1$s</string>

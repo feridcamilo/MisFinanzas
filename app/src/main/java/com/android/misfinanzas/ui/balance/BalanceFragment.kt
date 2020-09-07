@@ -16,6 +16,7 @@ import com.android.data.local.model.UserVO
 import com.android.data.local.repository.LocalRepositoryImp
 import com.android.data.remote.RetrofitDataSource
 import com.android.data.remote.repository.WebRepositoryImp
+import com.android.data.utils.NetworkUtils
 import com.android.domain.result.Result
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
@@ -61,8 +62,13 @@ class BalanceFragment : BaseFragment() {
                         UserSesion.setUser(result.data)
                         if (UserSesion.isFirstOpen()) {
                             UserSesion.setFirstOpen(false)
-                            //Makes an autosync
-                            navigateToSync(true)
+                            if (NetworkUtils.isConnected(requireContext())) {
+                                //Makes an autosync
+                                navigateToSync(true)
+                            } else {
+                                getLocalBalance()
+                                Toast.makeText(requireContext(), R.string.error_not_network_no_sync, Toast.LENGTH_SHORT).show()
+                            }
                         } else {
                             getLocalBalance()
                         }

@@ -5,10 +5,9 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.cardview.widget.CardView
 import com.android.data.local.model.BalanceVO
+import com.android.data.utils.MoneyUtils
 import com.android.misfinanzas.R
 import kotlinx.android.synthetic.main.card_view_balance.view.*
-import java.text.DecimalFormat
-import java.text.NumberFormat
 
 class BalanceView(context: Context, attrs: AttributeSet?) : CardView(context, attrs) {
 
@@ -16,11 +15,9 @@ class BalanceView(context: Context, attrs: AttributeSet?) : CardView(context, at
         LayoutInflater.from(context).inflate(R.layout.card_view_balance, this)
     }
 
-    private var moneyFormat: NumberFormat = DecimalFormat("$ ###,###")
-
     fun showBalance(balance: BalanceVO) {
-        tv_cash_value.text = moneyFormat.format(balance.TengoEfectivo)
-        tv_card_value.text = moneyFormat.format(balance.TengoElectronico)
-        tv_total_value.text = moneyFormat.format(balance.TengoTotal)
+        tv_cash_value.text = MoneyUtils.getMoneyFormat().format(balance.TengoEfectivo)
+        tv_card_value.text = MoneyUtils.getMoneyFormat().format(balance.TengoElectronico)
+        tv_total_value.text = MoneyUtils.getMoneyFormat().format(balance.TengoTotal)
     }
 }
