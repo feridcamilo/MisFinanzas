@@ -41,6 +41,8 @@ class MovementsFragment : BaseFragment(), MovementsAdapter.OnMovementClickListen
         )
     }
 
+    private val maxMovementSize: Int = 1000
+    private val minLengthToSearch: Int = 3
     private lateinit var movementsObserver: Observer<Result<List<MovementVO>>>
     private lateinit var peopleObserver: Observer<Result<List<PersonVO>>>
     private lateinit var placesObserver: Observer<Result<List<PlaceVO>>>
@@ -108,14 +110,20 @@ class MovementsFragment : BaseFragment(), MovementsAdapter.OnMovementClickListen
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                //implement if you can to change in every letter written
-                filter(newText)
+                //implement if you want to change in every letter written
+                if (movements?.size!! > maxMovementSize && newText?.length!! <= minLengthToSearch) {
+                    //if the list is big and if text length has less than minLengthToSearch it not search in every letter written
+                    return false
+                } else {
+                    filter(newText)
+                }
                 return false
             }
         })
     }
 
     private fun filter(text: String?) {
+        progressListener.show()
         if (!text.isNullOrEmpty()) {
             val textToCompare = text.toLowerCase(Locale.ROOT)
             val valueToCompare = MoneyUtils.getBigDecimalStringValue(text)
@@ -137,6 +145,7 @@ class MovementsFragment : BaseFragment(), MovementsAdapter.OnMovementClickListen
         } else {
             setupRecyclerViewData(movements!!)
         }
+        progressListener.hide()
     }
 
     private fun setupObservers() {
