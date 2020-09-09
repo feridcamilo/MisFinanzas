@@ -5,6 +5,7 @@
     <string name="title_movements_details">Detalle del movimiento</string>
     <string name="title_filters">Filtros</string>
     <string name="title_sync">Sincronizar</string>
+    <string name="go_to_web"><u>Ir al sitio web</u></string>
     <string name="loading">Cargando…</string>
     <string name="search">Buscar</string>
 

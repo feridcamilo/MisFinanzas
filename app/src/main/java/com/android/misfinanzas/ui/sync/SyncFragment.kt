@@ -9,12 +9,14 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.android.data.AppConfig
 import com.android.data.UserSesion
 import com.android.data.local.RoomDataSource
 import com.android.data.local.repository.LocalRepositoryImp
 import com.android.data.remote.RetrofitDataSource
 import com.android.data.remote.model.User
 import com.android.data.remote.repository.WebRepositoryImp
+import com.android.data.utils.AppUtils
 import com.android.data.utils.DateUtils
 import com.android.data.utils.NetworkUtils
 import com.android.domain.result.Result
@@ -70,6 +72,7 @@ class SyncFragment : BaseFragment() {
         if (!UserSesion.hasUser()) {
             setupLogin()
         } else {
+            tv_link.setOnClickListener { AppUtils.openURL(requireContext(), AppConfig.BASE_URL) }
             if (autoSync) {
                 makeAutoSync()
             } else {

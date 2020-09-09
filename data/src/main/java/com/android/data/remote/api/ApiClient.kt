@@ -1,5 +1,6 @@
 package com.android.data.remote.api
 
+import com.android.data.AppConfig
 import com.android.data.remote.model.converter.JsonDateDeserializer
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
@@ -19,7 +20,7 @@ object ApiClient {
         val gsonBuilder = GsonBuilder().registerTypeAdapter(Date::class.java, JsonDateDeserializer()).create()
 
         Retrofit.Builder()
-            .baseUrl("http://misfinanzas.somee.com/Servicios/")
+            .baseUrl(AppConfig.BASE_SERVICES_URL)
             .client(httpClient.build())
             .addConverterFactory(GsonConverterFactory.create(gsonBuilder))
             .build().create(APIService::class.java)

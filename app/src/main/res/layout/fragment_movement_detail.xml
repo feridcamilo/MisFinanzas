@@ -8,8 +8,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.movementDetail.MovementDetailFragment">
+        android:layout_height="match_parent">
 
         <com.android.misfinanzas.ui.widgets.movementDetail.MovementDetailView
             android:id="@+id/movement_detail_view"
