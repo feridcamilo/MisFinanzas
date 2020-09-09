@@ -48,10 +48,16 @@ class MainActivity : AppCompatActivity(), ProgressListener {
         return navController.navigateUp()
     }
 
-    override fun show() {
+    override fun show(hideKeyBoard: Boolean) {
         loading.visibility = View.VISIBLE
-        hideKeyboard()
+        if (hideKeyBoard) {
+            hideKeyboard()
+        }
         window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    override fun show() {
+        show(true)
     }
 
     override fun hide() {

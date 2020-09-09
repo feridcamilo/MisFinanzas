@@ -111,7 +111,7 @@ class MovementsFragment : BaseFragment(), MovementsAdapter.OnMovementClickListen
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 //implement if you want to change in every letter written
-                if (movements?.size!! > maxMovementSize && newText?.length!! <= minLengthToSearch) {
+                if (movements?.size!! > maxMovementSize && newText?.length!! != 0 && newText?.length!! <= minLengthToSearch) {
                     //if the list is big and if text length has less than minLengthToSearch it not search in every letter written
                     return false
                 } else {
@@ -123,7 +123,7 @@ class MovementsFragment : BaseFragment(), MovementsAdapter.OnMovementClickListen
     }
 
     private fun filter(text: String?) {
-        progressListener.show()
+        progressListener.show(false)
         if (!text.isNullOrEmpty()) {
             val textToCompare = text.toLowerCase(Locale.ROOT)
             val valueToCompare = MoneyUtils.getBigDecimalStringValue(text)

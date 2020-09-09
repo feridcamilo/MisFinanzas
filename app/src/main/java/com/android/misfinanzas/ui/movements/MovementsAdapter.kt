@@ -35,7 +35,7 @@ class MovementsAdapter(
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         when (holder) {
             is MovementsViewHolder -> holder.bind(movements[position], position)
-            //put other views here if you can
+            //put other views here if you want
         }
     }
 
