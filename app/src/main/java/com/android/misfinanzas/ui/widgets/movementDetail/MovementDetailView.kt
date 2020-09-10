@@ -37,6 +37,8 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
 
     private var movement: MovementVO? = null
     private var selectedMovementType: Int = MovementType.NOT_SELECTED
+    var shouldDiscard = false
+    var idToDiscard = 0
 
     fun initView(
         descriptions: List<String>?,
@@ -119,7 +121,7 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
     fun showMovement(movement: MovementVO?) {
         this.movement = movement
 
-        if (movement == null) {
+        if (movement == null || movement.idMovement <= 0) {
             tv_fecha_ingreso.visibility = View.GONE
             tv_fecha_ingreso_value.visibility = View.GONE
             tv_fecha_upd.visibility = View.GONE
@@ -209,13 +211,21 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
 
         var dateLastUpdate: Date? = null
         var dateEntry: Date? = currentDateTime
-        if (movement != null) {
+        if (movement != null && movement?.idMovement!! > 0) {
             dateLastUpdate = currentDateTime
             dateEntry = movement?.dateEntry
         }
 
+        var idMovement = movement?.idMovement ?: 0
+
+        if (movement != null && movement?.idMovement!! <= 0) {
+            shouldDiscard = true
+            idToDiscard = movement?.idMovement!!
+            idMovement = 0
+        }
+
         return MovementVO(
-            movement?.idMovement ?: 0,//Autoincrement
+            idMovement,//Autoincrement
             selectedMovementType,
             value,
             description,

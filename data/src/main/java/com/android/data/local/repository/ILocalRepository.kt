@@ -16,8 +16,10 @@ interface ILocalRepository {
     suspend fun getMovements(): List<MovementVO>
     suspend fun getMovementsToSync(lastSync: Date): List<MovementVO>
     suspend fun getMovementsToDelete(): List<Int>
+    suspend fun getDiscardedMovements(): List<Int>
     suspend fun deleteMovementsFromWeb(ids: List<Int>)
     suspend fun deleteMovement(movement: MovementVO)
+    suspend fun discardMovement(id: Int)
     suspend fun clearSyncedMovements(lastSync: Date)
     suspend fun insertMovement(movement: MovementVO)
     suspend fun insertMovements(movements: List<MovementVO>)

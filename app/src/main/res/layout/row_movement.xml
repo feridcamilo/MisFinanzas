@@ -29,10 +29,20 @@
         android:textSize="@dimen/text_size_20"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/iv_tipo_movimiento"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/ib_discard"
         app:layout_constraintStart_toEndOf="@id/tv_descripcion"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Categoría" />
+
+    <ImageButton
+        android:id="@+id/ib_discard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_delete"
+        app:layout_constraintBottom_toTopOf="@id/iv_tipo_movimiento"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_categoria"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_tipo_movimiento"

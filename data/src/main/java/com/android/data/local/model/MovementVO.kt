@@ -36,7 +36,7 @@ data class MovementVO(
     val description: String,
     val personId: Int?,
     val placeId: Int?,
-    val categoryId: Int,
+    val categoryId: Int?,
     val date: Date?,
     val debtId: Int?,
     val dateEntry: Date?,

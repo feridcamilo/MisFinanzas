@@ -19,7 +19,7 @@ data class Movement(
     val FechaActualizacion: Date?,
     val IdTipoMovimiento: Int,
     val DescTipoMovimiento: String,
-    val IdCategoria: Int,
+    val IdCategoria: Int?,
     val DescCategoria: String,
     val IdDeuda: Int?,
     val DescDeuda: String,

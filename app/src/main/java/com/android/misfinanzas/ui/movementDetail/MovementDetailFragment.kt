@@ -80,6 +80,9 @@ class MovementDetailFragment : BaseFragment() {
         try {
             val movementToSave = movementDetailView.getMovement()
             viewModel.insertLocalMovement(movementToSave)
+            if (movementDetailView.shouldDiscard) {
+                viewModel.insertDiscardedMovement(movementDetailView.idToDiscard)
+            }
             if (movementToSave.dateLastUpd == null) { //Is insert
                 movementDetailView.cleanFormAfterSave()
                 Toast.makeText(requireContext(), getString(R.string.info_movement_saved), Toast.LENGTH_SHORT).show()
@@ -113,7 +116,7 @@ class MovementDetailFragment : BaseFragment() {
         movementDetailView = movement_detail_view
         movementDetailView.initView(descriptions, people, places, categories, debts)
         movementDetailView.showMovement(movement)
-        if (movement == null) {
+        if (movement == null || movement?.idMovement!! <= 0) {
             ib_delete.visibility = View.GONE
         }
     }

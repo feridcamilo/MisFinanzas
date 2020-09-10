@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Mis Finanzas</string>
     <string name="title_balance">Saldos</string>
+    <string name="title_potential_movements">Potenciales movimientos desde SMS</string>
     <string name="title_movements">Movimientos</string>
     <string name="title_movements_details">Detalle del movimiento</string>
     <string name="title_filters">Filtros</string>
@@ -77,6 +78,7 @@
     <string name="info_movements_synced">Movimientos sincronizados con éxito.</string>
     <string name="info_movement_saved">Movimiento guardado con éxito.</string>
     <string name="info_movement_deleted">Movimiento eliminado con éxito.</string>
+    <string name="info_movement_discarded">Movimiento descartado.</string>
     <string name="info_movement_updated">Movimiento actualizado con éxito.</string>
     <string name="info_masters_synced">Maestros sincronizados con éxito.</string>
     <string name="info_user_saved">Usuario guardado con éxito.</string>
@@ -90,7 +92,9 @@
 
     <!--Confirm Dialog-->
     <string name="cd_title_delete">Eliminar movimiento</string>
+    <string name="cd_title_discard">Descartar movimiento</string>
     <string name="cd_desc_delete">¿Está seguro que desea eliminar el movimiento?</string>
+    <string name="cd_desc_discard">¿Está seguro que desea descartar el movimiento?</string>
     <string name="cd_yes">Si</string>
     <string name="cd_no">No</string>
 

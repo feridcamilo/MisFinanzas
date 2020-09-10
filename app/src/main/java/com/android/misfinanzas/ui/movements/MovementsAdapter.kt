@@ -11,6 +11,7 @@ import com.android.data.utils.MoneyUtils
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseViewHolder
 import com.android.misfinanzas.base.MovementType
+import com.android.misfinanzas.base.OnMovementClickListener
 import kotlinx.android.synthetic.main.row_movement.view.*
 
 class MovementsAdapter(
@@ -19,10 +20,6 @@ class MovementsAdapter(
     private val itemClickListener: OnMovementClickListener
 ) :
     RecyclerView.Adapter<BaseViewHolder<*>>() {
-
-    interface OnMovementClickListener {
-        fun onMovementClicked(movement: MovementVO)
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         return MovementsViewHolder(LayoutInflater.from(context).inflate(R.layout.row_movement, parent, false))
@@ -48,6 +45,13 @@ class MovementsAdapter(
             itemView.tv_descripcion.text = item.description
 
             itemView.setOnClickListener { itemClickListener.onMovementClicked(item) }
+
+            if (item.idMovement < 0) {
+                itemView.ib_discard.visibility = View.VISIBLE
+                itemView.ib_discard.setOnClickListener { itemClickListener.onDiscardMovementClicked(item.idMovement, position) }
+            } else {
+                itemView.ib_discard.visibility = View.GONE
+            }
         }
     }
 }
