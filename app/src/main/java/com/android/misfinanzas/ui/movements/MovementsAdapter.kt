@@ -46,6 +46,9 @@ class MovementsAdapter(
 
             itemView.setOnClickListener { itemClickListener.onMovementClicked(item) }
 
+            //TODO pending to add category description to model
+            itemView.tv_categoria.visibility = View.GONE
+
             if (item.idMovement < 0) {
                 itemView.ib_discard.visibility = View.VISIBLE
                 itemView.ib_discard.setOnClickListener { itemClickListener.onDiscardMovementClicked(item.idMovement, position) }
