@@ -25,6 +25,7 @@ interface ILocalRepository {
     suspend fun insertMovements(movements: List<MovementVO>)
 
     suspend fun clearDeletedMovements()
+    suspend fun clearDiscardedMovements()
 
     suspend fun getCategories(): List<CategoryVO>
     suspend fun insertCategories(categories: List<CategoryVO>)

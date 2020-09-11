@@ -13,6 +13,7 @@
     <!--SyncFragment-->
     <string name="sync_movements">Movimientos</string>
     <string name="sync_masters">Maestros</string>
+    <string name="sync_clean_discarded">Restaurar Descartados</string>
 
     <!--CardView Login-->
     <string name="cardview_login_title">Ingreso Mis Finanzas</string>
@@ -76,6 +77,7 @@
     <string name="info_no_movements">No hay movimientos para mostrar.</string>
     <string name="info_no_balance">No hay saldos para mostrar.</string>
     <string name="info_movements_synced">Movimientos sincronizados con éxito.</string>
+    <string name="info_movements_discarded_restored">Los movimientos descartados fueron restaurados con éxito.</string>
     <string name="info_movement_saved">Movimiento guardado con éxito.</string>
     <string name="info_movement_deleted">Movimiento eliminado con éxito.</string>
     <string name="info_movement_discarded">Movimiento descartado.</string>

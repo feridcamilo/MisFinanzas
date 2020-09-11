@@ -93,8 +93,7 @@
         app:layout_constraintBottom_toBottomOf="@id/tv_descripcion"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_descripcion"
-        app:layout_constraintTop_toTopOf="@id/tv_descripcion"
-        tools:text="" />
+        app:layout_constraintTop_toTopOf="@id/tv_descripcion" />
 
     <TextView
         android:id="@+id/tv_persona"

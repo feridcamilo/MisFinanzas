@@ -2,6 +2,7 @@ package com.android.data.utils
 
 import com.android.data.remote.model.APIParameter
 import com.android.data.remote.model.APIParameterBody
+import com.android.data.utils.StringUtils.Companion.EMPTY
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -22,7 +23,7 @@ class ParamsUtils {
         }
 
         fun getLastSyncToWeb(dateLastSync: Date?): String {
-            return if (dateLastSync == null) "" else getStringDateTimeToWeb(dateLastSync)
+            return if (dateLastSync == null) EMPTY else getStringDateTimeToWeb(dateLastSync)
         }
 
         private fun getStringDateTimeToWeb(date: Date): String {

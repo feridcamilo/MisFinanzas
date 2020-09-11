@@ -16,6 +16,7 @@ import com.android.data.utils.DateUtils.Companion.getCurrentDateTime
 import com.android.data.utils.DateUtils.Companion.getDateFormat
 import com.android.data.utils.DateUtils.Companion.getDateTimeFormat
 import com.android.data.utils.DateUtils.Companion.getDateToWebService
+import com.android.data.utils.StringUtils.Companion.EMPTY
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.MovementType
 import kotlinx.android.synthetic.main.view_movement_detail.view.*
@@ -58,7 +59,7 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
 
     private fun setMastersPickers() {
         movementTypes = MovementType.getList(context)
-        val movementTypeAdapter = ArrayAdapter<MovementType>(context, android.R.layout.simple_spinner_item, movementTypes)
+        val movementTypeAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, movementTypes)
         movementTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         sp_tipo_movimiento.adapter = movementTypeAdapter
 
@@ -73,27 +74,27 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
         }
 
         descriptions?.let {
-            val descriptionsAdapter = ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, it)
+            val descriptionsAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
             tv_descripcion_value.setAdapter(descriptionsAdapter)
         }
 
         people?.let {
-            val peopleAdapter = ArrayAdapter<PersonVO>(context, android.R.layout.simple_list_item_1, it)
+            val peopleAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
             tv_persona_value.setAdapter(peopleAdapter)
         }
 
         places?.let {
-            val placesAdapter = ArrayAdapter<PlaceVO>(context, android.R.layout.simple_list_item_1, it)
+            val placesAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
             tv_lugar_value.setAdapter(placesAdapter)
         }
 
         categories?.let {
-            val categoriesAdapter = ArrayAdapter<CategoryVO>(context, android.R.layout.simple_list_item_1, it)
+            val categoriesAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
             tv_categoria_value.setAdapter(categoriesAdapter)
         }
 
         debts?.let {
-            val debtsAdapter = ArrayAdapter<DebtVO>(context, android.R.layout.simple_list_item_1, it)
+            val debtsAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
             tv_deuda_value.setAdapter(debtsAdapter)
         }
 
@@ -240,10 +241,10 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
     }
 
     fun cleanFormAfterSave() {
-        et_valor.setText("")
+        et_valor.setText(EMPTY)
         et_valor.requestFocus()
-        tv_persona_value.setText("")
-        tv_deuda_value.setText("")
+        tv_persona_value.setText(EMPTY)
+        tv_deuda_value.setText(EMPTY)
     }
 
     private fun getMovementType(id: Int): MovementType? {

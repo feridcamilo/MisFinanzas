@@ -51,7 +51,7 @@ class RoomDataSource(private val context: Context) {
     }
 
     suspend fun getdiscardedMovements(): List<Int> {
-        return AppDatabase.getDatabase(context).discardedSMSDAO().getAll()
+        return AppDatabase.getDatabase(context).discardedMovementDAO().getAll()
     }
 
     suspend fun deleteMovementsFromWeb(ids: List<Int>) {
@@ -67,7 +67,7 @@ class RoomDataSource(private val context: Context) {
     }
 
     suspend fun discardMovement(id: Int) {
-        AppDatabase.getDatabase(context).discardedSMSDAO().insert(DiscardedMovementVO(0, id))
+        AppDatabase.getDatabase(context).discardedMovementDAO().insert(DiscardedMovementVO(0, id))
     }
 
     suspend fun clearSyncedMovements(lastSync: Date) {
@@ -85,6 +85,10 @@ class RoomDataSource(private val context: Context) {
 
     suspend fun clearDeletedMovements() {
         AppDatabase.getDatabase(context).deletedMovementDAO().cleanTable()
+    }
+
+    suspend fun clearDiscardedMovements() {
+        AppDatabase.getDatabase(context).discardedMovementDAO().cleanTable()
     }
 
 

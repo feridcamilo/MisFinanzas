@@ -196,6 +196,7 @@ class SyncFragment : BaseFragment() {
     private fun setupSync() {
         btn_sync_movements.visibility = View.VISIBLE
         btn_sync_masters.visibility = View.VISIBLE
+        btn_clean_discarded.visibility = View.VISIBLE
 
         setupMovementsObserver()
         btn_sync_movements.setOnClickListener {
@@ -216,6 +217,11 @@ class SyncFragment : BaseFragment() {
                 Toast.makeText(requireContext(), R.string.error_not_network_no_sync, Toast.LENGTH_SHORT).show()
             }
         }
+
+        btn_clean_discarded.setOnClickListener {
+            cleanDiscarded()
+            Toast.makeText(requireContext(), R.string.info_movements_discarded_restored, Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun syncMovements() {
@@ -224,5 +230,9 @@ class SyncFragment : BaseFragment() {
 
     private fun syncMasters() {
         viewModel.syncMasters().observe(viewLifecycleOwner, syncMastersObserver)
+    }
+
+    private fun cleanDiscarded() {
+        viewModel.cleanDiscarded()
     }
 }

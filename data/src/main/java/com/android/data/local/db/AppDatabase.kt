@@ -27,7 +27,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDAO(): CategoryDAO
     abstract fun debtDAO(): DebtDAO
     abstract fun deletedMovementDAO(): DeletedMovementDAO
-    abstract fun discardedSMSDAO(): DiscardedMovementDAO
+    abstract fun discardedMovementDAO(): DiscardedMovementDAO
     abstract fun movementDAO(): MovementDAO
     abstract fun personDAO(): PersonDAO
     abstract fun placeDAO(): PlaceDAO

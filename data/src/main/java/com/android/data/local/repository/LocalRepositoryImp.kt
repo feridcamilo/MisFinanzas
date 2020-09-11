@@ -80,6 +80,10 @@ class LocalRepositoryImp(private val dataSource: RoomDataSource) : ILocalReposit
         dataSource.clearDeletedMovements()
     }
 
+    override suspend fun clearDiscardedMovements() {
+        dataSource.clearDiscardedMovements()
+    }
+
 
     override suspend fun getCategories(): List<CategoryVO> {
         return dataSource.getCategories()

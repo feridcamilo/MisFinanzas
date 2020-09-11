@@ -8,6 +8,7 @@ import com.android.data.remote.model.Master
 import com.android.data.remote.model.Movement
 import com.android.data.remote.model.User
 import com.android.data.remote.repository.IWebRepository
+import com.android.data.utils.StringUtils.Companion.EMPTY
 import com.android.domain.result.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -128,11 +129,11 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
                     it.date!!,
                     it.dateEntry,
                     it.dateLastUpd,
-                    it.idType, "",
-                    it.categoryId, "",
-                    it.debtId, "",
-                    it.personId, "",
-                    it.placeId, ""
+                    it.idType, EMPTY,
+                    it.categoryId, EMPTY,
+                    it.debtId, EMPTY,
+                    it.personId, EMPTY,
+                    it.placeId, EMPTY
                 )
             }
             return webRepo.sendMovements(clientId, movementsToSend)
@@ -166,6 +167,12 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
 
         viewModelScope.launch {
             localRepo.insertMovements(movementsToInsert)
+        }
+    }
+
+    fun cleanDiscarded() {
+        viewModelScope.launch {
+            localRepo.clearDiscardedMovements()
         }
     }
 

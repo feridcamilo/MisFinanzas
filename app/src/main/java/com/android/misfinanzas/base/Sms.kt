@@ -3,6 +3,7 @@ package com.android.misfinanzas.base
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
+import com.android.data.utils.StringUtils
 import java.util.*
 
 data class Sms(
@@ -14,15 +15,15 @@ data class Sms(
     var folderName: String
 ) {
     companion object {
-        const val ID = "_id"
-        const val ADDRESS = "address"
-        const val BODY = "body"
-        const val READ = "read"
-        const val DATE = "date"
-        const val TYPE = "type"
-        const val INBOX = "inbox"
-        const val SENT = "sent"
-        const val SMS_URI = "content://sms/"
+        private const val ID = "_id"
+        private const val ADDRESS = "address"
+        private const val BODY = "body"
+        private const val READ = "read"
+        private const val DATE = "date"
+        private const val TYPE = "type"
+        private const val INBOX = "inbox"
+        private const val SENT = "sent"
+        private const val SMS_URI = "content://sms/"
 
         fun getAllSms(context: Context): List<Sms> {
             val lstSms: MutableList<Sms> = ArrayList()
@@ -32,13 +33,13 @@ data class Sms(
             val totalSMS = c!!.count
             if (c.moveToFirst()) {
                 for (i in 0 until totalSMS) {
-                    val objSms: Sms = Sms(
-                        c.getString(c.getColumnIndexOrThrow(Sms.ID)),
-                        c.getString(c.getColumnIndexOrThrow(Sms.ADDRESS)),
-                        c.getString(c.getColumnIndexOrThrow(Sms.BODY)),
-                        c.getString(c.getColumnIndex(Sms.READ)),
-                        c.getString(c.getColumnIndexOrThrow(Sms.DATE)),
-                        if (c.getString(c.getColumnIndexOrThrow(Sms.TYPE)).contains("1")) Sms.INBOX else Sms.SENT
+                    val objSms = Sms(
+                        c.getString(c.getColumnIndexOrThrow(ID)),
+                        c.getString(c.getColumnIndexOrThrow(ADDRESS)),
+                        c.getString(c.getColumnIndexOrThrow(BODY)),
+                        c.getString(c.getColumnIndex(READ)),
+                        c.getString(c.getColumnIndexOrThrow(DATE)),
+                        if (c.getString(c.getColumnIndexOrThrow(TYPE)).contains(StringUtils.ONE)) INBOX else SENT
                     )
                     lstSms.add(objSms)
                     c.moveToNext()
