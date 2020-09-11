@@ -15,6 +15,7 @@ import com.android.data.local.model.converters.DateConverter
         CategoryVO::class,
         DebtVO::class,
         DeletedMovementVO::class,
+        DiscardedMovementVO::class,
         MovementVO::class,
         PersonVO::class,
         PlaceVO::class,
@@ -26,6 +27,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDAO(): CategoryDAO
     abstract fun debtDAO(): DebtDAO
     abstract fun deletedMovementDAO(): DeletedMovementDAO
+    abstract fun discardedMovementDAO(): DiscardedMovementDAO
     abstract fun movementDAO(): MovementDAO
     abstract fun personDAO(): PersonDAO
     abstract fun placeDAO(): PlaceDAO

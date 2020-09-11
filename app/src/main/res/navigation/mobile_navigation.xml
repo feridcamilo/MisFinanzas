@@ -19,6 +19,9 @@
             app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@id/mobile_navigation"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_balanceFragment_to_movementsFragment"
+            app:destination="@id/movementsFragment" />
     </fragment>
 
     <fragment

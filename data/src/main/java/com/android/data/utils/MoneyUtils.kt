@@ -1,5 +1,6 @@
 package com.android.data.utils
 
+import com.android.data.utils.StringUtils.Companion.EMPTY
 import java.text.DecimalFormat
 import java.text.NumberFormat
 
@@ -13,7 +14,7 @@ class MoneyUtils {
             return try {
                 value.toBigDecimal().toString()
             } catch (e: Exception) {
-                ""
+                EMPTY
             }
         }
     }

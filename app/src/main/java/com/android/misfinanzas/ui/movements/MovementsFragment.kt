@@ -27,12 +27,13 @@ import com.android.domain.result.Result
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
 import com.android.misfinanzas.base.BaseViewModelFactory
+import com.android.misfinanzas.base.OnMovementClickListener
 import com.android.misfinanzas.ui.movementDetail.MovementDetailFragment
 import com.android.misfinanzas.ui.sync.SyncFragment
 import kotlinx.android.synthetic.main.fragment_movements.*
 import java.util.*
 
-class MovementsFragment : BaseFragment(), MovementsAdapter.OnMovementClickListener {
+class MovementsFragment : BaseFragment(), OnMovementClickListener {
 
     private val TAG = this.javaClass.name
 
@@ -51,6 +52,7 @@ class MovementsFragment : BaseFragment(), MovementsAdapter.OnMovementClickListen
 
     private var descriptions: List<String>? = null
     private var movements: List<MovementVO>? = null
+    private var movementToAdd: MovementVO? = null
 
     private var people: List<PersonVO>? = null
     private var peopleActive: List<PersonVO>? = null
@@ -60,6 +62,13 @@ class MovementsFragment : BaseFragment(), MovementsAdapter.OnMovementClickListen
     private var categoriesActive: List<CategoryVO>? = null
     private var debts: List<DebtVO>? = null
     private var debtsActive: List<DebtVO>? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            movementToAdd = it.getParcelable(MovementDetailFragment.MOVEMENT_DATA)
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_movements, container, false)
@@ -111,11 +120,13 @@ class MovementsFragment : BaseFragment(), MovementsAdapter.OnMovementClickListen
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 //implement if you want to change in every letter written
-                if (movements?.size!! > MAX_MOVEMENTS_SIZE && newText?.length!! != 0 && newText?.length!! <= MIN_LENGTH_SEARCH) {
-                    //if the list is big and if text length has less than minLengthToSearch it not search in every letter written
-                    return false
-                } else {
-                    filter(newText)
+                if (movements != null) {
+                    if (movements?.size!! > MAX_MOVEMENTS_SIZE && newText?.length!! != 0 && newText.length <= MIN_LENGTH_SEARCH) {
+                        //if the list is big and if text length has less than minLengthToSearch it not search in every letter written
+                        return false
+                    } else {
+                        filter(newText)
+                    }
                 }
                 return false
             }
@@ -267,7 +278,14 @@ class MovementsFragment : BaseFragment(), MovementsAdapter.OnMovementClickListen
     }
 
     private fun getLocalMovements() {
-        viewModel.getLocalMovements().observe(viewLifecycleOwner, movementsObserver)
+        //if is an action to add a movement, navigate directly without load movements list
+        if (movementToAdd != null) {
+            navigateToDetails(movementToAdd)
+            movementToAdd = null
+            progressListener.hide()
+        } else {
+            viewModel.getLocalMovements().observe(viewLifecycleOwner, movementsObserver)
+        }
     }
 
     private fun getLocalPeople() {
@@ -286,7 +304,11 @@ class MovementsFragment : BaseFragment(), MovementsAdapter.OnMovementClickListen
         viewModel.getLocalDebts().observe(viewLifecycleOwner, debtsObserver)
     }
 
-    override fun onMovementClicked(movement: MovementVO) {
+    override fun onMovementClicked(movement: MovementVO?) {
         navigateToDetails(movement)
+    }
+
+    override fun onDiscardMovementClicked(id: Int, position: Int) {
+        TODO("Not yet implemented")
     }
 }

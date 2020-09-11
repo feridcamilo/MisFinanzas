@@ -47,12 +47,20 @@ class LocalRepositoryImp(private val dataSource: RoomDataSource) : ILocalReposit
         return dataSource.getMovementsToDelete()
     }
 
+    override suspend fun getDiscardedMovements(): List<Int> {
+        return dataSource.getdiscardedMovements()
+    }
+
     override suspend fun deleteMovementsFromWeb(ids: List<Int>) {
         dataSource.deleteMovementsFromWeb(ids)
     }
 
     override suspend fun deleteMovement(movement: MovementVO) {
         dataSource.deleteMovement(movement)
+    }
+
+    override suspend fun discardMovement(id: Int) {
+        dataSource.discardMovement(id)
     }
 
     override suspend fun clearSyncedMovements(lastSync: Date) {
@@ -70,6 +78,10 @@ class LocalRepositoryImp(private val dataSource: RoomDataSource) : ILocalReposit
 
     override suspend fun clearDeletedMovements() {
         dataSource.clearDeletedMovements()
+    }
+
+    override suspend fun clearDiscardedMovements() {
+        dataSource.clearDiscardedMovements()
     }
 
 

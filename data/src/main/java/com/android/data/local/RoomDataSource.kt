@@ -50,6 +50,10 @@ class RoomDataSource(private val context: Context) {
         return AppDatabase.getDatabase(context).deletedMovementDAO().getAll()
     }
 
+    suspend fun getdiscardedMovements(): List<Int> {
+        return AppDatabase.getDatabase(context).discardedMovementDAO().getAll()
+    }
+
     suspend fun deleteMovementsFromWeb(ids: List<Int>) {
         AppDatabase.getDatabase(context).movementDAO().deletedFromWeb(ids)
     }
@@ -60,6 +64,10 @@ class RoomDataSource(private val context: Context) {
         if (!isLocal) {
             AppDatabase.getDatabase(context).deletedMovementDAO().insert(DeletedMovementVO(0, movement.idMovement))
         }
+    }
+
+    suspend fun discardMovement(id: Int) {
+        AppDatabase.getDatabase(context).discardedMovementDAO().insert(DiscardedMovementVO(0, id))
     }
 
     suspend fun clearSyncedMovements(lastSync: Date) {
@@ -77,6 +85,10 @@ class RoomDataSource(private val context: Context) {
 
     suspend fun clearDeletedMovements() {
         AppDatabase.getDatabase(context).deletedMovementDAO().cleanTable()
+    }
+
+    suspend fun clearDiscardedMovements() {
+        AppDatabase.getDatabase(context).discardedMovementDAO().cleanTable()
     }
 
 
