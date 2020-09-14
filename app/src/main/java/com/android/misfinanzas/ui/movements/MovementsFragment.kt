@@ -248,6 +248,13 @@ class MovementsFragment : BaseFragment(), OnMovementClickListener {
                         } else {
                             setupRecyclerViewData(movements!!)
                         }
+
+                        //if is an action to add a movement, navigate directly
+                        if (movementToAdd != null) {
+                            navigateToDetails(movementToAdd)
+                            movementToAdd = null
+                            progressListener.hide()
+                        }
                     }
                     progressListener.hide()
                 }
@@ -278,14 +285,7 @@ class MovementsFragment : BaseFragment(), OnMovementClickListener {
     }
 
     private fun getLocalMovements() {
-        //if is an action to add a movement, navigate directly without load movements list
-        if (movementToAdd != null) {
-            navigateToDetails(movementToAdd)
-            movementToAdd = null
-            progressListener.hide()
-        } else {
-            viewModel.getLocalMovements().observe(viewLifecycleOwner, movementsObserver)
-        }
+        viewModel.getLocalMovements().observe(viewLifecycleOwner, movementsObserver)
     }
 
     private fun getLocalPeople() {
