@@ -20,6 +20,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sw_auto_sync"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            android:checked="true"
+            android:text="@string/auto_sync_on_open"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/tv_link"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/login_view" />
+
         <TextView
             android:id="@+id/tv_link"
             android:layout_width="match_parent"
@@ -32,7 +46,7 @@
             app:layout_constraintBottom_toTopOf="@id/btn_sync_movements"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/login_view" />
+            app:layout_constraintTop_toBottomOf="@id/sw_auto_sync" />
 
         <Button
             android:id="@+id/btn_sync_movements"

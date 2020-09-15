@@ -168,9 +168,9 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
         }
 
         val debtId = getDebtId(tv_deuda_value.text.toString())
-        if (selectedMovementType == MovementType.CREDIT_CARD_BUY && debtId == 0) {
+        if (selectedMovementType == MovementType.CREDIT_CARD_BUY && (debtId == null || debtId == 0)) {
             sp_tipo_movimiento.requestFocus()
-            throw Exception(context.getString(R.string.info_select_movement_type))
+            throw Exception(context.getString(R.string.info_select_debt_by_cc_buy))
         }
 
         val strValue = et_valor.text.toString()

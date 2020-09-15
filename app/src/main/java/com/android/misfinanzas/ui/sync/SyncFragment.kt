@@ -19,6 +19,7 @@ import com.android.data.remote.repository.WebRepositoryImp
 import com.android.data.utils.AppUtils
 import com.android.data.utils.DateUtils
 import com.android.data.utils.NetworkUtils
+import com.android.data.utils.SharedPreferencesUtils
 import com.android.domain.result.Result
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
@@ -68,6 +69,12 @@ class SyncFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        sw_auto_sync.isChecked = SharedPreferencesUtils.getAutoSyncConfig(requireContext())
+        sw_auto_sync.setOnCheckedChangeListener { _, isChecked ->
+            SharedPreferencesUtils.setAutoSyncConfig(requireContext(), isChecked)
+            Toast.makeText(requireContext(), R.string.info_config_saved, Toast.LENGTH_SHORT).show()
+        }
 
         if (!UserSesion.hasUser()) {
             setupLogin()
@@ -176,7 +183,7 @@ class SyncFragment : BaseFragment() {
 
     private fun setupLogin() {
         setupUserObserver()
-
+        sw_auto_sync.isChecked = true
         cardViewLogin = login_view
         cardViewLogin.visibility = View.VISIBLE
 

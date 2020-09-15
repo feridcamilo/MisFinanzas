@@ -25,6 +25,7 @@ import com.android.data.remote.RetrofitDataSource
 import com.android.data.remote.repository.WebRepositoryImp
 import com.android.data.utils.DateUtils
 import com.android.data.utils.NetworkUtils
+import com.android.data.utils.SharedPreferencesUtils
 import com.android.domain.result.Result
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.*
@@ -127,14 +128,16 @@ class BalanceFragment : BaseFragment(), OnMovementClickListener {
     }
 
     private fun determinateProcedure() {
-        if (UserSesion.isFirstOpen()) {
-            UserSesion.setFirstOpen(false)
-            if (NetworkUtils.isConnected(requireContext())) {
-                //Makes an autosync
-                navigateToSync(true)
-                return
-            } else {
-                Toast.makeText(requireContext(), R.string.error_not_network_no_sync, Toast.LENGTH_SHORT).show()
+        if (SharedPreferencesUtils.getAutoSyncConfig(requireContext())) {
+            if (UserSesion.isFirstOpen()) {
+                UserSesion.setFirstOpen(false)
+                if (NetworkUtils.isConnected(requireContext())) {
+                    //Makes an autosync
+                    navigateToSync(true)
+                    return
+                } else {
+                    Toast.makeText(requireContext(), R.string.error_not_network_no_sync, Toast.LENGTH_SHORT).show()
+                }
             }
         }
 

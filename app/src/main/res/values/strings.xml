@@ -7,6 +7,7 @@
     <string name="title_filters">Filtros</string>
     <string name="title_sync">Sincronizar</string>
     <string name="go_to_web"><u>Ir al sitio web</u></string>
+    <string name="auto_sync_on_open">Sincronizar al iniciar la app</string>
     <string name="loading">Cargando…</string>
     <string name="search">Buscar</string>
 
@@ -74,6 +75,7 @@
     <string name="info_enter_user_and_password">Por favor ingrese usuario y contraseña.</string>
     <string name="info_wrong_user_or_password">Usuario y/o contraseña incorrecta.</string>
     <string name="info_please_log_in">Por favor inicie sesión.</string>
+    <string name="info_config_saved">Configuración guardada.</string>
     <string name="info_no_movements">No hay movimientos para mostrar.</string>
     <string name="info_no_balance">No hay saldos para mostrar.</string>
     <string name="info_movements_synced">Movimientos sincronizados con éxito.</string>
