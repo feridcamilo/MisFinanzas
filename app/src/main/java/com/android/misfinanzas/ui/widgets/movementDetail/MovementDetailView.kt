@@ -1,7 +1,6 @@
 package com.android.misfinanzas.ui.widgets.movementDetail
 
 import android.app.DatePickerDialog
-import android.app.DatePickerDialog.OnDateSetListener
 import android.content.Context
 import android.text.InputType
 import android.util.AttributeSet
@@ -81,21 +80,25 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
         people?.let {
             val peopleAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
             tv_persona_value.setAdapter(peopleAdapter)
+            tv_persona_value.setOnClickListener { tv_persona_value.showDropDown() }
         }
 
         places?.let {
             val placesAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
             tv_lugar_value.setAdapter(placesAdapter)
+            tv_lugar_value.setOnClickListener { tv_lugar_value.showDropDown() }
         }
 
         categories?.let {
             val categoriesAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
             tv_categoria_value.setAdapter(categoriesAdapter)
+            tv_categoria_value.setOnClickListener { tv_categoria_value.showDropDown() }
         }
 
         debts?.let {
             val debtsAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
             tv_deuda_value.setAdapter(debtsAdapter)
+            tv_deuda_value.setOnClickListener { tv_deuda_value.showDropDown() }
         }
 
         val currentDate: Date = getCurrentDateTime()
@@ -110,7 +113,7 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
             val month = cldr[Calendar.MONTH]
             val year = cldr[Calendar.YEAR]
             val picker = DatePickerDialog(
-                context, OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                context, { view, year, monthOfYear, dayOfMonth ->
                     val date = context.getString(R.string.md_date, dayOfMonth.toString(), (monthOfYear + 1).toString(), year.toString())
                     et_fecha_movimiento.setText(date)
                 }, year, month, day
@@ -131,7 +134,7 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
 
         movement?.let {
             val notAssociated = context.getString(R.string.view_md_not_associated)
-            val date = if (it.date == null) notAssociated else getDateFormat().format(checkNotNull(it.date)).toString()
+            val date = if (it.date == null) getDateFormat().format(getCurrentDateTime()) else getDateFormat().format(checkNotNull(it.date)).toString()
             val entryDate =
                 if (it.dateEntry == null) notAssociated else getDateTimeFormat().format(checkNotNull(it.dateEntry)).toString()
             val lastUpdate =

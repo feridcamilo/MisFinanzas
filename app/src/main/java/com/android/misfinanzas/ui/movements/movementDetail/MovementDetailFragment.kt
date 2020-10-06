@@ -1,4 +1,4 @@
-package com.android.misfinanzas.ui.movementDetail
+package com.android.misfinanzas.ui.movements.movementDetail
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import com.android.data.local.RoomDataSource
 import com.android.data.local.model.*
@@ -76,6 +77,19 @@ class MovementDetailFragment : BaseFragment() {
         }
     }
 
+    private fun initMovementDetailView() {
+        val isNewMovement = movement == null || movement?.idMovement!! <= 0
+
+        if (isNewMovement) {
+            (activity as AppCompatActivity?)!!.supportActionBar!!.title = getString(R.string.title_movements_details_new)
+            ib_delete.visibility = View.GONE
+        }
+
+        movementDetailView = movement_detail_view
+        movementDetailView.initView(descriptions, people, places, categories, debts)
+        movementDetailView.showMovement(movement)
+    }
+
     private fun save() {
         try {
             val movementToSave = movementDetailView.getMovement()
@@ -110,14 +124,5 @@ class MovementDetailFragment : BaseFragment() {
 
         builder.setNeutralButton(R.string.cd_no) { dialog, which -> }
         builder.show()
-    }
-
-    private fun initMovementDetailView() {
-        movementDetailView = movement_detail_view
-        movementDetailView.initView(descriptions, people, places, categories, debts)
-        movementDetailView.showMovement(movement)
-        if (movement == null || movement?.idMovement!! <= 0) {
-            ib_delete.visibility = View.GONE
-        }
     }
 }

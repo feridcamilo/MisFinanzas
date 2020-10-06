@@ -3,13 +3,21 @@
     <string name="title_balance">Saldos</string>
     <string name="title_potential_movements">Potenciales movimientos desde SMS</string>
     <string name="title_movements">Movimientos</string>
+    <string name="title_masters">Maestros</string>
     <string name="title_movements_details">Detalle del movimiento</string>
+    <string name="title_movements_details_new">Ingresar movimiento</string>
     <string name="title_filters">Filtros</string>
     <string name="title_sync">Sincronizar</string>
     <string name="go_to_web"><u>Ir al sitio web</u></string>
     <string name="auto_sync_on_open">Sincronizar al iniciar la app</string>
     <string name="loading">Cargando…</string>
     <string name="search">Buscar</string>
+
+    <!--SyncFragment-->
+    <string name="masters_categories">Categorías</string>
+    <string name="masters_places">Lugares</string>
+    <string name="masters_people">Personas</string>
+    <string name="masters_debts">Deudas</string>
 
     <!--SyncFragment-->
     <string name="sync_movements">Movimientos</string>

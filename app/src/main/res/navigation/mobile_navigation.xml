@@ -21,7 +21,12 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_balanceFragment_to_movementsFragment"
-            app:destination="@id/movementsFragment" />
+            app:destination="@id/movementsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/mobile_navigation" />
     </fragment>
 
     <fragment
@@ -29,6 +34,15 @@
         android:name="com.android.misfinanzas.ui.movements.MovementsFragment"
         android:label="@string/title_movements"
         tools:layout="@layout/fragment_movements">
+        <action
+            android:id="@+id/action_movementsFragment_to_syncFragment"
+            app:destination="@id/syncFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/mobile_navigation"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_movementsFragment_to_movementDetailFragment"
             app:destination="@id/movementDetailFragment"
@@ -43,14 +57,48 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/movementDetailFragment"
+        android:name="com.android.misfinanzas.ui.movements.movementDetail.MovementDetailFragment"
+        android:label="@string/title_movements_details"
+        tools:layout="@layout/fragment_movement_detail" />
+
+    <fragment
+        android:id="@+id/filtersFragment"
+        android:name="com.android.misfinanzas.ui.movements.filters.FiltersFragment"
+        android:label="@string/title_filters"
+        tools:layout="@layout/fragment_filters" />
+
+    <fragment
+        android:id="@+id/mastersFragment"
+        android:name="com.android.misfinanzas.ui.masters.MastersFragment"
+        android:label="@string/title_masters"
+        tools:layout="@layout/fragment_masters">
         <action
-            android:id="@+id/action_movementsFragment_to_syncFragment"
+            android:id="@+id/action_mastersFragment_to_syncFragment"
             app:destination="@id/syncFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/mobile_navigation"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_mastersFragment_to_mastersListFragment"
+            app:destination="@id/mastersListFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
+
+    <fragment
+        android:id="@+id/mastersListFragment"
+        android:name="com.android.misfinanzas.ui.masters.mastersList.MastersListFragment"
+        android:label="@string/title_masters"
+        tools:layout="@layout/fragment_masters_list" />
 
     <fragment
         android:id="@+id/syncFragment"
@@ -68,15 +116,4 @@
             app:popUpToInclusive="true" />
     </fragment>
 
-    <fragment
-        android:id="@+id/movementDetailFragment"
-        android:name="com.android.misfinanzas.ui.movementDetail.MovementDetailFragment"
-        android:label="@string/title_movements_details"
-        tools:layout="@layout/fragment_movement_detail" />
-
-    <fragment
-        android:id="@+id/filtersFragment"
-        android:name="com.android.misfinanzas.ui.filters.FiltersFragment"
-        android:label="@string/title_filters"
-        tools:layout="@layout/fragment_filters" />
 </navigation>

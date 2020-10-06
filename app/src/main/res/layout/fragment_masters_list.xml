@@ -11,22 +11,9 @@
         android:layout_width="@dimen/zero"
         android:layout_height="wrap_content"
         android:queryHint="@string/search"
-        app:layout_constraintBottom_toTopOf="@id/rv_movimientos"
-        app:layout_constraintEnd_toStartOf="@id/btn_filtros"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btn_filtros"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:text="@string/title_filters"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_20"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/rv_movimientos"
+        app:layout_constraintBottom_toTopOf="@id/rv_masters"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
@@ -39,7 +26,7 @@
         app:layout_constraintTop_toBottomOf="@id/sv_search" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_movimientos"
+        android:id="@+id/rv_masters"
         android:layout_width="match_parent"
         android:layout_height="@dimen/zero"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -48,7 +35,7 @@
         app:layout_constraintTop_toBottomOf="@id/divider" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_add_movement"
+        android:id="@+id/btn_add_master"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/default_half_margin"

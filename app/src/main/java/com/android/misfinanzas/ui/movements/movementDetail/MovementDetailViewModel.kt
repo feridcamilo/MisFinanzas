@@ -1,4 +1,4 @@
-package com.android.misfinanzas.ui.movementDetail
+package com.android.misfinanzas.ui.movements.movementDetail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

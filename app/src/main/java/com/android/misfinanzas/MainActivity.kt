@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity(), ProgressListener {
             setOf(
                 R.id.balanceFragment,
                 R.id.movementsFragment,
+                R.id.mastersFragment,
                 R.id.syncFragment
             )
         )

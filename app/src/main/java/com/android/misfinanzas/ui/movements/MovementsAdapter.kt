@@ -18,8 +18,7 @@ class MovementsAdapter(
     private val context: Context,
     private val movements: List<MovementVO>,
     private val itemClickListener: OnMovementClickListener
-) :
-    RecyclerView.Adapter<BaseViewHolder<*>>() {
+) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         return MovementsViewHolder(LayoutInflater.from(context).inflate(R.layout.row_movement, parent, false))

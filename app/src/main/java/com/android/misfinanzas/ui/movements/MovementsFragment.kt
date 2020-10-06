@@ -28,7 +28,7 @@ import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
 import com.android.misfinanzas.base.BaseViewModelFactory
 import com.android.misfinanzas.base.OnMovementClickListener
-import com.android.misfinanzas.ui.movementDetail.MovementDetailFragment
+import com.android.misfinanzas.ui.movements.movementDetail.MovementDetailFragment
 import com.android.misfinanzas.ui.sync.SyncFragment
 import kotlinx.android.synthetic.main.fragment_movements.*
 import java.util.*

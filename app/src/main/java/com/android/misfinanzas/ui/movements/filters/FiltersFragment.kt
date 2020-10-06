@@ -1,4 +1,4 @@
-package com.android.misfinanzas.ui.filters
+package com.android.misfinanzas.ui.movements.filters
 
 import android.os.Bundle
 import android.view.LayoutInflater

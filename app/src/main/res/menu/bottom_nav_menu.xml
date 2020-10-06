@@ -12,6 +12,11 @@
         android:title="@string/title_movements" />
 
     <item
+        android:id="@+id/mastersFragment"
+        android:icon="@drawable/ic_masters"
+        android:title="@string/title_masters" />
+
+    <item
         android:id="@+id/syncFragment"
         android:icon="@drawable/ic_sync"
         android:title="@string/title_sync" />

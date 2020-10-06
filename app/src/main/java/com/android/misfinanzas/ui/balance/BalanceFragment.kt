@@ -29,8 +29,8 @@ import com.android.data.utils.SharedPreferencesUtils
 import com.android.domain.result.Result
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.*
-import com.android.misfinanzas.ui.movementDetail.MovementDetailFragment
 import com.android.misfinanzas.ui.movements.MovementsAdapter
+import com.android.misfinanzas.ui.movements.movementDetail.MovementDetailFragment
 import com.android.misfinanzas.ui.sync.SyncFragment
 import kotlinx.android.synthetic.main.fragment_balance.*
 import java.util.*
@@ -60,6 +60,10 @@ class BalanceFragment : BaseFragment(), OnMovementClickListener {
         super.onViewCreated(view, savedInstanceState)
         setupObservers()
         getLocalUser()
+
+        btn_add_movement.setOnClickListener {
+            navigateToAddMovement(MovementVO.getEmpty())
+        }
     }
 
     private fun setupObservers() {
