@@ -28,7 +28,8 @@
         app:layout_constraintBottom_toBottomOf="@id/tv_tipo_movimiento"
         app:layout_constraintStart_toEndOf="@id/tv_tipo_movimiento"
         app:layout_constraintTop_toTopOf="@id/tv_tipo_movimiento"
-        tools:src="@mipmap/ic_money" />
+        tools:src="@mipmap/ic_money"
+        android:contentDescription="@string/view_md_movement_type" />
 
     <Spinner
         android:id="@+id/sp_tipo_movimiento"
@@ -75,7 +76,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/view_md_enter"
             android:inputType="numberDecimal"
-            android:maxLength="12" />
+            android:maxLength="12"
+            android:importantForAutofill="no" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -110,7 +112,7 @@
             android:layout_height="wrap_content"
             android:completionThreshold="1"
             android:hint="@string/view_md_enter"
-            android:inputType="text"
+            android:inputType="textCapSentences"
             android:maxLength="50"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -251,7 +253,8 @@
         app:layout_constraintBottom_toBottomOf="@id/tv_fecha_movimiento"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_fecha_movimiento"
-        app:layout_constraintTop_toTopOf="@id/tv_fecha_movimiento" />
+        app:layout_constraintTop_toTopOf="@id/tv_fecha_movimiento"
+        android:importantForAutofill="no" />
 
     <TextView
         android:id="@+id/tv_deuda"

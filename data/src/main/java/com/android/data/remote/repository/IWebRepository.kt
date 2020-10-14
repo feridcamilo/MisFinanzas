@@ -27,4 +27,12 @@ interface IWebRepository {
     suspend fun getPlaces(clientId: String, lastSync: Date?): List<Master>
 
     suspend fun getPeople(clientId: String, lastSync: Date?): List<Master>
+
+    suspend fun sendCategories(clientId: String, masters: List<Master>): Boolean
+
+    suspend fun sendPlaces(clientId: String, masters: List<Master>): Boolean
+
+    suspend fun sendPeople(clientId: String, masters: List<Master>): Boolean
+
+    suspend fun sendDebts(clientId: String, masters: List<Master>): Boolean
 }

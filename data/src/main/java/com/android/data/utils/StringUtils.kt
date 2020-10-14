@@ -7,6 +7,7 @@ class StringUtils {
         const val EMPTY = ""
         const val SPACE = " "
         const val MONEY = "$"
+        const val SLASH = "/"
         const val ONE = "1"
     }
 }

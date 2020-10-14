@@ -9,10 +9,10 @@ interface PlaceDAO {
     @Query("SELECT * FROM Place WHERE id = :id")
     suspend fun getById(id: Int): PlaceVO
 
-    @Query("SELECT * FROM Place")
+    @Query("SELECT * FROM Place ORDER BY name")
     suspend fun getAll(): List<PlaceVO>
 
-    @Query("SELECT * FROM Place WHERE enabled = 1")
+    @Query("SELECT * FROM Place WHERE enabled = 1 ORDER BY name")
     suspend fun getAllActivated(): List<PlaceVO>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

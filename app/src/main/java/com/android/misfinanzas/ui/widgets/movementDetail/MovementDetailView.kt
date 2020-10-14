@@ -11,10 +11,12 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import androidx.cardview.widget.CardView
 import com.android.data.local.model.*
+import com.android.data.utils.DateUtils.Companion.getCalendarFromStringDate
 import com.android.data.utils.DateUtils.Companion.getCurrentDateTime
 import com.android.data.utils.DateUtils.Companion.getDateFormat
 import com.android.data.utils.DateUtils.Companion.getDateTimeFormat
 import com.android.data.utils.DateUtils.Companion.getDateToWebService
+import com.android.data.utils.MoneyUtils
 import com.android.data.utils.StringUtils.Companion.EMPTY
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.MovementType
@@ -53,7 +55,7 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
         this.categories = categories
         this.debts = debts
         setMastersPickers()
-        setControlsRules()
+        setDateControl()
     }
 
     private fun setMastersPickers() {
@@ -105,16 +107,22 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
         et_fecha_movimiento.setText(getDateFormat().format(currentDate))
     }
 
-    private fun setControlsRules() {
+    private fun setDateControl() {
         et_fecha_movimiento.inputType = InputType.TYPE_NULL
         et_fecha_movimiento.setOnClickListener {
-            val cldr = Calendar.getInstance()
-            val day = cldr[Calendar.DAY_OF_MONTH]
-            val month = cldr[Calendar.MONTH]
-            val year = cldr[Calendar.YEAR]
+            val strDate = et_fecha_movimiento.text.toString()
+            var calendar = Calendar.getInstance()
+            if (strDate.isNotEmpty()) {
+                calendar = getCalendarFromStringDate(strDate)
+            }
+
+            val day = calendar[Calendar.DAY_OF_MONTH]
+            val month = calendar[Calendar.MONTH]
+            val year = calendar[Calendar.YEAR]
+
             val picker = DatePickerDialog(
-                context, { view, year, monthOfYear, dayOfMonth ->
-                    val date = context.getString(R.string.md_date, dayOfMonth.toString(), (monthOfYear + 1).toString(), year.toString())
+                context, { _, _year, _month, _day ->
+                    val date = context.getString(R.string.md_date, _day.toString(), (_month + 1).toString(), _year.toString())
                     et_fecha_movimiento.setText(date)
                 }, year, month, day
             )
@@ -142,7 +150,7 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
 
             iv_tipo_movimiento.setImageResource(MovementType.getImage(it.idType))
             sp_tipo_movimiento.setSelection(getMovementTypeIndex(it.idType))
-            et_valor.setText(it.value.toString())
+            et_valor.setText(MoneyUtils.getBigDecimalStringValue(it.value.toString()))
             tv_descripcion_value.setText(it.description)
             tv_persona_value.setText(getPersonName(it.personId))
             tv_lugar_value.setText(getPlaceName(it.placeId))

@@ -9,10 +9,10 @@ interface DebtDAO {
     @Query("SELECT * FROM Debt WHERE id = :id")
     suspend fun getById(id: Int): DebtVO
 
-    @Query("SELECT * FROM Debt")
+    @Query("SELECT * FROM Debt ORDER BY name")
     suspend fun getAll(): List<DebtVO>
 
-    @Query("SELECT * FROM Debt WHERE enabled = 1")
+    @Query("SELECT * FROM Debt WHERE enabled = 1 ORDER BY name")
     suspend fun getAllActivated(): List<DebtVO>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

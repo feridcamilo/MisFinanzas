@@ -9,10 +9,10 @@ interface PersonDAO {
     @Query("SELECT * FROM Person WHERE id = :id")
     suspend fun getById(id: Int): PersonVO
 
-    @Query("SELECT * FROM Person")
+    @Query("SELECT * FROM Person ORDER BY name")
     suspend fun getAll(): List<PersonVO>
 
-    @Query("SELECT * FROM Person WHERE enabled = 1")
+    @Query("SELECT * FROM Person WHERE enabled = 1 ORDER BY name")
     suspend fun getAllActivated(): List<PersonVO>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

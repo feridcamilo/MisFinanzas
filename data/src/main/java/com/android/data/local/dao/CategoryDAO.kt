@@ -9,10 +9,10 @@ interface CategoryDAO {
     @Query("SELECT * FROM Category WHERE id = :id")
     suspend fun getById(id: Int): CategoryVO
 
-    @Query("SELECT * FROM Category")
+    @Query("SELECT * FROM Category ORDER BY name")
     suspend fun getAll(): List<CategoryVO>
 
-    @Query("SELECT * FROM Category WHERE enabled = 1")
+    @Query("SELECT * FROM Category WHERE enabled = 1  ORDER BY name")
     suspend fun getAllActivated(): List<CategoryVO>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

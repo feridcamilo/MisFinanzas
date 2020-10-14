@@ -20,6 +20,9 @@ interface APIService {
     @GET("Maestros.svc/getPersonas/{clientId}/{lastsync}")
     suspend fun getPeople(@Path("clientId") clientId: String, @Path("lastsync") lastSync: String): PersonaDTO
 
+    @POST("Maestros.svc/recibirMaestros")
+    suspend fun sendMasters(@Body sendMasters: SendMaster): SendMastersDTO
+
     @GET("Maestros.svc/getUsuario/{user}/{password}")
     suspend fun getUser(@Path("user") user: String, @Path("password") password: String): UserDTO
 

@@ -50,4 +50,20 @@ class RetrofitDataSource {
     suspend fun getPeople(clientId: String, lastSync: Date?): List<Master> {
         return ApiClient.service.getPeople(clientId, ParamsUtils.getLastSyncToWeb(lastSync)).results
     }
+
+    suspend fun sendCategories(clientId: String, masters: List<Master>): Boolean {
+        return ApiClient.service.sendMasters(SendMaster(Integer.parseInt(clientId), Master.TYPE_CATEGORY, masters)).results
+    }
+
+    suspend fun sendPlaces(clientId: String, masters: List<Master>): Boolean {
+        return ApiClient.service.sendMasters(SendMaster(Integer.parseInt(clientId), Master.TYPE_PLACE, masters)).results
+    }
+
+    suspend fun sendPeople(clientId: String, masters: List<Master>): Boolean {
+        return ApiClient.service.sendMasters(SendMaster(Integer.parseInt(clientId), Master.TYPE_PERSON, masters)).results
+    }
+
+    suspend fun sendDebts(clientId: String, masters: List<Master>): Boolean {
+        return ApiClient.service.sendMasters(SendMaster(Integer.parseInt(clientId), Master.TYPE_DEBT, masters)).results
+    }
 }

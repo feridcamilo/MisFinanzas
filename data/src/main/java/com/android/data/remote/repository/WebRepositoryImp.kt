@@ -48,4 +48,20 @@ class WebRepositoryImp(private val dataSource: RetrofitDataSource) : IWebReposit
     override suspend fun getPeople(clientId: String, lastSync: Date?): List<Master> {
         return dataSource.getPeople(clientId, lastSync)
     }
+
+    override suspend fun sendCategories(clientId: String, masters: List<Master>): Boolean {
+        return dataSource.sendCategories(clientId, masters)
+    }
+
+    override suspend fun sendPlaces(clientId: String, masters: List<Master>): Boolean {
+        return dataSource.sendPlaces(clientId, masters)
+    }
+
+    override suspend fun sendPeople(clientId: String, masters: List<Master>): Boolean {
+        return dataSource.sendPeople(clientId, masters)
+    }
+
+    override suspend fun sendDebts(clientId: String, masters: List<Master>): Boolean {
+        return dataSource.sendDebts(clientId, masters)
+    }
 }

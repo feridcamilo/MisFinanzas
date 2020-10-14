@@ -3,6 +3,7 @@ package com.android.data.local.model
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.android.data.utils.StringUtils
 import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 import java.util.*
@@ -41,4 +42,10 @@ data class MovementVO(
     val debtId: Int?,
     val dateEntry: Date?,
     val dateLastUpd: Date?
-) : Parcelable
+) : Parcelable {
+    companion object {
+        fun getEmpty(): MovementVO {
+            return MovementVO(0, 0, BigDecimal.valueOf(0), StringUtils.EMPTY, null, null, null, null, null, null, null)
+        }
+    }
+}

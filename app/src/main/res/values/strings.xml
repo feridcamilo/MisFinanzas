@@ -44,7 +44,7 @@
     <string name="view_md_myself_enter">Yo (Ingrese para asociar)</string>
     <string name="view_md_money_hint">$ 0.00</string>
     <string name="view_md_not_associated">No asociada</string>
-    <string name="view_md_movement_type">Tipo de movimiento:</string>
+    <string name="view_md_movement_type">Tipo de\nmovimiento:</string>
     <string name="view_md_value">Valor:</string>
     <string name="view_md_description">Descripción:</string>
     <string name="view_md_person">Persona:</string>

@@ -37,5 +37,17 @@ class DateUtils {
         fun getDateFormat(): SimpleDateFormat {
             return SimpleDateFormat("dd/MM/yyyy", Locale.US)
         }
+
+        fun getCalendarFromStringDate(strDate: String): Calendar {
+            val splitedDate = strDate.split(StringUtils.SLASH)
+            val day = splitedDate[0]
+            val month = splitedDate[1]
+            val year = splitedDate[2]
+            val calendar = Calendar.getInstance()
+            calendar[Calendar.YEAR] = Integer.parseInt(year)
+            calendar[Calendar.MONTH] = Integer.parseInt(month) - 1
+            calendar[Calendar.DAY_OF_MONTH] = Integer.parseInt(day)
+            return calendar
+        }
     }
 }
