@@ -65,15 +65,23 @@ class UserSesion {
         private fun getTimeZone(): TimeZone {
             val serverDateTime = getServerDateTime()
             val currentDateTime = DateUtils.getCurrentDateTime()
-            val difference = hoursDifference(currentDateTime, serverDateTime)
-            val timeZone = if (difference < 10) "0$difference" else difference
-            val gmt = "GMT-$timeZone:00" //current server difference
+            val gmt = getGTMDifference(currentDateTime, serverDateTime) //current server difference
             return TimeZone.getTimeZone(gmt)
         }
 
-        private fun hoursDifference(date1: Date, date2: Date): Int {
+        private fun getGTMDifference(date1: Date, date2: Date): String {
             val MILLI_TO_HOUR = 1000 * 60 * 60
-            return (date1.time - date2.time).toInt() / MILLI_TO_HOUR
+
+            val diff = if (date1.time > date2.time) (date1.time - date2.time).toInt() else (date2.time - date1.time).toInt()
+            val diffHours = diff / if (MILLI_TO_HOUR == 0) 1 else MILLI_TO_HOUR
+            val diffMinutes = diff / (60 * 1000) % 60
+
+            val hours = if (diffHours < 10) "0$diffHours" else diffHours
+            val minutes = if (diffMinutes < 10) "0$diffMinutes" else diffMinutes
+            val sign = if (date1.time > date2.time) "-" else "+"
+            val gmt = "GMT$sign$hours:$minutes"
+
+            return gmt
         }
     }
 }

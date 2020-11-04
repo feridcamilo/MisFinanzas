@@ -25,11 +25,11 @@
         android:layout_marginTop="@dimen/default_margin"
         android:layout_marginEnd="@dimen/default_quarter_margin"
         android:layout_marginBottom="@dimen/default_margin"
+        android:contentDescription="@string/view_md_movement_type"
         app:layout_constraintBottom_toBottomOf="@id/tv_tipo_movimiento"
         app:layout_constraintStart_toEndOf="@id/tv_tipo_movimiento"
         app:layout_constraintTop_toTopOf="@id/tv_tipo_movimiento"
-        tools:src="@mipmap/ic_money"
-        android:contentDescription="@string/view_md_movement_type" />
+        tools:src="@mipmap/ic_money" />
 
     <Spinner
         android:id="@+id/sp_tipo_movimiento"
@@ -75,9 +75,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/view_md_enter"
+            android:importantForAutofill="no"
             android:inputType="numberDecimal"
-            android:maxLength="12"
-            android:importantForAutofill="no" />
+            android:maxLength="12" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -149,6 +149,7 @@
             android:layout_height="wrap_content"
             android:completionThreshold="1"
             android:hint="@string/view_md_myself_enter"
+            android:inputType="textCapSentences"
             android:maxLength="50"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -185,6 +186,7 @@
             android:layout_height="wrap_content"
             android:completionThreshold="1"
             android:hint="@string/view_md_not_associated_male"
+            android:inputType="textCapSentences"
             android:maxLength="50"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -221,6 +223,7 @@
             android:layout_height="wrap_content"
             android:completionThreshold="1"
             android:hint="@string/view_md_enter"
+            android:inputType="textCapSentences"
             android:maxLength="50"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -247,14 +250,14 @@
         android:calendarViewShown="false"
         android:datePickerMode="spinner"
         android:hint="@string/view_md_select"
+        android:importantForAutofill="no"
         android:inputType="date"
         android:maxLength="10"
         android:maxLines="1"
         app:layout_constraintBottom_toBottomOf="@id/tv_fecha_movimiento"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_fecha_movimiento"
-        app:layout_constraintTop_toTopOf="@id/tv_fecha_movimiento"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toTopOf="@id/tv_fecha_movimiento" />
 
     <TextView
         android:id="@+id/tv_deuda"
@@ -288,6 +291,7 @@
             android:layout_height="wrap_content"
             android:completionThreshold="1"
             android:hint="@string/view_md_not_associated_female"
+            android:inputType="textCapSentences"
             android:maxLength="50"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
