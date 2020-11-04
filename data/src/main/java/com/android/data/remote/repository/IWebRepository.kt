@@ -20,6 +20,8 @@ interface IWebRepository {
 
     suspend fun sendMovements(clientId: String, movements: List<Movement>): Boolean
 
+    suspend fun getServerDateTime(): String
+
     suspend fun getCategories(clientId: String, lastSync: Date?): List<Master>
 
     suspend fun getDebts(clientId: String, lastSync: Date?): List<Master>

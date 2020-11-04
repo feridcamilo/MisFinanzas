@@ -176,6 +176,16 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
         }
     }
 
+    fun getServerDateTime() = liveData {
+        emit(Result.Loading)
+        try {
+            val serverDateTime = webRepo.getServerDateTime()
+            emit(Result.Success(serverDateTime))
+        } catch (e: Exception) {
+            emit(Result.Error(e))
+        }
+    }
+
     fun syncMasters() = liveData {
         emit(Result.Loading)
         try {

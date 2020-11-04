@@ -40,4 +40,7 @@ interface APIService {
 
     @POST("Movimientos.svc/recibirMovimientos")
     suspend fun sendMovements(@Body sendMovement: SendMovement): SendMovementDTO
+
+    @GET("Movimientos.svc/getServerDateTime")
+    suspend fun getServerDateTime(): ServerDateTime
 }

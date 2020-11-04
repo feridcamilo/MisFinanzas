@@ -135,12 +135,10 @@ class BalanceFragment : BaseFragment(), OnMovementClickListener {
         if (SharedPreferencesUtils.getAutoSyncConfig(requireContext())) {
             if (UserSesion.isFirstOpen()) {
                 UserSesion.setFirstOpen(false)
-                if (NetworkUtils.isConnected(requireContext())) {
+                if (NetworkUtils.isConnected(requireContext(), getString(R.string.error_not_network_no_sync))) {
                     //Makes an autosync
                     navigateToSync(true)
                     return
-                } else {
-                    Toast.makeText(requireContext(), R.string.error_not_network_no_sync, Toast.LENGTH_SHORT).show()
                 }
             }
         }

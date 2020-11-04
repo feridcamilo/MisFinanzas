@@ -35,6 +35,10 @@ class RetrofitDataSource {
         return ApiClient.service.sendMovements(SendMovement(Integer.parseInt(clientId), movements)).results
     }
 
+    suspend fun getServerDateTime(): String {
+        return ApiClient.service.getServerDateTime().result
+    }
+
     suspend fun getCategories(clientId: String, lastSync: Date?): List<Master> {
         return ApiClient.service.getCategories(clientId, ParamsUtils.getLastSyncToWeb(lastSync)).results
     }

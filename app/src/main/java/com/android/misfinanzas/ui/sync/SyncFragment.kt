@@ -20,6 +20,8 @@ import com.android.data.utils.AppUtils
 import com.android.data.utils.DateUtils
 import com.android.data.utils.NetworkUtils
 import com.android.data.utils.SharedPreferencesUtils
+import com.android.data.utils.StringUtils.Companion.EMPTY
+import com.android.data.utils.StringUtils.Companion.POINT
 import com.android.domain.result.Result
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
@@ -31,9 +33,9 @@ import kotlinx.android.synthetic.main.fragment_sync.*
 class SyncFragment : BaseFragment() {
 
     companion object {
-        val FROM_BALANCE: String = "FromBalance"
-        val AUTO_SYNC: String = "AutoSync"
-        val FROM_MOVEMENTS: String = "FromMovements"
+        const val FROM_BALANCE: String = "FromBalance"
+        const val AUTO_SYNC: String = "AutoSync"
+        const val FROM_MOVEMENTS: String = "FromMovements"
     }
 
     private val TAG = this.javaClass.name
@@ -50,6 +52,7 @@ class SyncFragment : BaseFragment() {
     private var autoSync: Boolean = false
     private var fromMovements: Boolean = false
 
+    private lateinit var serverDateTimeObserver: Observer<Result<String>>
     private lateinit var syncUserObserver: Observer<Result<User>>
     private lateinit var syncMovementsObserver: Observer<Result<Boolean>>
     private lateinit var syncMastersObserver: Observer<Result<Boolean>>
@@ -76,10 +79,52 @@ class SyncFragment : BaseFragment() {
             Toast.makeText(requireContext(), R.string.info_config_saved, Toast.LENGTH_SHORT).show()
         }
 
+        tv_link.setOnClickListener { AppUtils.openURL(requireContext(), AppConfig.BASE_URL) }
+
+        if (NetworkUtils.isConnected(requireContext(), getString(R.string.error_not_network_no_continue))) {
+            setupServerDateTimeObserver()
+        }
+    }
+
+    private fun setupServerDateTimeObserver() {
+        serverDateTimeObserver = Observer { result ->
+            when (result) {
+                is Result.Loading -> {
+                    progressListener.show()
+                }
+                is Result.Success -> {
+                    if (result.data == null) {
+                        tv_serverDateTime_title.visibility = View.GONE
+                        tv_serverDateTime.visibility = View.GONE
+                    } else {
+                        tv_serverDateTime_title.visibility = View.VISIBLE
+                        tv_serverDateTime.visibility = View.VISIBLE
+
+                        val serverDateTime = DateUtils.getDateTimeFormat_AM_PM().parse(result.data.replace(POINT, EMPTY))!!
+                        SharedPreferencesUtils.setServerDateTime(requireContext(), serverDateTime)
+                        UserSesion.setServerDateTime(serverDateTime)
+
+                        tv_serverDateTime.text = getString(R.string.server_datetime_value, result.data, UserSesion.getServerTimeZone().displayName)
+
+                        continueSyncProcess()
+                    }
+                    progressListener.hide()
+                }
+                is Result.Error -> {
+                    progressListener.hide()
+                    Toast.makeText(requireContext(), getString(R.string.error_getting_server_datetime, result.exception), Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, getString(R.string.error_retrofit, result.exception))
+                }
+            }
+        }
+
+        getServerDateTime()
+    }
+
+    private fun continueSyncProcess() {
         if (!UserSesion.hasUser()) {
             setupLogin()
         } else {
-            tv_link.setOnClickListener { AppUtils.openURL(requireContext(), AppConfig.BASE_URL) }
             if (autoSync) {
                 makeAutoSync()
             } else {
@@ -96,7 +141,7 @@ class SyncFragment : BaseFragment() {
                 }
                 is Result.Success -> {
                     if (result.data == null) {
-                        Toast.makeText(requireContext(), getString(R.string.info_wrong_user_or_password), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), R.string.info_wrong_user_or_password, Toast.LENGTH_SHORT).show()
                         progressListener.hide()
                     } else {
                         makeLogin(result.data)
@@ -188,13 +233,11 @@ class SyncFragment : BaseFragment() {
         cardViewLogin.visibility = View.VISIBLE
 
         cardViewLogin.btn_login.setOnClickListener {
-            if (NetworkUtils.isConnected(requireContext())) {
+            if (NetworkUtils.isConnected(requireContext(), getString(R.string.error_not_network_no_login))) {
                 val credential = cardViewLogin.getCredential()
                 if (credential != null) {
                     viewModel.setCredential(credential)
                 }
-            } else {
-                Toast.makeText(requireContext(), R.string.error_not_network_no_login, Toast.LENGTH_SHORT).show()
             }
         }
         Toast.makeText(requireContext(), R.string.info_please_log_in, Toast.LENGTH_SHORT).show()
@@ -207,21 +250,17 @@ class SyncFragment : BaseFragment() {
 
         setupMovementsObserver()
         btn_sync_movements.setOnClickListener {
-            if (NetworkUtils.isConnected(requireContext())) {
+            if (NetworkUtils.isConnected(requireContext(), getString(R.string.error_not_network_no_sync))) {
                 //Manual movements sync
                 syncMovements()
-            } else {
-                Toast.makeText(requireContext(), R.string.error_not_network_no_sync, Toast.LENGTH_SHORT).show()
             }
         }
 
         setupMastersObserver()
         btn_sync_masters.setOnClickListener {
-            if (NetworkUtils.isConnected(requireContext())) {
+            if (NetworkUtils.isConnected(requireContext(), getString(R.string.error_not_network_no_sync))) {
                 //Manual masters sync
                 syncMasters()
-            } else {
-                Toast.makeText(requireContext(), R.string.error_not_network_no_sync, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -229,6 +268,10 @@ class SyncFragment : BaseFragment() {
             cleanDiscarded()
             Toast.makeText(requireContext(), R.string.info_movements_discarded_restored, Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun getServerDateTime() {
+        viewModel.getServerDateTime().observe(viewLifecycleOwner, serverDateTimeObserver)
     }
 
     private fun syncMovements() {

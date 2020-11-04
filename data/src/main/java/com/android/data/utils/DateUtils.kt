@@ -1,5 +1,6 @@
 package com.android.data.utils
 
+import com.android.data.UserSesion
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -18,12 +19,8 @@ class DateUtils {
             return Date(date.time - getServerTimeOffset(date))
         }
 
-        fun getServerTimeOffset(date: Date): Int {
-            return getTimeZone().getOffset(date.time)
-        }
-
-        private fun getTimeZone(): TimeZone {
-            return TimeZone.getTimeZone("GMT-02:00") //current server config
+        private fun getServerTimeOffset(date: Date): Int {
+            return UserSesion.getServerTimeZone().getOffset(date.time)
         }
 
         fun getDateTimeFormatToWebService(): SimpleDateFormat {
@@ -32,6 +29,10 @@ class DateUtils {
 
         fun getDateTimeFormat(): SimpleDateFormat {
             return SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US)
+        }
+
+        fun getDateTimeFormat_AM_PM(): SimpleDateFormat {
+            return SimpleDateFormat("dd/MM/yyyy hh:mm:ss a", Locale.US)
         }
 
         fun getDateFormat(): SimpleDateFormat {

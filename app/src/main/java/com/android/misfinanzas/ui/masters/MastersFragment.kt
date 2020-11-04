@@ -168,7 +168,7 @@ class MastersFragment : BaseFragment() {
     private fun navigateToSync() {
         val bundle = Bundle()
         bundle.putBoolean(SyncFragment.FROM_MOVEMENTS, true)
-        findNavController().navigate(R.id.action_movementsFragment_to_syncFragment, bundle)
+        findNavController().navigate(R.id.action_mastersFragment_to_syncFragment, bundle)
     }
 
     private fun navigateToMastersList(masterList: List<MasterVO>?, title: String) {

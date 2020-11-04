@@ -213,7 +213,7 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
         }
         val date: Date
         try {
-            date = getDateToWebService(getDateFormat().parse(strDate))
+            date = getDateToWebService(getDateFormat().parse(strDate)!!)
         } catch (e: Exception) {
             et_fecha_movimiento.requestFocus()
             throw Exception(context.getString(R.string.info_enter_valid_date))

@@ -33,6 +33,10 @@ class WebRepositoryImp(private val dataSource: RetrofitDataSource) : IWebReposit
         return dataSource.sendMovements(clientId, movements)
     }
 
+    override suspend fun getServerDateTime(): String {
+        return dataSource.getServerDateTime()
+    }
+
     override suspend fun getCategories(clientId: String, lastSync: Date?): List<Master> {
         return dataSource.getCategories(clientId, lastSync)
     }

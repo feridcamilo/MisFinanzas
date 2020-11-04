@@ -9,6 +9,8 @@
     <string name="title_filters">Filtros</string>
     <string name="title_sync">Sincronizar</string>
     <string name="go_to_web"><u>Ir al sitio web</u></string>
+    <string name="server_datetime_title">Fecha y hora del servidor</string>
+    <string name="server_datetime_value"> %1$s con diferencia de  %2$s horas.</string>
     <string name="auto_sync_on_open">Sincronizar al iniciar la app</string>
     <string name="loading">Cargando…</string>
     <string name="search">Buscar</string>
@@ -68,14 +70,16 @@
     <!--Error messages-->
     <string name="error_not_network_no_sync">No hay conexión a internet. No se puede sincronizar.</string>
     <string name="error_not_network_no_login">No hay conexión a internet. No se puede iniciar sesión.</string>
+    <string name="error_not_network_no_continue">No hay conexión a internet. No se puede continuar.</string>
     <string name="error_getting_movements">Ocurrió un error obteniendo los movimientos: %1$s</string>
-    <string name="error_getting_masters">Ocurrió un error obteniendo las maestros: %1$s</string>
+    <string name="error_getting_masters">Ocurrió un error obteniendo los maestros: %1$s</string>
     <string name="error_getting_balance">Ocurrió un error obteniendo los saldos: %1$s</string>
     <string name="error_getting_categories">Ocurrió un error obteniendo las categorias: %1$s</string>
     <string name="error_getting_debts">Ocurrió un error obteniendo las deudas: %1$s</string>
     <string name="error_getting_places">Ocurrió un error obteniendo los lugares: %1$s</string>
     <string name="error_getting_people">Ocurrió un error obteniendo las personas: %1$s</string>
     <string name="error_getting_user">Ocurrió un error obteniendo el usuario: %1$s</string>
+    <string name="error_getting_server_datetime">Ocurrió un error obteniendo la fecha y hora del servidor: %1$s</string>
     <string name="error_retrofit">Retrofit: %1$s</string>
     <string name="error_room">Room: %1$s</string>
 

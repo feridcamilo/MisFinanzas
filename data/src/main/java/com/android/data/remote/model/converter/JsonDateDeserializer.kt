@@ -12,7 +12,6 @@ class JsonDateDeserializer : JsonDeserializer<Date>, JsonSerializer<Date> {
         val date = json.asJsonPrimitive.asString
         val cleanDate = date.replace("/Date(", EMPTY).replace(")/", EMPTY)
         val longDate = cleanDate.substring(0, cleanDate.length - 5).toLong()
-        //return DateUtils.getDateTimeToWebService(Date(longDate))
         return Date(longDate)
     }
 
