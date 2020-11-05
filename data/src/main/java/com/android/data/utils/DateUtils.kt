@@ -50,5 +50,36 @@ class DateUtils {
             calendar[Calendar.DAY_OF_MONTH] = Integer.parseInt(day)
             return calendar
         }
+
+        fun getTimeZone(): TimeZone {
+            val serverDateTime = UserSesion.getServerDateTime()
+            val currentDateTime = getCurrentDateTime()
+            val gmt = getGTMDifference(currentDateTime, serverDateTime) //current server difference
+            return TimeZone.getTimeZone(gmt)
+        }
+
+        fun getGTMDifference(date1: Date, date2: Date): String {
+            val MILLI_TO_HOUR = 1000 * 60 * 60
+            val MILI_TO_MIN = 60 * 1000
+
+            val diff = if (date1.time > date2.time) (date1.time - date2.time).toInt() else (date2.time - date1.time).toInt()
+            var diffHours = diff / MILLI_TO_HOUR
+            var diffMinutes = diff / MILI_TO_MIN % 60
+
+            //fix to add 1 min (to substract) to always be before server time
+            if (diffMinutes == 59) {
+                diffMinutes = 0
+                diffHours += 1
+            } else {
+                diffMinutes += 1
+            }
+
+            val hours = if (diffHours < 10) "0$diffHours" else diffHours
+            val minutes = if (diffMinutes < 10) "0$diffMinutes" else diffMinutes
+            val sign = if (date1.time > date2.time) "-" else "+"
+            val gmt = "GMT$sign$hours:$minutes"
+
+            return gmt
+        }
     }
 }

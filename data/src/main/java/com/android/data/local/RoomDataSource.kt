@@ -17,6 +17,7 @@ class RoomDataSource(private val context: Context) {
     }
 
     suspend fun updateLastSyncMovements(date: Date) {
+        UserSesion.updateLastSyncMovements(date)
         return AppDatabase.getDatabase(context).userDao().updateLastSyncMovements(date)
     }
 
@@ -25,6 +26,7 @@ class RoomDataSource(private val context: Context) {
     }
 
     suspend fun updateLastSyncMasters(date: Date) {
+        UserSesion.updateLastSyncMasters(date)
         return AppDatabase.getDatabase(context).userDao().updateLastSyncMasters(date)
     }
 

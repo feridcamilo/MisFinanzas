@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.android.data.AppConfig
 import com.android.data.UserSesion
@@ -29,6 +30,7 @@ import com.android.misfinanzas.base.BaseViewModelFactory
 import com.android.misfinanzas.ui.widgets.login.LoginView
 import kotlinx.android.synthetic.main.card_view_login.view.*
 import kotlinx.android.synthetic.main.fragment_sync.*
+import kotlinx.coroutines.launch
 
 class SyncFragment : BaseFragment() {
 
@@ -50,6 +52,7 @@ class SyncFragment : BaseFragment() {
     private lateinit var cardViewLogin: LoginView
     private var fromBalance: Boolean = false
     private var autoSync: Boolean = false
+    private var isRefresh: Boolean = false
     private var fromMovements: Boolean = false
 
     private lateinit var serverDateTimeObserver: Observer<Result<String>>
@@ -79,6 +82,8 @@ class SyncFragment : BaseFragment() {
             Toast.makeText(requireContext(), R.string.info_config_saved, Toast.LENGTH_SHORT).show()
         }
 
+        ib_info.setOnClickListener { Toast.makeText(requireContext(), R.string.info_difference_time, Toast.LENGTH_LONG).show() }
+
         tv_link.setOnClickListener { AppUtils.openURL(requireContext(), AppConfig.BASE_URL) }
 
         if (NetworkUtils.isConnected(requireContext(), getString(R.string.error_not_network_no_continue))) {
@@ -96,19 +101,29 @@ class SyncFragment : BaseFragment() {
                     if (result.data == null) {
                         tv_serverDateTime_title.visibility = View.GONE
                         tv_serverDateTime.visibility = View.GONE
+                        ib_info.visibility = View.GONE
+                        progressListener.hide()
                     } else {
                         tv_serverDateTime_title.visibility = View.VISIBLE
                         tv_serverDateTime.visibility = View.VISIBLE
+                        ib_info.visibility = View.VISIBLE
 
                         val serverDateTime = DateUtils.getDateTimeFormat_AM_PM().parse(result.data.replace(POINT, EMPTY))!!
                         SharedPreferencesUtils.setServerDateTime(requireContext(), serverDateTime)
                         UserSesion.setServerDateTime(serverDateTime)
 
-                        tv_serverDateTime.text = getString(R.string.server_datetime_value, result.data, UserSesion.getServerTimeZone().displayName)
+                        val serverDateTimeFormated = DateUtils.getDateTimeFormat_AM_PM().format(serverDateTime)
+                        val gtmDiff = UserSesion.getServerTimeZone().displayName
+                        tv_serverDateTime.text = getString(R.string.server_datetime_value, serverDateTimeFormated, gtmDiff)
 
-                        continueSyncProcess()
+                        if (!isRefresh) {
+                            continueSyncProcess()
+                        }
+
+                        if (!autoSync) {
+                            progressListener.hide()
+                        }
                     }
-                    progressListener.hide()
                 }
                 is Result.Error -> {
                     progressListener.hide()
@@ -118,17 +133,44 @@ class SyncFragment : BaseFragment() {
             }
         }
 
-        getServerDateTime()
+        getServerDateTime(false)
     }
 
     private fun continueSyncProcess() {
         if (!UserSesion.hasUser()) {
             setupLogin()
         } else {
+            showLastSyncValues()
             if (autoSync) {
                 makeAutoSync()
             } else {
                 setupSync()
+            }
+        }
+    }
+
+    private fun showLastSyncValues() {
+        lifecycleScope.launch {
+            val lastSyncMovements = viewModel.getLastSyncMovements()
+            val lastSyncMasters = viewModel.getLastSyncMasters()
+
+            if (lastSyncMovements != null || lastSyncMasters != null) {
+                tv_last_sync.visibility = View.VISIBLE
+                tv_last_sync_movements.visibility = View.VISIBLE
+                tv_last_sync_masters.visibility = View.VISIBLE
+
+                if (lastSyncMovements != null) {
+                    val formatedLastSyncMovements = DateUtils.getDateTimeFormat_AM_PM().format(DateUtils.getDateTimeToWebService(lastSyncMovements))
+                    tv_last_sync_movements.text = getString(R.string.last_sync_movements, formatedLastSyncMovements)
+                } else {
+                    tv_last_sync_movements.text = getString(R.string.never_synced)
+                }
+                if (lastSyncMasters != null) {
+                    val formatedLastSyncMasters = DateUtils.getDateTimeFormat_AM_PM().format(DateUtils.getDateTimeToWebService(lastSyncMasters))
+                    tv_last_sync_masters.text = getString(R.string.last_sync_masters, formatedLastSyncMasters)
+                } else {
+                    tv_last_sync_masters.text = getString(R.string.never_synced)
+                }
             }
         }
     }
@@ -144,8 +186,8 @@ class SyncFragment : BaseFragment() {
                         Toast.makeText(requireContext(), R.string.info_wrong_user_or_password, Toast.LENGTH_SHORT).show()
                         progressListener.hide()
                     } else {
-                        makeLogin(result.data)
                         Toast.makeText(requireContext(), R.string.info_user_saved, Toast.LENGTH_SHORT).show()
+                        makeLogin(result.data)
                     }
                 }
                 is Result.Error -> {
@@ -166,11 +208,14 @@ class SyncFragment : BaseFragment() {
                     progressListener.show()
                 }
                 is Result.Success -> {
-                    progressListener.hide()
                     viewModel.updateLastSyncMovements(DateUtils.getCurrentDateTime())
-                    Toast.makeText(requireContext(), R.string.info_movements_synced, Toast.LENGTH_SHORT).show()
+                    getServerDateTime(true)
+                    showLastSyncValues()
                     if (autoSync) {
                         syncMasters()
+                    } else {
+                        progressListener.hide()
+                        Toast.makeText(requireContext(), R.string.info_movements_synced, Toast.LENGTH_SHORT).show()
                     }
                 }
                 is Result.Error -> {
@@ -190,12 +235,15 @@ class SyncFragment : BaseFragment() {
                 }
                 is Result.Success -> {
                     viewModel.updateLastSyncMasters(DateUtils.getCurrentDateTime())
-                    Toast.makeText(requireContext(), R.string.info_masters_synced, Toast.LENGTH_SHORT).show()
+                    getServerDateTime(true)
+                    showLastSyncValues()
                     if (autoSync) {
                         UserSesion.setFirstOpen(false)
                         navigateToBalance()
+                    } else {
+                        progressListener.hide()
+                        Toast.makeText(requireContext(), R.string.info_masters_synced, Toast.LENGTH_SHORT).show()
                     }
-                    progressListener.hide()
                 }
                 is Result.Error -> {
                     progressListener.hide()
@@ -222,8 +270,8 @@ class SyncFragment : BaseFragment() {
     }
 
     private fun navigateToBalance() {
-        val bundle = Bundle()
-        findNavController().navigate(R.id.action_syncFragment_to_balanceFragment, bundle)
+        Toast.makeText(requireContext(), R.string.info_data_synced, Toast.LENGTH_SHORT).show()
+        findNavController().navigate(R.id.action_syncFragment_to_balanceFragment)
     }
 
     private fun setupLogin() {
@@ -270,7 +318,8 @@ class SyncFragment : BaseFragment() {
         }
     }
 
-    private fun getServerDateTime() {
+    private fun getServerDateTime(isRefresh: Boolean) {
+        this.isRefresh = isRefresh
         viewModel.getServerDateTime().observe(viewLifecycleOwner, serverDateTimeObserver)
     }
 

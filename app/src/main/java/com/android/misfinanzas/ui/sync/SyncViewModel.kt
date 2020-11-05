@@ -176,6 +176,14 @@ class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: 
         }
     }
 
+    suspend fun getLastSyncMovements(): Date? {
+        return localRepo.getLastSyncMovements()
+    }
+
+    suspend fun getLastSyncMasters(): Date? {
+        return localRepo.getLastSyncMasters()
+    }
+
     fun getServerDateTime() = liveData {
         emit(Result.Loading)
         try {

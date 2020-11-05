@@ -8,23 +8,28 @@
     <string name="title_movements_details_new">Ingresar movimiento</string>
     <string name="title_filters">Filtros</string>
     <string name="title_sync">Sincronizar</string>
-    <string name="go_to_web"><u>Ir al sitio web</u></string>
-    <string name="server_datetime_title">Fecha y hora del servidor</string>
-    <string name="server_datetime_value"> %1$s con diferencia de  %2$s horas.</string>
-    <string name="auto_sync_on_open">Sincronizar al iniciar la app</string>
     <string name="loading">Cargando…</string>
     <string name="search">Buscar</string>
 
-    <!--SyncFragment-->
+    <!--MastersFragment-->
     <string name="masters_categories">Categorías</string>
     <string name="masters_places">Lugares</string>
     <string name="masters_people">Personas</string>
     <string name="masters_debts">Deudas</string>
 
     <!--SyncFragment-->
-    <string name="sync_movements">Movimientos</string>
-    <string name="sync_masters">Maestros</string>
-    <string name="sync_clean_discarded">Restaurar Descartados</string>
+    <string name="go_to_web"><u>Ir al sitio web</u></string>
+    <string name="server_datetime_title">Fecha y hora del servidor</string>
+    <string name="info_difference_time">La fecha y hora de sus registros puede variar con respecto a la diferencia horaria del servidor.</string>
+    <string name="last_sync">Última sincronización</string>
+    <string name="last_sync_movements">Movimientos: %1$s</string>
+    <string name="last_sync_masters">Maestros: %1$s</string>
+    <string name="never_synced">Nunca sincronizado.</string>
+    <string name="server_datetime_value"> %1$s diferencia de %2$s</string>
+    <string name="auto_sync_on_open">Sincronizar al iniciar la app</string>
+    <string name="sync_movements">Sincronizar movimientos</string>
+    <string name="sync_masters">Sincronizar maestros</string>
+    <string name="sync_clean_discarded">Restaurar descartados</string>
 
     <!--CardView Login-->
     <string name="cardview_login_title">Ingreso Mis Finanzas</string>
@@ -90,6 +95,7 @@
     <string name="info_config_saved">Configuración guardada.</string>
     <string name="info_no_movements">No hay movimientos para mostrar.</string>
     <string name="info_no_balance">No hay saldos para mostrar.</string>
+    <string name="info_data_synced">Datos sincronizados con éxito.</string>
     <string name="info_movements_synced">Movimientos sincronizados con éxito.</string>
     <string name="info_movements_discarded_restored">Los movimientos descartados fueron restaurados con éxito.</string>
     <string name="info_movement_saved">Movimiento guardado con éxito.</string>

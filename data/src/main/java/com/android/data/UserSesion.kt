@@ -24,6 +24,38 @@ class UserSesion {
             INSTANCE = user
         }
 
+        fun updateLastSyncMovements(date: Date) {
+            val currentUser = getUser()
+            if (currentUser != null) {
+                val newUser = UserVO(
+                    currentUser.user,
+                    currentUser.clientId,
+                    currentUser.name,
+                    currentUser.lastName,
+                    currentUser.email,
+                    date,
+                    currentUser.lastSyncMasters
+                )
+                setUser(newUser)
+            }
+        }
+
+        fun updateLastSyncMasters(date: Date) {
+            val currentUser = getUser()
+            if (currentUser != null) {
+                val newUser = UserVO(
+                    currentUser.user,
+                    currentUser.clientId,
+                    currentUser.name,
+                    currentUser.lastName,
+                    currentUser.email,
+                    currentUser.lastSyncMovements,
+                    date
+                )
+                setUser(newUser)
+            }
+        }
+
         fun setUser(user: User) {
             val userVO = UserVO(
                 user.Usuario,
@@ -50,38 +82,16 @@ class UserSesion {
             setServerTimeZone()
         }
 
-        private fun getServerDateTime(): Date {
+        fun getServerDateTime(): Date {
             return SERVER_DATETIME
         }
 
         private fun setServerTimeZone() {
-            SERVER_TIME_ZONE = getTimeZone()
+            SERVER_TIME_ZONE = DateUtils.getTimeZone()
         }
 
         fun getServerTimeZone(): TimeZone {
             return SERVER_TIME_ZONE
-        }
-
-        private fun getTimeZone(): TimeZone {
-            val serverDateTime = getServerDateTime()
-            val currentDateTime = DateUtils.getCurrentDateTime()
-            val gmt = getGTMDifference(currentDateTime, serverDateTime) //current server difference
-            return TimeZone.getTimeZone(gmt)
-        }
-
-        private fun getGTMDifference(date1: Date, date2: Date): String {
-            val MILLI_TO_HOUR = 1000 * 60 * 60
-
-            val diff = if (date1.time > date2.time) (date1.time - date2.time).toInt() else (date2.time - date1.time).toInt()
-            val diffHours = diff / if (MILLI_TO_HOUR == 0) 1 else MILLI_TO_HOUR
-            val diffMinutes = diff / (60 * 1000) % 60
-
-            val hours = if (diffHours < 10) "0$diffHours" else diffHours
-            val minutes = if (diffMinutes < 10) "0$diffMinutes" else diffMinutes
-            val sign = if (date1.time > date2.time) "-" else "+"
-            val gmt = "GMT$sign$hours:$minutes"
-
-            return gmt
         }
     }
 }
