@@ -36,7 +36,7 @@ class RoomDataSource(private val context: Context) {
 
 
     suspend fun getBalance(query: String): BalanceVO {
-        val sqlQuery = SimpleSQLiteQuery(query);
+        val sqlQuery = SimpleSQLiteQuery(query)
         return AppDatabase.getDatabase(context).movementDAO().getBalance(sqlQuery)
     }
 

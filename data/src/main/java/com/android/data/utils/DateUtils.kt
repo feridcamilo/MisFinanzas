@@ -20,7 +20,7 @@ class DateUtils {
         }
 
         private fun getServerTimeOffset(date: Date): Int {
-            return UserSesion.getServerTimeZone().getOffset(date.time)
+            return UserSesion.getServerTimeZone()!!.getOffset(date.time)
         }
 
         fun getDateTimeFormatToWebService(): SimpleDateFormat {

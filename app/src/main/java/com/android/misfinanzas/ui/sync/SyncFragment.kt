@@ -109,11 +109,13 @@ class SyncFragment : BaseFragment() {
                         ib_info.visibility = View.VISIBLE
 
                         val serverDateTime = DateUtils.getDateTimeFormat_AM_PM().parse(result.data.replace(POINT, EMPTY))!!
-                        SharedPreferencesUtils.setServerDateTime(requireContext(), serverDateTime)
                         UserSesion.setServerDateTime(serverDateTime)
 
+                        val gtmDiff = UserSesion.getServerTimeZone()!!.displayName
+                        //Save gtm diff in shared preferences
+                        SharedPreferencesUtils.setDiffTimeToServer(requireContext(), gtmDiff)
+
                         val serverDateTimeFormated = DateUtils.getDateTimeFormat_AM_PM().format(serverDateTime)
-                        val gtmDiff = UserSesion.getServerTimeZone().displayName
                         tv_serverDateTime.text = getString(R.string.server_datetime_value, serverDateTimeFormated, gtmDiff)
 
                         if (!isRefresh) {

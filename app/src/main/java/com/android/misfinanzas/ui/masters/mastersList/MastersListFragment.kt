@@ -105,7 +105,7 @@ class MastersListFragment : BaseFragment(), OnMasterClickListener {
 
     private fun navigateToDetails(master: MasterVO?) {
         //TODO pending to implement master detail fragment and functionality
-        val bundle = Bundle()
+        //val bundle = Bundle()
         //bundle.putParcelable(dataName, master)
         //findNavController().navigate(R.id., bundle)
     }

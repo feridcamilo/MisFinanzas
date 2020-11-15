@@ -3,14 +3,15 @@ package com.android.data
 import com.android.data.local.model.UserVO
 import com.android.data.remote.model.User
 import com.android.data.utils.DateUtils
+import com.android.data.utils.StringUtils.Companion.EMPTY
 import java.util.*
 
 class UserSesion {
     companion object {
         private var INSTANCE: UserVO? = null
         private var FIRST_OPEN: Boolean = true
-        private lateinit var SERVER_DATETIME: Date
-        private lateinit var SERVER_TIME_ZONE: TimeZone
+        private var SERVER_DATETIME: Date? = null
+        private var SERVER_TIME_ZONE: TimeZone? = null
 
         fun getUser(): UserVO? {
             return INSTANCE
@@ -83,14 +84,18 @@ class UserSesion {
         }
 
         fun getServerDateTime(): Date {
-            return SERVER_DATETIME
+            return SERVER_DATETIME!!
         }
 
-        private fun setServerTimeZone() {
-            SERVER_TIME_ZONE = DateUtils.getTimeZone()
+        fun setServerTimeZone(timeZone: String = EMPTY) {
+            SERVER_TIME_ZONE = if (SERVER_DATETIME != null && timeZone.isEmpty()) {
+                DateUtils.getTimeZone()
+            } else {
+                TimeZone.getTimeZone(timeZone)
+            }
         }
 
-        fun getServerTimeZone(): TimeZone {
+        fun getServerTimeZone(): TimeZone? {
             return SERVER_TIME_ZONE
         }
     }
