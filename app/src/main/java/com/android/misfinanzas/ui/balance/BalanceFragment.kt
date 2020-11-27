@@ -141,12 +141,12 @@ class BalanceFragment : BaseFragment(), OnMovementClickListener {
                     return
                 }
             }
-        } else {
-            if (UserSesion.getServerTimeZone() == null) {
-                //get last gmt diff from shared preferences
-                val gtmDiff = SharedPreferencesUtils.getDiffTimeToServer(requireContext())
-                UserSesion.setServerTimeZone(gtmDiff)
-            }
+        }
+
+        if (UserSesion.getServerTimeZone() == null) {
+            //get last gmt diff from shared preferences
+            val gtmDiff = SharedPreferencesUtils.getDiffTimeToServer(requireContext())
+            UserSesion.setServerTimeZone(gtmDiff)
         }
 
         setupRecyclerView()
