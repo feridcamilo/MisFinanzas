@@ -1,7 +1,6 @@
 package com.android.misfinanzas.ui.sync
 
 import androidx.lifecycle.*
-import com.android.data.repository.master.mappers.CategoryDataMapper
 import com.android.domain.UserSesion
 import com.android.domain.model.Master
 import com.android.domain.model.Movement

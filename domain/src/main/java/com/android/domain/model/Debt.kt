@@ -11,4 +11,3 @@ data class Debt(
         return name
     }
 }
-

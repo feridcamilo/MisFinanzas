@@ -53,4 +53,3 @@ fun Context.openURL(url: String) {
         startActivity(intent)
     }
 }
-

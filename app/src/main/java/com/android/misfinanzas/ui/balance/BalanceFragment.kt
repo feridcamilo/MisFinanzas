@@ -13,13 +13,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.data.local.model.converters.MovementConverter
-import com.android.domain.utils.DateUtils
 import com.android.data.utils.SharedPreferencesUtils
 import com.android.domain.UserSesion
 import com.android.domain.model.Balance
 import com.android.domain.model.Movement
 import com.android.domain.model.User
 import com.android.domain.result.Result
+import com.android.domain.utils.DateUtils
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.*
 import com.android.misfinanzas.ui.movements.MovementsAdapter
