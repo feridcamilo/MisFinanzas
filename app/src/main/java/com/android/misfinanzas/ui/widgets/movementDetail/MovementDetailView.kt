@@ -10,12 +10,12 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import androidx.cardview.widget.CardView
-import com.android.data.local.model.*
-import com.android.data.utils.DateUtils.Companion.getCalendarFromStringDate
-import com.android.data.utils.DateUtils.Companion.getCurrentDateTime
-import com.android.data.utils.DateUtils.Companion.getDateFormat
-import com.android.data.utils.DateUtils.Companion.getDateTimeFormat
-import com.android.data.utils.DateUtils.Companion.getDateToWebService
+import com.android.domain.model.*
+import com.android.domain.utils.DateUtils.Companion.getCalendarFromStringDate
+import com.android.domain.utils.DateUtils.Companion.getCurrentDateTime
+import com.android.domain.utils.DateUtils.Companion.getDateFormat
+import com.android.domain.utils.DateUtils.Companion.getDateTimeFormat
+import com.android.domain.utils.DateUtils.Companion.getDateToWebService
 import com.android.domain.utils.MoneyUtils
 import com.android.domain.utils.StringUtils.Companion.EMPTY
 import com.android.misfinanzas.R
@@ -32,22 +32,22 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
 
     private lateinit var movementTypes: List<MovementType>
     private var descriptions: List<String>? = null
-    private var people: List<PersonVO>? = null
-    private var places: List<PlaceVO>? = null
-    private var categories: List<CategoryVO>? = null
-    private var debts: List<DebtVO>? = null
+    private var people: List<Person>? = null
+    private var places: List<Place>? = null
+    private var categories: List<Category>? = null
+    private var debts: List<Debt>? = null
 
-    private var movement: MovementVO? = null
+    private var movement: Movement? = null
     private var selectedMovementType: Int = MovementType.NOT_SELECTED
     var shouldDiscard = false
     var idToDiscard = 0
 
     fun initView(
         descriptions: List<String>?,
-        people: List<PersonVO>?,
-        places: List<PlaceVO>?,
-        categories: List<CategoryVO>?,
-        debts: List<DebtVO>?
+        people: List<Person>?,
+        places: List<Place>?,
+        categories: List<Category>?,
+        debts: List<Debt>?
     ) {
         this.descriptions = descriptions
         this.people = people
@@ -130,7 +130,7 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
         }
     }
 
-    fun showMovement(movement: MovementVO?) {
+    fun showMovement(movement: Movement?) {
         this.movement = movement
 
         if (movement == null || movement.idMovement <= 0) {
@@ -168,12 +168,12 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
     }
 
     @Throws(Exception::class)
-    fun getMovement(): MovementVO {
+    fun getMovement(): Movement {
         return validateForm()
     }
 
     @Throws(Exception::class)
-    private fun validateForm(): MovementVO {
+    private fun validateForm(): Movement {
         if (selectedMovementType == MovementType.NOT_SELECTED) {
             throw Exception(context.getString(R.string.info_select_movement_type))
         }
@@ -236,7 +236,7 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
             idMovement = 0
         }
 
-        return MovementVO(
+        return Movement(
             idMovement,//Autoincrement
             selectedMovementType,
             value,

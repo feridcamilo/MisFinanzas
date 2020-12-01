@@ -2,17 +2,17 @@ package com.android.misfinanzas.ui.masters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import com.android.domain.repository.ILocalRepository
+import com.android.domain.repository.MasterRepository
 import com.android.domain.result.Result
 
 class MastersViewModel(
-    private val localRepo: ILocalRepository
+    private val masterRepository: MasterRepository
 ) : ViewModel() {
 
     fun getLocalPeople() = liveData {
         emit(Result.Loading)
         try {
-            emit(Result.Success(localRepo.getPeople()))
+            emit(Result.Success(masterRepository.getPeople()))
         } catch (e: Exception) {
             emit(Result.Error(e))
         }
@@ -21,7 +21,7 @@ class MastersViewModel(
     fun getLocalPlaces() = liveData {
         emit(Result.Loading)
         try {
-            emit(Result.Success(localRepo.getPlaces()))
+            emit(Result.Success(masterRepository.getPlaces()))
         } catch (e: Exception) {
             emit(Result.Error(e))
         }
@@ -30,7 +30,7 @@ class MastersViewModel(
     fun getLocalCategories() = liveData {
         emit(Result.Loading)
         try {
-            emit(Result.Success(localRepo.getCategories()))
+            emit(Result.Success(masterRepository.getCategories()))
         } catch (e: Exception) {
             emit(Result.Error(e))
         }
@@ -39,7 +39,7 @@ class MastersViewModel(
     fun getLocalDebts() = liveData {
         emit(Result.Loading)
         try {
-            emit(Result.Success(localRepo.getDebts()))
+            emit(Result.Success(masterRepository.getDebts()))
         } catch (e: Exception) {
             emit(Result.Error(e))
         }

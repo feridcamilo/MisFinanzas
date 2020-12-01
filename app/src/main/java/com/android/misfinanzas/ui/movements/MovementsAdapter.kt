@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.android.data.local.model.MovementVO
-import com.android.data.utils.DateUtils
+import com.android.domain.model.Movement
+import com.android.domain.utils.DateUtils
 import com.android.domain.utils.MoneyUtils
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseViewHolder
@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.row_movement.view.*
 
 class MovementsAdapter(
     private val context: Context,
-    private val movements: List<MovementVO>,
+    private val movements: List<Movement>,
     private val itemClickListener: OnMovementClickListener
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
@@ -36,8 +36,8 @@ class MovementsAdapter(
     }
 
     //inner class to avoid memory leak, when parent class died (MovementsAdapter) this inner also die
-    inner class MovementsViewHolder(itemView: View) : BaseViewHolder<MovementVO>(itemView) {
-        override fun bind(item: MovementVO, position: Int) {
+    inner class MovementsViewHolder(itemView: View) : BaseViewHolder<Movement>(itemView) {
+        override fun bind(item: Movement, position: Int) {
             itemView.iv_tipo_movimiento.setImageResource((MovementType.getImage(item.idType)))
             itemView.tv_valor.text = MoneyUtils.getMoneyFormat().format(item.value)
             itemView.tv_fecha.text = DateUtils.getDateFormat().format(item.date!!)

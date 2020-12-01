@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.android.data.UserSesion
-import com.android.data.local.model.*
+import com.android.domain.UserSesion
+import com.android.domain.model.*
 import com.android.domain.result.Result
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
@@ -23,15 +23,15 @@ class MastersFragment : BaseFragment() {
 
     private val TAG = this.javaClass.name
 
-    private lateinit var peopleObserver: Observer<Result<List<PersonVO>>>
-    private lateinit var placesObserver: Observer<Result<List<PlaceVO>>>
-    private lateinit var categoryObserver: Observer<Result<List<CategoryVO>>>
-    private lateinit var debtsObserver: Observer<Result<List<DebtVO>>>
+    private lateinit var peopleObserver: Observer<Result<List<Person>>>
+    private lateinit var placesObserver: Observer<Result<List<Place>>>
+    private lateinit var categoryObserver: Observer<Result<List<Category>>>
+    private lateinit var debtsObserver: Observer<Result<List<Debt>>>
 
-    private var people: List<PersonVO>? = null
-    private var places: List<PlaceVO>? = null
-    private var categories: List<CategoryVO>? = null
-    private var debts: List<DebtVO>? = null
+    private var people: List<Person>? = null
+    private var places: List<Place>? = null
+    private var categories: List<Category>? = null
+    private var debts: List<Debt>? = null
 
     private val viewModel by viewModel<MastersViewModel>()
 
@@ -53,19 +53,19 @@ class MastersFragment : BaseFragment() {
 
     private fun setupEvents() {
         btn_people.setOnClickListener {
-            navigateToMastersList(people?.map { MasterVO(it.id, it.name, it.enabled) }, (it as Button).text.toString())
+            navigateToMastersList(people?.map { Master(it.id, it.name, it.enabled) }, (it as Button).text.toString())
         }
 
         btn_places.setOnClickListener {
-            navigateToMastersList(places?.map { MasterVO(it.id, it.name, it.enabled) }, (it as Button).text.toString())
+            navigateToMastersList(places?.map { Master(it.id, it.name, it.enabled) }, (it as Button).text.toString())
         }
 
         btn_categories.setOnClickListener {
-            navigateToMastersList(categories?.map { MasterVO(it.id, it.name, it.enabled) }, (it as Button).text.toString())
+            navigateToMastersList(categories?.map { Master(it.id, it.name, it.enabled) }, (it as Button).text.toString())
         }
 
         btn_debts.setOnClickListener {
-            navigateToMastersList(debts?.map { MasterVO(it.id, it.name, it.enabled) }, (it as Button).text.toString())
+            navigateToMastersList(debts?.map { Master(it.id, it.name, it.enabled) }, (it as Button).text.toString())
         }
     }
 
@@ -137,7 +137,7 @@ class MastersFragment : BaseFragment() {
         findNavController().navigate(R.id.action_mastersFragment_to_syncFragment, bundle)
     }
 
-    private fun navigateToMastersList(masterList: List<MasterVO>?, title: String) {
+    private fun navigateToMastersList(masterList: List<Master>?, title: String) {
         val bundle = Bundle()
         masterList?.let { bundle.putParcelableArrayList(MastersListFragment.MASTERS_DATA, it as ArrayList<out Parcelable>) }
         bundle.putString(MastersListFragment.LIST_TITLE, title)

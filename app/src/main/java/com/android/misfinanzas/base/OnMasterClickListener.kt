@@ -1,7 +1,8 @@
 package com.android.misfinanzas.base
 
-import com.android.data.local.model.MasterVO
+import com.android.domain.model.Master
+
 
 interface OnMasterClickListener {
-    fun onMasterClicked(master: MasterVO?)
+    fun onMasterClicked(master: Master?)
 }

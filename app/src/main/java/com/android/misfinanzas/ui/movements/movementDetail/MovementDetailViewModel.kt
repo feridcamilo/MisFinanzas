@@ -2,28 +2,29 @@ package com.android.misfinanzas.ui.movements.movementDetail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.data.local.model.MovementVO
-import com.android.domain.repository.ILocalRepository
-import com.android.domain.repository.IWebRepository
+import com.android.domain.model.Movement
+import com.android.domain.repository.MovementRepository
 import kotlinx.coroutines.launch
 
-class MovementDetailViewModel(private val webRepo: IWebRepository, private val localRepo: ILocalRepository) : ViewModel() {
+class MovementDetailViewModel(
+    private val movementRepository: MovementRepository
+) : ViewModel() {
 
-    fun insertLocalMovement(movement: MovementVO) {
+    fun insertLocalMovement(movement: Movement) {
         viewModelScope.launch {
-            localRepo.insertMovement(movement)
+            movementRepository.insertMovement(movement)
         }
     }
 
-    fun deleteLocalMovement(movement: MovementVO) {
+    fun deleteLocalMovement(movement: Movement) {
         viewModelScope.launch {
-            localRepo.deleteMovement(movement)
+            movementRepository.deleteMovement(movement)
         }
     }
 
     fun insertDiscardedMovement(id: Int) {
         viewModelScope.launch {
-            localRepo.discardMovement(id)
+            movementRepository.discardMovement(id)
         }
     }
 }

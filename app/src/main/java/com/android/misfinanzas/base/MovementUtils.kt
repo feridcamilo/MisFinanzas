@@ -1,6 +1,6 @@
 package com.android.misfinanzas.base
 
-import com.android.data.utils.DateUtils
+import com.android.domain.utils.DateUtils
 import com.android.domain.utils.StringUtils.Companion.COMMA
 import com.android.domain.utils.StringUtils.Companion.EMPTY
 import com.android.domain.utils.StringUtils.Companion.MONEY

@@ -3,12 +3,16 @@ package com.android.misfinanzas.ui.balance
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
-import com.android.domain.repository.ILocalRepository
+import com.android.domain.repository.BalanceRepository
+import com.android.domain.repository.MovementRepository
+import com.android.domain.repository.UserRepository
 import com.android.domain.result.Result
 import kotlinx.coroutines.launch
 
 class BalanceViewModel(
-    private val localRepo: ILocalRepository
+    private val userRepository: UserRepository,
+    private val balanceRepository: BalanceRepository,
+    private val movementRepository: MovementRepository
 ) : ViewModel() {
 
     //val viewState: LiveData<BalanceViewState> get() = _viewState
@@ -17,7 +21,7 @@ class BalanceViewModel(
     fun getLocalUser() = liveData {
         emit(Result.Loading)
         try {
-            emit(Result.Success(localRepo.getUser()))
+            emit(Result.Success(userRepository.getUser()))
         } catch (e: Exception) {
             emit(Result.Error(e))
         }
@@ -26,7 +30,7 @@ class BalanceViewModel(
     fun getLocalBalance(query: String) = liveData {
         emit(Result.Loading)
         try {
-            emit(Result.Success(localRepo.getBalance(query)))
+            emit(Result.Success(balanceRepository.getBalance(query)))
         } catch (e: Exception) {
             emit(Result.Error(e))
         }
@@ -47,7 +51,7 @@ class BalanceViewModel(
     fun getDiscardedMovements() = liveData {
         emit(Result.Loading)
         try {
-            emit(Result.Success(localRepo.getDiscardedMovements()))
+            emit(Result.Success(movementRepository.getDiscardedMovements()))
         } catch (e: Exception) {
             emit(Result.Error(e))
         }
@@ -55,7 +59,7 @@ class BalanceViewModel(
 
     fun insertDiscardedMovement(id: Int) {
         viewModelScope.launch {
-            localRepo.discardMovement(id)
+            movementRepository.discardMovement(id)
         }
     }
 }

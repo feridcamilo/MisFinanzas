@@ -8,7 +8,7 @@ import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.data.local.model.MasterVO
+import com.android.domain.model.Master
 import com.android.domain.utils.StringUtils
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
@@ -25,7 +25,7 @@ class MastersListFragment : BaseFragment(), OnMasterClickListener {
 
     private val TAG = this.javaClass.name
 
-    private var masters: List<MasterVO>? = null
+    private var masters: List<Master>? = null
     private var title: String = StringUtils.EMPTY
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +64,7 @@ class MastersListFragment : BaseFragment(), OnMasterClickListener {
         rv_masters.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
     }
 
-    private fun setupRecyclerViewData(masters: List<MasterVO>) {
+    private fun setupRecyclerViewData(masters: List<Master>) {
         rv_masters.adapter = MastersAdapter(requireContext(), masters, this)
     }
 
@@ -103,14 +103,14 @@ class MastersListFragment : BaseFragment(), OnMasterClickListener {
         progressListener.hide()
     }
 
-    private fun navigateToDetails(master: MasterVO?) {
+    private fun navigateToDetails(master: Master?) {
         //TODO pending to implement master detail fragment and functionality
         //val bundle = Bundle()
         //bundle.putParcelable(dataName, master)
         //findNavController().navigate(R.id., bundle)
     }
 
-    override fun onMasterClicked(master: MasterVO?) {
+    override fun onMasterClicked(master: Master?) {
         navigateToDetails(master)
     }
 }

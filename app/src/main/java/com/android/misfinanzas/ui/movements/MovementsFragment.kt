@@ -10,12 +10,13 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.data.UserSesion
-import com.android.data.local.model.*
-import com.android.data.utils.DateUtils
+import com.android.data.local.model.converters.MovementConverter
 import com.android.domain.AppConfig.Companion.MAX_MOVEMENTS_SIZE
 import com.android.domain.AppConfig.Companion.MIN_LENGTH_SEARCH
+import com.android.domain.UserSesion
+import com.android.domain.model.*
 import com.android.domain.result.Result
+import com.android.domain.utils.DateUtils
 import com.android.domain.utils.MoneyUtils
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
@@ -33,24 +34,24 @@ class MovementsFragment : BaseFragment(), OnMovementClickListener {
 
     private val viewModel by viewModel<MovementsViewModel>()
 
-    private lateinit var movementsObserver: Observer<Result<List<MovementVO>>>
-    private lateinit var peopleObserver: Observer<Result<List<PersonVO>>>
-    private lateinit var placesObserver: Observer<Result<List<PlaceVO>>>
-    private lateinit var categoryObserver: Observer<Result<List<CategoryVO>>>
-    private lateinit var debtsObserver: Observer<Result<List<DebtVO>>>
+    private lateinit var movementsObserver: Observer<Result<List<Movement>>>
+    private lateinit var peopleObserver: Observer<Result<List<Person>>>
+    private lateinit var placesObserver: Observer<Result<List<Place>>>
+    private lateinit var categoryObserver: Observer<Result<List<Category>>>
+    private lateinit var debtsObserver: Observer<Result<List<Debt>>>
 
     private var descriptions: List<String>? = null
-    private var movements: List<MovementVO>? = null
-    private var movementToAdd: MovementVO? = null
+    private var movements: List<Movement>? = null
+    private var movementToAdd: Movement? = null
 
-    private var people: List<PersonVO>? = null
-    private var peopleActive: List<PersonVO>? = null
-    private var places: List<PlaceVO>? = null
-    private var placesActive: List<PlaceVO>? = null
-    private var categories: List<CategoryVO>? = null
-    private var categoriesActive: List<CategoryVO>? = null
-    private var debts: List<DebtVO>? = null
-    private var debtsActive: List<DebtVO>? = null
+    private var people: List<Person>? = null
+    private var peopleActive: List<Person>? = null
+    private var places: List<Place>? = null
+    private var placesActive: List<Place>? = null
+    private var categories: List<Category>? = null
+    private var categoriesActive: List<Category>? = null
+    private var debts: List<Debt>? = null
+    private var debtsActive: List<Debt>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,7 +95,7 @@ class MovementsFragment : BaseFragment(), OnMovementClickListener {
         rv_movimientos.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
     }
 
-    private fun setupRecyclerViewData(movements: List<MovementVO>) {
+    private fun setupRecyclerViewData(movements: List<Movement>) {
         rv_movimientos.adapter = MovementsAdapter(requireContext(), movements, this)
     }
 
@@ -232,9 +233,9 @@ class MovementsFragment : BaseFragment(), OnMovementClickListener {
         findNavController().navigate(R.id.action_movementsFragment_to_syncFragment, bundle)
     }
 
-    private fun navigateToDetails(movement: MovementVO?) {
+    private fun navigateToDetails(movement: Movement?) {
         val bundle = Bundle()
-        bundle.putParcelable(MovementDetailFragment.MOVEMENT_DATA, movement)
+        bundle.putString(MovementDetailFragment.MOVEMENT_DATA, MovementConverter().movementToString(movement!!))
         descriptions?.let { bundle.putStringArrayList(MovementDetailFragment.DESCRIPTIONS_DATA, it as ArrayList<String>) }
         peopleActive?.let { bundle.putParcelableArrayList(MovementDetailFragment.PEOPLE_DATA, it as ArrayList<out Parcelable>) }
         placesActive?.let { bundle.putParcelableArrayList(MovementDetailFragment.PLACES_DATA, it as ArrayList<out Parcelable>) }
@@ -263,7 +264,7 @@ class MovementsFragment : BaseFragment(), OnMovementClickListener {
         viewModel.getLocalDebts().observe(viewLifecycleOwner, debtsObserver)
     }
 
-    override fun onMovementClicked(movement: MovementVO?) {
+    override fun onMovementClicked(movement: Movement?) {
         navigateToDetails(movement)
     }
 

@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.android.data.UserSesion
-import com.android.data.remote.model.User
-import com.android.data.utils.DateUtils
 import com.android.data.utils.SharedPreferencesUtils
 import com.android.domain.AppConfig
+import com.android.domain.UserSesion
+import com.android.domain.model.User
 import com.android.domain.result.Result
+import com.android.domain.utils.DateUtils
 import com.android.domain.utils.StringUtils.Companion.EMPTY
 import com.android.domain.utils.StringUtils.Companion.POINT
 import com.android.misfinanzas.R
@@ -46,7 +46,7 @@ class SyncFragment : BaseFragment() {
     private var fromMovements: Boolean = false
 
     private lateinit var serverDateTimeObserver: Observer<Result<String>>
-    private lateinit var syncUserObserver: Observer<Result<User>>
+    private lateinit var syncUserObserver: Observer<Result<User?>>
     private lateinit var syncMovementsObserver: Observer<Result<Boolean>>
     private lateinit var syncMastersObserver: Observer<Result<Boolean>>
 
@@ -193,7 +193,7 @@ class SyncFragment : BaseFragment() {
                         progressListener.hide()
                     } else {
                         context?.showShortToast(R.string.info_user_saved)
-                        makeLogin(result.data)
+                        makeLogin(result.data!!)
                     }
                 }
                 is Result.Error -> showExceptionMessage(TAG, getString(R.string.error_getting_user, result.exception), ErrorType.TYPE_RETROFIT)
@@ -246,7 +246,7 @@ class SyncFragment : BaseFragment() {
 
     private fun makeLogin(user: User) {
         UserSesion.setUser(user)
-        viewModel.setClientId(user.IdCliente.toString())
+        viewModel.setClientId(user.clientId.toString())
         cardViewLogin.visibility = View.GONE
 
         //Auto sync after login

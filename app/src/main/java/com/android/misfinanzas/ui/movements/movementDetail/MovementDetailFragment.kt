@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import com.android.data.local.model.*
+import com.android.data.local.model.converters.MovementConverter
+import com.android.domain.model.*
+import com.android.domain.utils.StringUtils.Companion.EMPTY
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
 import com.android.misfinanzas.ui.widgets.movementDetail.MovementDetailView
@@ -30,17 +32,17 @@ class MovementDetailFragment : BaseFragment() {
     private val viewModel by viewModel<MovementDetailViewModel>()
 
     private lateinit var movementDetailView: MovementDetailView
-    private var movement: MovementVO? = null
+    private var movement: Movement? = null
     private var descriptions: List<String>? = null
-    private var people: List<PersonVO>? = null
-    private var places: List<PlaceVO>? = null
-    private var categories: List<CategoryVO>? = null
-    private var debts: List<DebtVO>? = null
+    private var people: List<Person>? = null
+    private var places: List<Place>? = null
+    private var categories: List<Category>? = null
+    private var debts: List<Debt>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            movement = it.getParcelable(MOVEMENT_DATA)
+            movement = MovementConverter().stringToMovement(it.getString(MOVEMENT_DATA, EMPTY))
             descriptions = it.getStringArrayList(DESCRIPTIONS_DATA)
             people = it.getParcelableArrayList(PEOPLE_DATA)
             places = it.getParcelableArrayList(PLACES_DATA)

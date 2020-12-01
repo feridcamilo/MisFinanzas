@@ -4,6 +4,7 @@ import com.android.domain.utils.listByElementsOf
 import com.android.misfinanzas.ui.balance.BalanceViewModel
 import com.android.misfinanzas.ui.masters.MastersViewModel
 import com.android.misfinanzas.ui.movements.MovementsViewModel
+import com.android.misfinanzas.ui.movements.movementDetail.MovementDetailViewModel
 import com.android.misfinanzas.ui.sync.SyncViewModel
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
@@ -14,12 +15,13 @@ val uiModules by lazy {
         balanceFeatureModule,
         mastersFeatureModule,
         movementsFeatureModule,
+        movementDetailFeatureModule,
         syncFeatureModule
     )
 }
 
 private val balanceFeatureModule = module {
-    viewModel { BalanceViewModel(get()) }
+    viewModel { BalanceViewModel(get(), get(), get()) }
 }
 
 private val mastersFeatureModule = module {
@@ -30,6 +32,10 @@ private val movementsFeatureModule = module {
     viewModel { MovementsViewModel(get(), get()) }
 }
 
+private val movementDetailFeatureModule = module {
+    viewModel { MovementDetailViewModel(get()) }
+}
+
 private val syncFeatureModule = module {
-    viewModel { SyncViewModel(get(), get()) }
+    viewModel { SyncViewModel(get(), get(), get()) }
 }
