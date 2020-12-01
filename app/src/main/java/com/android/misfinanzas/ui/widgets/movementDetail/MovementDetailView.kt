@@ -16,8 +16,8 @@ import com.android.data.utils.DateUtils.Companion.getCurrentDateTime
 import com.android.data.utils.DateUtils.Companion.getDateFormat
 import com.android.data.utils.DateUtils.Companion.getDateTimeFormat
 import com.android.data.utils.DateUtils.Companion.getDateToWebService
-import com.android.data.utils.MoneyUtils
-import com.android.data.utils.StringUtils.Companion.EMPTY
+import com.android.domain.utils.MoneyUtils
+import com.android.domain.utils.StringUtils.Companion.EMPTY
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.MovementType
 import kotlinx.android.synthetic.main.view_movement_detail.view.*

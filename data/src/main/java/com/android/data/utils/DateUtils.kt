@@ -40,7 +40,7 @@ class DateUtils {
         }
 
         fun getCalendarFromStringDate(strDate: String): Calendar {
-            val splitedDate = strDate.split(StringUtils.SLASH)
+            val splitedDate = strDate.split(com.android.domain.utils.StringUtils.SLASH)
             val day = splitedDate[0]
             val month = splitedDate[1]
             val year = splitedDate[2]

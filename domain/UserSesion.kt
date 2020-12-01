@@ -1,9 +1,9 @@
-package com.android.data
+package com.android.domain
 
 import com.android.data.local.model.UserVO
-import com.android.data.remote.model.User
+
 import com.android.data.utils.DateUtils
-import com.android.data.utils.StringUtils.Companion.EMPTY
+import com.android.domain.utils.StringUtils.Companion.EMPTY
 import java.util.*
 
 class UserSesion {

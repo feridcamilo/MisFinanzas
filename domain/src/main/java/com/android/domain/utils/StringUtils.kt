@@ -1,4 +1,4 @@
-package com.android.data.utils
+package com.android.domain.utils
 
 class StringUtils {
     companion object {

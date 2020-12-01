@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.cardview.widget.CardView
 import com.android.data.local.model.BalanceVO
-import com.android.data.utils.MoneyUtils
+import com.android.domain.utils.MoneyUtils
 import com.android.misfinanzas.R
 import kotlinx.android.synthetic.main.card_view_balance.view.*
 

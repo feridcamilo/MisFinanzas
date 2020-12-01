@@ -1,6 +1,6 @@
 package com.android.data.remote.api
 
-import com.android.data.AppConfig
+import com.android.domain.AppConfig
 import com.android.data.remote.model.converter.JsonDateDeserializer
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient

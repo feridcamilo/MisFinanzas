@@ -3,12 +3,16 @@ package com.android.misfinanzas.ui.balance
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
-import com.android.data.local.repository.ILocalRepository
-import com.android.data.remote.repository.IWebRepository
+import com.android.domain.repository.ILocalRepository
 import com.android.domain.result.Result
 import kotlinx.coroutines.launch
 
-class BalanceViewModel(private val webRepo: IWebRepository, private val localRepo: ILocalRepository) : ViewModel() {
+class BalanceViewModel(
+    private val localRepo: ILocalRepository
+) : ViewModel() {
+
+    //val viewState: LiveData<BalanceViewState> get() = _viewState
+    //private val _viewState = MutableLiveData<BalanceViewState>()
 
     fun getLocalUser() = liveData {
         emit(Result.Loading)
@@ -27,6 +31,18 @@ class BalanceViewModel(private val webRepo: IWebRepository, private val localRep
             emit(Result.Error(e))
         }
     }
+
+    /*
+    suspend fun getLocalBalances(query: String) {
+        _viewState.postValue(BalanceViewState.PageLoading)
+        try {
+            _viewState.postValue(BalanceViewState.BalanceLoaded)
+            localRepo.getBalance(query)
+        } catch (e: Exception) {
+            _viewState.postValue(BalanceViewState.ErrorLoadingBalance(e))
+        }
+    }
+    */
 
     fun getDiscardedMovements() = liveData {
         emit(Result.Loading)

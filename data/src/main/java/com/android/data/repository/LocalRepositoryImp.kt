@@ -1,18 +1,11 @@
-package com.android.data.local.repository
+package com.android.data.repository
 
 import com.android.data.local.RoomDataSource
 import com.android.data.local.model.*
+import com.android.domain.repository.ILocalRepository
 import java.util.*
 
 class LocalRepositoryImp(private val dataSource: RoomDataSource) : ILocalRepository {
-
-    override suspend fun getUser(): UserVO {
-        return dataSource.getUser()
-    }
-
-    override suspend fun insertUser(user: UserVO) {
-        dataSource.insertUser(user)
-    }
 
     override suspend fun updateLastSyncMovements(date: Date) {
         dataSource.updateLastSyncMovements(date)

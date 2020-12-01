@@ -1,11 +1,11 @@
 package com.android.misfinanzas.base
 
 import com.android.data.utils.DateUtils
-import com.android.data.utils.StringUtils.Companion.COMMA
-import com.android.data.utils.StringUtils.Companion.EMPTY
-import com.android.data.utils.StringUtils.Companion.MONEY
-import com.android.data.utils.StringUtils.Companion.POINT
-import com.android.data.utils.StringUtils.Companion.SPACE
+import com.android.domain.utils.StringUtils.Companion.COMMA
+import com.android.domain.utils.StringUtils.Companion.EMPTY
+import com.android.domain.utils.StringUtils.Companion.MONEY
+import com.android.domain.utils.StringUtils.Companion.POINT
+import com.android.domain.utils.StringUtils.Companion.SPACE
 import java.math.BigDecimal
 import java.util.*
 import java.util.regex.Matcher

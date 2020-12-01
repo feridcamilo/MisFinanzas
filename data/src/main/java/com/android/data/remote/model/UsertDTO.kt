@@ -5,10 +5,10 @@ import java.io.Serializable
 
 data class UserDTO(
     @SerializedName("getUsuarioResult")
-    val result: User
+    val result: UserResult
 ) : Serializable
 
-data class User(
+data class UserResult(
     val Usuario: String,
     val IdCliente: Int,
     val Nombres: String,

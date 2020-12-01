@@ -3,7 +3,7 @@ package com.android.misfinanzas.base
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
-import com.android.data.utils.StringUtils
+import com.android.domain.utils.StringUtils
 import java.util.*
 
 data class Sms(

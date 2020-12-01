@@ -2,11 +2,12 @@ package com.android.misfinanzas.ui.masters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import com.android.data.local.repository.ILocalRepository
-import com.android.data.remote.repository.IWebRepository
+import com.android.domain.repository.ILocalRepository
 import com.android.domain.result.Result
 
-class MastersViewModel(private val webRepo: IWebRepository, private val localRepo: ILocalRepository) : ViewModel() {
+class MastersViewModel(
+    private val localRepo: ILocalRepository
+) : ViewModel() {
 
     fun getLocalPeople() = liveData {
         emit(Result.Loading)

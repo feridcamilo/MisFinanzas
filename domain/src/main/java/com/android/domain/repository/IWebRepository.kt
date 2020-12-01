@@ -1,4 +1,4 @@
-package com.android.data.remote.repository
+package com.android.domain.repository
 
 import com.android.data.remote.model.Balance
 import com.android.data.remote.model.Master

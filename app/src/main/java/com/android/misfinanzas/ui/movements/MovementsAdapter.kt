@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.android.data.local.model.MovementVO
 import com.android.data.utils.DateUtils
-import com.android.data.utils.MoneyUtils
+import com.android.domain.utils.MoneyUtils
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseViewHolder
 import com.android.misfinanzas.base.MovementType

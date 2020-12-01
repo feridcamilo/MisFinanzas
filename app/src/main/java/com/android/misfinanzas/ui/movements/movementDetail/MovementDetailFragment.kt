@@ -5,19 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
-import com.android.data.local.RoomDataSource
 import com.android.data.local.model.*
-import com.android.data.local.repository.LocalRepositoryImp
-import com.android.data.remote.RetrofitDataSource
-import com.android.data.remote.repository.WebRepositoryImp
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
-import com.android.misfinanzas.base.BaseViewModelFactory
 import com.android.misfinanzas.ui.widgets.movementDetail.MovementDetailView
+import com.android.misfinanzas.utils.showShortToast
 import kotlinx.android.synthetic.main.fragment_movement_detail.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class MovementDetailFragment : BaseFragment() {
 
@@ -32,12 +27,7 @@ class MovementDetailFragment : BaseFragment() {
 
     private val TAG = this.javaClass.name
 
-    private val viewModel by viewModels<MovementDetailViewModel> {
-        BaseViewModelFactory(
-            WebRepositoryImp(RetrofitDataSource()),
-            LocalRepositoryImp(RoomDataSource(requireContext()))
-        )
-    }
+    private val viewModel by viewModel<MovementDetailViewModel>()
 
     private lateinit var movementDetailView: MovementDetailView
     private var movement: MovementVO? = null
@@ -67,7 +57,10 @@ class MovementDetailFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initMovementDetailView()
+        setupEvents()
+    }
 
+    private fun setupEvents() {
         ib_save.setOnClickListener {
             save()
         }
@@ -99,13 +92,13 @@ class MovementDetailFragment : BaseFragment() {
             }
             if (movementToSave.dateLastUpd == null) { //Is insert
                 movementDetailView.cleanFormAfterSave()
-                Toast.makeText(requireContext(), getString(R.string.info_movement_saved), Toast.LENGTH_SHORT).show()
+                context?.showShortToast(R.string.info_movement_saved)
             } else { //Is update
                 activity?.onBackPressed()
-                Toast.makeText(requireContext(), getString(R.string.info_movement_updated), Toast.LENGTH_SHORT).show()
+                context?.showShortToast(R.string.info_movement_updated)
             }
         } catch (e: Exception) {
-            Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+            showExceptionMessage(TAG, e.message!!, ErrorType.TYPE_APP)
         }
     }
 
@@ -119,7 +112,7 @@ class MovementDetailFragment : BaseFragment() {
                 viewModel.deleteLocalMovement(it)
             }
             activity?.onBackPressed()
-            Toast.makeText(requireContext(), R.string.info_movement_deleted, Toast.LENGTH_SHORT).show()
+            context?.showShortToast(R.string.info_movement_deleted)
         }
 
         builder.setNeutralButton(R.string.cd_no) { dialog, which -> }

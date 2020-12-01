@@ -84,7 +84,8 @@
     <string name="error_getting_places">Ocurrió un error obteniendo los lugares: %1$s</string>
     <string name="error_getting_people">Ocurrió un error obteniendo las personas: %1$s</string>
     <string name="error_getting_user">Ocurrió un error obteniendo el usuario: %1$s</string>
-    <string name="error_getting_server_datetime">Ocurrió un error obteniendo la fecha y hora del servidor: %1$s</string>
+    <string name="error_getting_srv_dtm">Ocurrió un error obteniendo la fecha y hora del servidor: %1$s</string>
+    <string name="error_getting_discarded_movs">Ocurrió un error obteniendo los movimientos descartados: %1$s</string>
     <string name="error_retrofit">Retrofit: %1$s</string>
     <string name="error_room">Room: %1$s</string>
 

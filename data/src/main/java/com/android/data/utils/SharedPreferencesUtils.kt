@@ -2,7 +2,7 @@ package com.android.data.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.android.data.utils.StringUtils.Companion.EMPTY
+import com.android.domain.utils.StringUtils.Companion.EMPTY
 
 class SharedPreferencesUtils {
     companion object {

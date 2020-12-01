@@ -1,128 +1,121 @@
 package com.android.data.local
 
-import android.content.Context
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.android.data.UserSesion
 import com.android.data.local.db.AppDatabase
 import com.android.data.local.model.*
 import java.util.*
 
-class RoomDataSource(private val context: Context) {
-    suspend fun getUser(): UserVO {
-        return AppDatabase.getDatabase(context).userDao().getUser()
-    }
+class RoomDataSource(private val db: AppDatabase) {
 
-    suspend fun insertUser(user: UserVO) {
-        return AppDatabase.getDatabase(context).userDao().insert(user)
-    }
 
     suspend fun updateLastSyncMovements(date: Date) {
         UserSesion.updateLastSyncMovements(date)
-        return AppDatabase.getDatabase(context).userDao().updateLastSyncMovements(date)
+        return db.userDao().updateLastSyncMovements(date)
     }
 
     suspend fun getLastSyncMovements(): Date? {
-        return AppDatabase.getDatabase(context).userDao().getLastSyncMovements()
+        return db.userDao().getLastSyncMovements()
     }
 
     suspend fun updateLastSyncMasters(date: Date) {
         UserSesion.updateLastSyncMasters(date)
-        return AppDatabase.getDatabase(context).userDao().updateLastSyncMasters(date)
+        return db.userDao().updateLastSyncMasters(date)
     }
 
     suspend fun getLastSyncMasters(): Date? {
-        return AppDatabase.getDatabase(context).userDao().getLastSyncMasters()
+        return db.userDao().getLastSyncMasters()
     }
 
 
     suspend fun getBalance(query: String): BalanceVO {
         val sqlQuery = SimpleSQLiteQuery(query)
-        return AppDatabase.getDatabase(context).movementDAO().getBalance(sqlQuery)
+        return db.movementDAO().getBalance(sqlQuery)
     }
 
     suspend fun getMovements(): List<MovementVO> {
-        return AppDatabase.getDatabase(context).movementDAO().getAll()
+        return db.movementDAO().getAll()
     }
 
     suspend fun getMovementsToSync(lastSync: Date): List<MovementVO> {
-        return AppDatabase.getDatabase(context).movementDAO().getAllToSync(lastSync)
+        return db.movementDAO().getAllToSync(lastSync)
     }
 
     suspend fun getMovementsToDelete(): List<Int> {
-        return AppDatabase.getDatabase(context).deletedMovementDAO().getAll()
+        return db.deletedMovementDAO().getAll()
     }
 
     suspend fun getdiscardedMovements(): List<Int> {
-        return AppDatabase.getDatabase(context).discardedMovementDAO().getAll()
+        return db.discardedMovementDAO().getAll()
     }
 
     suspend fun deleteMovementsFromWeb(ids: List<Int>) {
-        AppDatabase.getDatabase(context).movementDAO().deletedFromWeb(ids)
+        db.movementDAO().deletedFromWeb(ids)
     }
 
     suspend fun deleteMovement(movement: MovementVO) {
-        AppDatabase.getDatabase(context).movementDAO().delete(movement)
+        db.movementDAO().delete(movement)
         val isLocal = movement.dateEntry!! > UserSesion.getUser()?.lastSyncMovements
         if (!isLocal) {
-            AppDatabase.getDatabase(context).deletedMovementDAO().insert(DeletedMovementVO(0, movement.idMovement))
+            db.deletedMovementDAO().insert(DeletedMovementVO(0, movement.idMovement))
         }
     }
 
     suspend fun discardMovement(id: Int) {
-        AppDatabase.getDatabase(context).discardedMovementDAO().insert(DiscardedMovementVO(0, id))
+        db.discardedMovementDAO().insert(DiscardedMovementVO(0, id))
     }
 
     suspend fun clearSyncedMovements(lastSync: Date) {
-        AppDatabase.getDatabase(context).movementDAO().deleteAllNews(lastSync)
+        db.movementDAO().deleteAllNews(lastSync)
     }
 
     suspend fun insertMovement(movement: MovementVO) {
-        AppDatabase.getDatabase(context).movementDAO().insert(movement)
+        db.movementDAO().insert(movement)
     }
 
     suspend fun insertMovements(movements: List<MovementVO>) {
-        AppDatabase.getDatabase(context).movementDAO().insertAll(movements)
+        db.movementDAO().insertAll(movements)
     }
 
 
     suspend fun clearDeletedMovements() {
-        AppDatabase.getDatabase(context).deletedMovementDAO().cleanTable()
+        db.deletedMovementDAO().cleanTable()
     }
 
     suspend fun clearDiscardedMovements() {
-        AppDatabase.getDatabase(context).discardedMovementDAO().cleanTable()
+        db.discardedMovementDAO().cleanTable()
     }
 
 
     suspend fun getCategories(): List<CategoryVO> {
-        return AppDatabase.getDatabase(context).categoryDAO().getAll()
+        return db.categoryDAO().getAll()
     }
 
     suspend fun insertCategories(categories: List<CategoryVO>) {
-        AppDatabase.getDatabase(context).categoryDAO().insertAll(categories)
+        db.categoryDAO().insertAll(categories)
     }
 
     suspend fun getDebts(): List<DebtVO> {
-        return AppDatabase.getDatabase(context).debtDAO().getAll()
+        return db.debtDAO().getAll()
     }
 
     suspend fun insertDebts(debts: List<DebtVO>) {
-        AppDatabase.getDatabase(context).debtDAO().insertAll(debts)
+        db.debtDAO().insertAll(debts)
     }
 
     suspend fun getPlaces(): List<PlaceVO> {
-        return AppDatabase.getDatabase(context).placeDAO().getAll()
+        return db.placeDAO().getAll()
     }
 
     suspend fun insertPlaces(places: List<PlaceVO>) {
-        AppDatabase.getDatabase(context).placeDAO().insertAll(places)
+        db.placeDAO().insertAll(places)
     }
 
     suspend fun getPeople(): List<PersonVO> {
-        return AppDatabase.getDatabase(context).personDAO().getAll()
+        return db.personDAO().getAll()
     }
 
     suspend fun insertPeople(people: List<PersonVO>) {
-        AppDatabase.getDatabase(context).personDAO().insertAll(people)
+        db.personDAO().insertAll(people)
     }
 }

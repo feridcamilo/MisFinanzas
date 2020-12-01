@@ -1,4 +1,4 @@
-package com.android.data
+package com.android.domain
 
 class AppConfig {
     companion object {

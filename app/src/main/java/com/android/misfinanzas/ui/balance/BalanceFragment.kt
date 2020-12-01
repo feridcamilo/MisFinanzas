@@ -4,27 +4,19 @@ import android.Manifest
 import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.data.UserSesion
-import com.android.data.local.RoomDataSource
 import com.android.data.local.model.BalanceVO
 import com.android.data.local.model.MovementVO
 import com.android.data.local.model.UserVO
-import com.android.data.local.repository.LocalRepositoryImp
-import com.android.data.remote.RetrofitDataSource
-import com.android.data.remote.repository.WebRepositoryImp
 import com.android.data.utils.DateUtils
-import com.android.data.utils.NetworkUtils
 import com.android.data.utils.SharedPreferencesUtils
 import com.android.domain.result.Result
 import com.android.misfinanzas.R
@@ -32,21 +24,18 @@ import com.android.misfinanzas.base.*
 import com.android.misfinanzas.ui.movements.MovementsAdapter
 import com.android.misfinanzas.ui.movements.movementDetail.MovementDetailFragment
 import com.android.misfinanzas.ui.sync.SyncFragment
+import com.android.misfinanzas.utils.isConnected
+import com.android.misfinanzas.utils.showShortToast
 import kotlinx.android.synthetic.main.fragment_balance.*
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
-
 
 class BalanceFragment : BaseFragment(), OnMovementClickListener {
 
     private val TAG = this.javaClass.name
     private val REQUEST_PERMISSION_READ_SMS = 1
 
-    private val viewModel by viewModels<BalanceViewModel> {
-        BaseViewModelFactory(
-            WebRepositoryImp(RetrofitDataSource()),
-            LocalRepositoryImp(RoomDataSource(requireContext()))
-        )
-    }
+    private val viewModel by viewModel<BalanceViewModel>()
 
     private lateinit var userObserver: Observer<Result<UserVO>>
     private lateinit var balanceObserver: Observer<Result<BalanceVO>>
@@ -58,20 +47,23 @@ class BalanceFragment : BaseFragment(), OnMovementClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupObservers()
+        setupViewModel()
+        setupEvents()
         getLocalUser()
+    }
 
+    private fun setupEvents() {
         btn_add_movement.setOnClickListener {
             navigateToAddMovement(MovementVO.getEmpty())
         }
     }
 
-    private fun setupObservers() {
+    private fun setupViewModel() {
+        //viewModel.viewState.observe(viewLifecycleOwner, viewStateObserver)
+
         userObserver = Observer { result ->
             when (result) {
-                is Result.Loading -> {
-                    progressListener.show()
-                }
+                is Result.Loading -> progressListener.show()
                 is Result.Success -> {
                     if (result.data == null) {
                         progressListener.hide()
@@ -81,61 +73,85 @@ class BalanceFragment : BaseFragment(), OnMovementClickListener {
                         determinateProcedure()
                     }
                 }
-                is Result.Error -> {
-                    progressListener.hide()
-                    Toast.makeText(requireContext(), getString(R.string.error_getting_movements, result.exception), Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, getString(R.string.error_room, result.exception))
-                }
+                is Result.Error -> showExceptionMessage(TAG, getString(R.string.error_getting_user, result.exception), ErrorType.TYPE_ROOM)
             }
         }
 
         balanceObserver = Observer { result ->
             when (result) {
-                is Result.Loading -> {
-                    progressListener.show()
-                }
+                is Result.Loading -> progressListener.show()
                 is Result.Success -> {
                     if (result.data == null) {
-                        Toast.makeText(requireContext(), R.string.info_no_balance, Toast.LENGTH_SHORT).show()
+                        context?.showShortToast(R.string.info_no_balance)
                         navigateToSync(false)
                     } else {
                         showBalance(result.data)
                     }
                     progressListener.hide()
                 }
-                is Result.Error -> {
-                    progressListener.hide()
-                    Toast.makeText(requireContext(), getString(R.string.error_getting_balance, result.exception), Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, getString(R.string.error_room, result.exception))
-                }
+                is Result.Error -> showExceptionMessage(TAG, getString(R.string.error_getting_balance, result.exception), ErrorType.TYPE_ROOM)
             }
         }
 
         discardedObserver = Observer { result ->
             when (result) {
-                is Result.Loading -> {
-                    progressListener.show()
-                }
+                is Result.Loading -> progressListener.show()
                 is Result.Success -> {
                     if (result.data != null) {
                         getPotentialsMovementsFromSMS(result.data)
                     }
                     progressListener.hide()
                 }
-                is Result.Error -> {
-                    progressListener.hide()
-                    Toast.makeText(requireContext(), getString(R.string.error_getting_balance, result.exception), Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, getString(R.string.error_room, result.exception))
-                }
+                is Result.Error -> showExceptionMessage(TAG, getString(R.string.error_getting_discarded_movs, result.exception), ErrorType.TYPE_ROOM)
             }
         }
     }
+
+    /*
+    private val viewStateObserver = Observer<BalanceViewState> { state ->
+        when (state) {
+            is BalanceViewState.PageLoading -> progressListener.show()
+            is BalanceViewState.UserLoaded -> TODO()
+            is BalanceViewState.ErrorLoadingUser -> showExceptionMessage(getString(R.string.error_getting_user, it.))
+            is BalanceViewState.BalanceLoaded -> TODO()
+            is BalanceViewState.ErrorLoadingBalance -> TODO()
+            is BalanceViewState.MovementDiscarded -> TODO()
+            is BalanceViewState.ErrorDiscardingMovement -> TODO()
+        }
+    }
+
+    private fun processUser(data: UserVO) {
+        if (data == null) {
+            progressListener.hide()
+            navigateToSync(false)
+        } else {
+            UserSesion.setUser(data)
+            determinateProcedure()
+        }
+    }
+
+    private fun processBalance(data: BalanceVO) {
+        if (data == null) {
+            context?.showShortToast(R.string.info_no_balance)
+            navigateToSync(false)
+        } else {
+            showBalance(data)
+        }
+        progressListener.hide()
+    }
+
+    private fun showExceptionMessage(message: String) {
+        progressListener.hide()
+        context?.showShortToast(message)
+        Log.e(TAG, message)
+    }
+    */
 
     private fun determinateProcedure() {
         if (SharedPreferencesUtils.getAutoSyncConfig(requireContext())) {
             if (UserSesion.isFirstOpen()) {
                 UserSesion.setFirstOpen(false)
-                if (NetworkUtils.isConnected(requireContext(), getString(R.string.error_not_network_no_sync))) {
+                if (context?.isConnected(getString(R.string.error_not_network_no_sync)) == true) {
                     //Makes an autosync
                     navigateToSync(true)
                     return
@@ -266,7 +282,7 @@ class BalanceFragment : BaseFragment(), OnMovementClickListener {
             viewModel.insertDiscardedMovement(id)
             getDiscardedMovements()
             refreshRecyclerViewVisibility()
-            Toast.makeText(requireContext(), R.string.info_movement_discarded, Toast.LENGTH_SHORT).show()
+            context?.showShortToast(R.string.info_movement_discarded)
         }
 
         builder.setNeutralButton(R.string.cd_no) { dialog, which -> }

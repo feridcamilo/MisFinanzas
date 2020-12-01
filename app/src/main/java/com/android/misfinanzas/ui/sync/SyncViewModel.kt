@@ -3,18 +3,21 @@ package com.android.misfinanzas.ui.sync
 import androidx.lifecycle.*
 import com.android.data.UserSesion
 import com.android.data.local.model.*
-import com.android.data.local.repository.ILocalRepository
 import com.android.data.remote.model.Master
 import com.android.data.remote.model.Movement
 import com.android.data.remote.model.User
-import com.android.data.remote.repository.IWebRepository
-import com.android.data.utils.StringUtils.Companion.EMPTY
+import com.android.domain.repository.ILocalRepository
+import com.android.domain.repository.IWebRepository
 import com.android.domain.result.Result
+import com.android.domain.utils.StringUtils.Companion.EMPTY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
-class SyncViewModel(private val webRepo: IWebRepository, private val localRepo: ILocalRepository) : ViewModel() {
+class SyncViewModel(
+    private val webRepo: IWebRepository,
+    private val localRepo: ILocalRepository
+) : ViewModel() {
 
     private var clientId: String = UserSesion.getUser()?.clientId.toString()
 

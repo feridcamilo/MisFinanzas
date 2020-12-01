@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.data.local.model.MasterVO
-import com.android.data.utils.StringUtils
+import com.android.domain.utils.StringUtils
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
 import com.android.misfinanzas.base.OnMasterClickListener

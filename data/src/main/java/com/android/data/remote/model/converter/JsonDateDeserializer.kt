@@ -1,6 +1,6 @@
 package com.android.data.remote.model.converter
 
-import com.android.data.utils.StringUtils.Companion.EMPTY
+import com.android.domain.utils.StringUtils.Companion.EMPTY
 import com.google.gson.*
 import java.lang.reflect.Type
 import java.util.*

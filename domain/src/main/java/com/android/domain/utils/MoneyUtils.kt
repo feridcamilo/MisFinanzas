@@ -1,6 +1,6 @@
-package com.android.data.utils
+package com.android.domain.utils
 
-import com.android.data.utils.StringUtils.Companion.EMPTY
+import com.android.domain.utils.StringUtils.Companion.EMPTY
 import java.text.DecimalFormat
 import java.text.NumberFormat
 

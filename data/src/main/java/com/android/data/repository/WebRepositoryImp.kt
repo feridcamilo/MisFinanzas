@@ -1,10 +1,11 @@
-package com.android.data.remote.repository
+package com.android.data.repository
 
 import com.android.data.remote.RetrofitDataSource
 import com.android.data.remote.model.Balance
 import com.android.data.remote.model.Master
 import com.android.data.remote.model.Movement
 import com.android.data.remote.model.User
+import com.android.domain.repository.IWebRepository
 import java.util.*
 
 class WebRepositoryImp(private val dataSource: RetrofitDataSource) : IWebRepository {

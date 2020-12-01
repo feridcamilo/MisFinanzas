@@ -2,47 +2,36 @@ package com.android.misfinanzas.ui.movements
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import android.widget.Toast
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.data.AppConfig.Companion.MAX_MOVEMENTS_SIZE
-import com.android.data.AppConfig.Companion.MIN_LENGTH_SEARCH
 import com.android.data.UserSesion
-import com.android.data.local.RoomDataSource
 import com.android.data.local.model.*
-import com.android.data.local.repository.LocalRepositoryImp
-import com.android.data.remote.RetrofitDataSource
-import com.android.data.remote.repository.WebRepositoryImp
 import com.android.data.utils.DateUtils
-import com.android.data.utils.MoneyUtils
+import com.android.domain.AppConfig.Companion.MAX_MOVEMENTS_SIZE
+import com.android.domain.AppConfig.Companion.MIN_LENGTH_SEARCH
 import com.android.domain.result.Result
+import com.android.domain.utils.MoneyUtils
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
-import com.android.misfinanzas.base.BaseViewModelFactory
 import com.android.misfinanzas.base.OnMovementClickListener
 import com.android.misfinanzas.ui.movements.movementDetail.MovementDetailFragment
 import com.android.misfinanzas.ui.sync.SyncFragment
+import com.android.misfinanzas.utils.showShortToast
 import kotlinx.android.synthetic.main.fragment_movements.*
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 class MovementsFragment : BaseFragment(), OnMovementClickListener {
 
     private val TAG = this.javaClass.name
 
-    private val viewModel by viewModels<MovementsViewModel> {
-        BaseViewModelFactory(
-            WebRepositoryImp(RetrofitDataSource()),
-            LocalRepositoryImp(RoomDataSource(requireContext()))
-        )
-    }
+    private val viewModel by viewModel<MovementsViewModel>()
 
     private lateinit var movementsObserver: Observer<Result<List<MovementVO>>>
     private lateinit var peopleObserver: Observer<Result<List<PersonVO>>>
@@ -162,84 +151,58 @@ class MovementsFragment : BaseFragment(), OnMovementClickListener {
     private fun setupObservers() {
         peopleObserver = Observer { result ->
             when (result) {
-                is Result.Loading -> {
-                    progressListener.show()
-                }
+                is Result.Loading -> progressListener.show()
                 is Result.Success -> {
                     people = result.data
                     peopleActive = people?.filter { it.enabled }
                     getLocalPlaces()
                 }
-                is Result.Error -> {
-                    progressListener.hide()
-                    Toast.makeText(requireContext(), getString(R.string.error_getting_people, result.exception), Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, getString(R.string.error_room, result.exception))
-                }
+                is Result.Error -> showExceptionMessage(TAG, getString(R.string.error_getting_people, result.exception), ErrorType.TYPE_ROOM)
             }
         }
 
         placesObserver = Observer { result ->
             when (result) {
-                is Result.Loading -> {
-                    progressListener.show()
-                }
+                is Result.Loading -> progressListener.show()
                 is Result.Success -> {
                     places = result.data
                     placesActive = places?.filter { it.enabled }
                     getLocalCategories()
                 }
-                is Result.Error -> {
-                    progressListener.hide()
-                    Toast.makeText(requireContext(), getString(R.string.error_getting_places, result.exception), Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, getString(R.string.error_room, result.exception))
-                }
+                is Result.Error -> showExceptionMessage(TAG, getString(R.string.error_getting_places, result.exception), ErrorType.TYPE_ROOM)
             }
         }
 
         categoryObserver = Observer { result ->
             when (result) {
-                is Result.Loading -> {
-                    progressListener.show()
-                }
+                is Result.Loading -> progressListener.show()
                 is Result.Success -> {
                     categories = result.data
                     categoriesActive = categories?.filter { it.enabled }
                     getLocalDebts()
                 }
-                is Result.Error -> {
-                    progressListener.hide()
-                    Toast.makeText(requireContext(), getString(R.string.error_getting_categories, result.exception), Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, getString(R.string.error_room, result.exception))
-                }
+                is Result.Error -> showExceptionMessage(TAG, getString(R.string.error_getting_categories, result.exception), ErrorType.TYPE_ROOM)
             }
         }
 
         debtsObserver = Observer { result ->
             when (result) {
-                is Result.Loading -> {
-                    progressListener.show()
-                }
+                is Result.Loading -> progressListener.show()
                 is Result.Success -> {
                     debts = result.data
                     debtsActive = debts?.filter { it.enabled }
                     getLocalMovements()
                 }
-                is Result.Error -> {
-                    progressListener.hide()
-                    Toast.makeText(requireContext(), getString(R.string.error_getting_debts, result.exception), Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, getString(R.string.error_room, result.exception))
-                }
+                is Result.Error -> showExceptionMessage(TAG, getString(R.string.error_getting_debts, result.exception), ErrorType.TYPE_ROOM)
             }
         }
 
         movementsObserver = Observer { result ->
             when (result) {
-                is Result.Loading -> {
-                    progressListener.show()
-                }
+                is Result.Loading -> progressListener.show()
                 is Result.Success -> {
                     if (result.data.isEmpty()) {
-                        Toast.makeText(requireContext(), R.string.info_no_movements, Toast.LENGTH_SHORT).show()
+                        context?.showShortToast(R.string.info_no_movements)
                     } else {
                         movements = result.data
                         descriptions = result.data.distinctBy { it.description }.map { it.description }
@@ -258,11 +221,7 @@ class MovementsFragment : BaseFragment(), OnMovementClickListener {
                     }
                     progressListener.hide()
                 }
-                is Result.Error -> {
-                    progressListener.hide()
-                    Toast.makeText(requireContext(), getString(R.string.error_getting_movements, result.exception), Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, getString(R.string.error_room, result.exception))
-                }
+                is Result.Error -> showExceptionMessage(TAG, getString(R.string.error_getting_movements, result.exception), ErrorType.TYPE_ROOM)
             }
         }
     }
