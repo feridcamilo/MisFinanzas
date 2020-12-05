@@ -55,4 +55,5 @@ class MovementsViewModel(
             emit(Result.Error(e))
         }
     }
+
 }

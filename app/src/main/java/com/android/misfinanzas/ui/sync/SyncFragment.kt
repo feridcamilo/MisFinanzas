@@ -10,43 +10,41 @@ import androidx.navigation.fragment.findNavController
 import com.android.data.utils.SharedPreferencesUtils
 import com.android.domain.AppConfig
 import com.android.domain.UserSesion
-import com.android.domain.model.User
 import com.android.domain.result.Result
 import com.android.domain.utils.DateUtils
 import com.android.domain.utils.StringUtils.Companion.EMPTY
 import com.android.domain.utils.StringUtils.Companion.POINT
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
-import com.android.misfinanzas.ui.widgets.login.LoginView
+import com.android.misfinanzas.base.LoginListener
+import com.android.misfinanzas.databinding.FragmentSyncBinding
+import com.android.misfinanzas.ui.login.LoginFragment
 import com.android.misfinanzas.utils.isConnected
 import com.android.misfinanzas.utils.openURL
 import com.android.misfinanzas.utils.showLongToast
 import com.android.misfinanzas.utils.showShortToast
-import kotlinx.android.synthetic.main.card_view_login.view.*
-import kotlinx.android.synthetic.main.fragment_sync.*
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class SyncFragment : BaseFragment() {
+open class SyncFragment : BaseFragment(), LoginListener {
 
     companion object {
         const val FROM_BALANCE: String = "FromBalance"
-        const val AUTO_SYNC: String = "AutoSync"
         const val FROM_MOVEMENTS: String = "FromMovements"
+        const val AUTO_SYNC: String = "AutoSync"
     }
 
     private val TAG = this.javaClass.name
 
     private val viewModel by viewModel<SyncViewModel>()
+    private lateinit var binding: FragmentSyncBinding
 
-    private lateinit var cardViewLogin: LoginView
     private var fromBalance: Boolean = false
     private var autoSync: Boolean = false
     private var isRefresh: Boolean = false
     private var fromMovements: Boolean = false
 
     private lateinit var serverDateTimeObserver: Observer<Result<String>>
-    private lateinit var syncUserObserver: Observer<Result<User?>>
     private lateinit var syncMovementsObserver: Observer<Result<Boolean>>
     private lateinit var syncMastersObserver: Observer<Result<Boolean>>
 
@@ -59,8 +57,9 @@ class SyncFragment : BaseFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_sync, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentSyncBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,51 +71,51 @@ class SyncFragment : BaseFragment() {
         }
     }
 
-    private fun setupEvents() {
-        sw_auto_sync.isChecked = SharedPreferencesUtils.getAutoSyncConfig(requireContext())
-        sw_auto_sync.setOnCheckedChangeListener { _, isChecked ->
+    private fun setupEvents() = with(binding) {
+        swAutoSync.isChecked = SharedPreferencesUtils.getAutoSyncConfig(requireContext())
+        swAutoSync.setOnCheckedChangeListener { _, isChecked ->
             SharedPreferencesUtils.setAutoSyncConfig(requireContext(), isChecked)
             context?.showShortToast(R.string.info_config_saved)
         }
 
-        ib_info.setOnClickListener { context?.showLongToast(R.string.info_difference_time) }
+        ibInfo.setOnClickListener { context?.showLongToast(R.string.info_difference_time) }
 
-        tv_link.setOnClickListener { context?.openURL(AppConfig.BASE_URL) }
+        tvLink.setOnClickListener { context?.openURL(AppConfig.BASE_URL) }
 
-        btn_sync_movements.setOnClickListener {
+        btnSyncMovements.setOnClickListener {
             if (context?.isConnected(getString(R.string.error_not_network_no_sync)) == true) {
                 //Manual movements sync
                 syncMovements()
             }
         }
 
-        btn_sync_masters.setOnClickListener {
+        btnSyncMasters.setOnClickListener {
             if (context?.isConnected(getString(R.string.error_not_network_no_sync)) == true) {
                 //Manual masters sync
                 syncMasters()
             }
         }
 
-        btn_clean_discarded.setOnClickListener {
+        btnCleanDiscarded.setOnClickListener {
             cleanDiscarded()
             context?.showLongToast(R.string.info_movements_discarded_restored)
         }
     }
 
-    private fun setupServerDateTimeObserver() {
+    private fun setupServerDateTimeObserver() = with(binding) {
         serverDateTimeObserver = Observer { result ->
             when (result) {
                 is Result.Loading -> progressListener.show()
                 is Result.Success -> {
                     if (result.data == null) {
-                        tv_serverDateTime_title.visibility = View.GONE
-                        tv_serverDateTime.visibility = View.GONE
-                        ib_info.visibility = View.GONE
+                        tvServerDateTimeTitle.visibility = View.GONE
+                        tvServerDateTime.visibility = View.GONE
+                        ibInfo.visibility = View.GONE
                         progressListener.hide()
                     } else {
-                        tv_serverDateTime_title.visibility = View.VISIBLE
-                        tv_serverDateTime.visibility = View.VISIBLE
-                        ib_info.visibility = View.VISIBLE
+                        tvServerDateTimeTitle.visibility = View.VISIBLE
+                        tvServerDateTime.visibility = View.VISIBLE
+                        ibInfo.visibility = View.VISIBLE
 
                         val serverDateTime = DateUtils.getDateTimeFormat_AM_PM().parse(result.data.replace(POINT, EMPTY))!!
                         UserSesion.setServerDateTime(serverDateTime)
@@ -126,7 +125,7 @@ class SyncFragment : BaseFragment() {
                         SharedPreferencesUtils.setDiffTimeToServer(requireContext(), gtmDiff)
 
                         val serverDateTimeFormated = DateUtils.getDateTimeFormat_AM_PM().format(serverDateTime)
-                        tv_serverDateTime.text = getString(R.string.server_datetime_value, serverDateTimeFormated, gtmDiff)
+                        tvServerDateTime.text = getString(R.string.server_datetime_value, serverDateTimeFormated, gtmDiff)
 
                         if (!isRefresh) {
                             continueSyncProcess()
@@ -157,50 +156,58 @@ class SyncFragment : BaseFragment() {
         }
     }
 
-    private fun showLastSyncValues() {
+    private fun setupLogin() {
+        binding.swAutoSync.isChecked = true
+        binding.loginView.visibility = View.VISIBLE
+        childFragmentManager.fragments.forEach {
+            if (it is LoginFragment) {
+                it.setListener(this)
+            }
+        }
+        context?.showShortToast(R.string.info_please_log_in)
+    }
+
+    override fun onLogged() {
+        binding.loginView.visibility = View.GONE
+        viewModel.setClientId(UserSesion.getUser()!!.clientId.toString())
+        //Auto sync after login
+        autoSync = true
+        makeAutoSync()
+    }
+
+    private fun setupSync() = with(binding) {
+        btnSyncMovements.visibility = View.VISIBLE
+        btnSyncMasters.visibility = View.VISIBLE
+        btnCleanDiscarded.visibility = View.VISIBLE
+
+        setupMovementsObserver()
+        setupMastersObserver()
+    }
+
+    private fun showLastSyncValues() = with(binding) {
         lifecycleScope.launch {
             val lastSyncMovements = viewModel.getLastSyncMovements()
             val lastSyncMasters = viewModel.getLastSyncMasters()
 
             if (lastSyncMovements != null || lastSyncMasters != null) {
-                tv_last_sync.visibility = View.VISIBLE
-                tv_last_sync_movements.visibility = View.VISIBLE
-                tv_last_sync_masters.visibility = View.VISIBLE
+                tvLastSync.visibility = View.VISIBLE
+                tvLastSyncMovements.visibility = View.VISIBLE
+                tvLastSyncMasters.visibility = View.VISIBLE
 
                 if (lastSyncMovements != null) {
-                    val formatedLastSyncMovements = DateUtils.getDateTimeFormat_AM_PM().format(DateUtils.getDateTimeToWebService(lastSyncMovements))
-                    tv_last_sync_movements.text = getString(R.string.last_sync_movements, formatedLastSyncMovements)
+                    val formattedLastSyncMovements = DateUtils.getDateTimeFormat_AM_PM().format(DateUtils.getDateTimeToWebService(lastSyncMovements))
+                    tvLastSyncMovements.text = getString(R.string.last_sync_movements, formattedLastSyncMovements)
                 } else {
-                    tv_last_sync_movements.text = getString(R.string.never_synced)
+                    tvLastSyncMovements.text = getString(R.string.never_synced)
                 }
                 if (lastSyncMasters != null) {
-                    val formatedLastSyncMasters = DateUtils.getDateTimeFormat_AM_PM().format(DateUtils.getDateTimeToWebService(lastSyncMasters))
-                    tv_last_sync_masters.text = getString(R.string.last_sync_masters, formatedLastSyncMasters)
+                    val formattedLastSyncMasters = DateUtils.getDateTimeFormat_AM_PM().format(DateUtils.getDateTimeToWebService(lastSyncMasters))
+                    tvLastSyncMasters.text = getString(R.string.last_sync_masters, formattedLastSyncMasters)
                 } else {
-                    tv_last_sync_masters.text = getString(R.string.never_synced)
+                    tvLastSyncMasters.text = getString(R.string.never_synced)
                 }
             }
         }
-    }
-
-    private fun setupUserObserver() {
-        syncUserObserver = Observer { result ->
-            when (result) {
-                is Result.Loading -> progressListener.show()
-                is Result.Success -> {
-                    if (result.data == null) {
-                        context?.showShortToast(R.string.info_wrong_user_or_password)
-                        progressListener.hide()
-                    } else {
-                        context?.showShortToast(R.string.info_user_saved)
-                        makeLogin(result.data!!)
-                    }
-                }
-                is Result.Error -> showExceptionMessage(TAG, getString(R.string.error_getting_user, result.exception), ErrorType.TYPE_RETROFIT)
-            }
-        }
-
-        viewModel.syncUser.observe(viewLifecycleOwner, syncUserObserver)
     }
 
     private fun setupMovementsObserver() {
@@ -244,16 +251,6 @@ class SyncFragment : BaseFragment() {
         }
     }
 
-    private fun makeLogin(user: User) {
-        UserSesion.setUser(user)
-        viewModel.setClientId(user.clientId.toString())
-        cardViewLogin.visibility = View.GONE
-
-        //Auto sync after login
-        autoSync = true
-        makeAutoSync()
-    }
-
     private fun makeAutoSync() {
         setupSync()
         syncMovements()
@@ -262,32 +259,6 @@ class SyncFragment : BaseFragment() {
     private fun navigateToBalance() {
         context?.showShortToast(R.string.info_data_synced)
         findNavController().navigate(R.id.action_syncFragment_to_balanceFragment)
-    }
-
-    private fun setupLogin() {
-        setupUserObserver()
-        sw_auto_sync.isChecked = true
-        cardViewLogin = login_view
-        cardViewLogin.visibility = View.VISIBLE
-
-        cardViewLogin.btn_login.setOnClickListener {
-            if (context?.isConnected(getString(R.string.error_not_network_no_login)) == true) {
-                val credential = cardViewLogin.getCredential()
-                if (credential != null) {
-                    viewModel.setCredential(credential)
-                }
-            }
-        }
-        context?.showShortToast(R.string.info_please_log_in)
-    }
-
-    private fun setupSync() {
-        btn_sync_movements.visibility = View.VISIBLE
-        btn_sync_masters.visibility = View.VISIBLE
-        btn_clean_discarded.visibility = View.VISIBLE
-
-        setupMovementsObserver()
-        setupMastersObserver()
     }
 
     private fun getServerDateTime(isRefresh: Boolean) {
@@ -306,4 +277,5 @@ class SyncFragment : BaseFragment() {
     private fun cleanDiscarded() {
         viewModel.cleanDiscarded()
     }
+
 }

@@ -1,15 +1,15 @@
 package com.android.misfinanzas.ui.sync
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.android.domain.UserSesion
 import com.android.domain.model.Master
 import com.android.domain.model.Movement
-import com.android.domain.model.User
 import com.android.domain.repository.MasterRepository
 import com.android.domain.repository.MovementRepository
 import com.android.domain.repository.UserRepository
 import com.android.domain.result.Result
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -21,37 +21,8 @@ class SyncViewModel(
 
     private var clientId: String = UserSesion.getUser()?.clientId.toString()
 
-    private val credential = MutableLiveData<UserCredential>()
-
-    fun setCredential(credential: UserCredential) {
-        this.credential.value = credential
-    }
-
     fun setClientId(clientId: String) {
         this.clientId = clientId
-    }
-
-    val syncUser = credential.distinctUntilChanged().switchMap {
-        liveData(Dispatchers.IO) {
-            if (it.user.isNotEmpty() && it.password.isNotEmpty()) {
-                emit(Result.Loading)
-                try {
-                    val user = userRepository.getCloudUser(it.user, it.password)
-                    if (user != null) {
-                        insertLocalUser(user)
-                    }
-                    emit(Result.Success(user))
-                } catch (e: Exception) {
-                    emit(Result.Error(e))
-                }
-            }
-        }
-    }
-
-    private fun insertLocalUser(user: User) {
-        viewModelScope.launch {
-            userRepository.insertUser(user)
-        }
     }
 
     fun updateLastSyncMovements(date: Date) {

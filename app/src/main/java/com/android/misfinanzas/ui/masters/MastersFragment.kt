@@ -13,9 +13,9 @@ import com.android.domain.model.*
 import com.android.domain.result.Result
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
+import com.android.misfinanzas.databinding.FragmentMastersBinding
 import com.android.misfinanzas.ui.masters.mastersList.MastersListFragment
 import com.android.misfinanzas.ui.sync.SyncFragment
-import kotlinx.android.synthetic.main.fragment_masters.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -34,9 +34,11 @@ class MastersFragment : BaseFragment() {
     private var debts: List<Debt>? = null
 
     private val viewModel by viewModel<MastersViewModel>()
+    private lateinit var binding: FragmentMastersBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_masters, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentMastersBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,20 +53,20 @@ class MastersFragment : BaseFragment() {
         }
     }
 
-    private fun setupEvents() {
-        btn_people.setOnClickListener {
+    private fun setupEvents() = with(binding) {
+        btnPeople.setOnClickListener {
             navigateToMastersList(people?.map { Master(it.id, it.name, it.enabled) }, (it as Button).text.toString())
         }
 
-        btn_places.setOnClickListener {
+        btnPlaces.setOnClickListener {
             navigateToMastersList(places?.map { Master(it.id, it.name, it.enabled) }, (it as Button).text.toString())
         }
 
-        btn_categories.setOnClickListener {
+        btnCategories.setOnClickListener {
             navigateToMastersList(categories?.map { Master(it.id, it.name, it.enabled) }, (it as Button).text.toString())
         }
 
-        btn_debts.setOnClickListener {
+        btnDebts.setOnClickListener {
             navigateToMastersList(debts?.map { Master(it.id, it.name, it.enabled) }, (it as Button).text.toString())
         }
     }

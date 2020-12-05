@@ -1,6 +1,5 @@
 package com.android.misfinanzas.base
 
-import android.app.Activity
 import android.content.Context
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -15,11 +14,6 @@ open class BaseFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         setListeners(context)
-    }
-
-    override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-        setListeners(activity)
     }
 
     private fun setListeners(context: Context) {

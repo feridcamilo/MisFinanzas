@@ -22,28 +22,30 @@ import com.android.domain.result.Result
 import com.android.domain.utils.DateUtils
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.*
+import com.android.misfinanzas.databinding.FragmentBalanceBinding
 import com.android.misfinanzas.ui.movements.MovementsAdapter
 import com.android.misfinanzas.ui.movements.movementDetail.MovementDetailFragment
 import com.android.misfinanzas.ui.sync.SyncFragment
 import com.android.misfinanzas.utils.isConnected
 import com.android.misfinanzas.utils.showShortToast
-import kotlinx.android.synthetic.main.fragment_balance.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
-class BalanceFragment : BaseFragment(), OnMovementClickListener {
+class BalanceFragment : BaseFragment(), MovementClickListener {
 
     private val TAG = this.javaClass.name
     private val REQUEST_PERMISSION_READ_SMS = 1
 
     private val viewModel by viewModel<BalanceViewModel>()
+    private lateinit var binding: FragmentBalanceBinding
 
     private lateinit var userObserver: Observer<Result<User?>>
     private lateinit var balanceObserver: Observer<Result<Balance>>
     private lateinit var discardedObserver: Observer<Result<List<Int>>>
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_balance, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentBalanceBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,8 +55,8 @@ class BalanceFragment : BaseFragment(), OnMovementClickListener {
         getLocalUser()
     }
 
-    private fun setupEvents() {
-        btn_add_movement.setOnClickListener {
+    private fun setupEvents() = with(binding) {
+        btnAddMovement.setOnClickListener {
             navigateToAddMovement(Movement.getEmpty())
         }
     }
@@ -82,12 +84,7 @@ class BalanceFragment : BaseFragment(), OnMovementClickListener {
             when (result) {
                 is Result.Loading -> progressListener.show()
                 is Result.Success -> {
-                    if (result.data == null) {
-                        context?.showShortToast(R.string.info_no_balance)
-                        navigateToSync(false)
-                    } else {
-                        showBalance(result.data)
-                    }
+                    binding.balanceView.showBalance(result.data)
                     progressListener.hide()
                 }
                 is Result.Error -> showExceptionMessage(TAG, getString(R.string.error_getting_balance, result.exception), ErrorType.TYPE_ROOM)
@@ -98,9 +95,7 @@ class BalanceFragment : BaseFragment(), OnMovementClickListener {
             when (result) {
                 is Result.Loading -> progressListener.show()
                 is Result.Success -> {
-                    if (result.data != null) {
-                        getPotentialsMovementsFromSMS(result.data)
-                    }
+                    getPotentialsMovementsFromSMS(result.data)
                     progressListener.hide()
                 }
                 is Result.Error -> showExceptionMessage(TAG, getString(R.string.error_getting_discarded_movs, result.exception), ErrorType.TYPE_ROOM)
@@ -192,10 +187,6 @@ class BalanceFragment : BaseFragment(), OnMovementClickListener {
         viewModel.getDiscardedMovements().observe(viewLifecycleOwner, discardedObserver)
     }
 
-    private fun showBalance(balance: Balance) {
-        balance_view.showBalance(balance)
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -246,23 +237,23 @@ class BalanceFragment : BaseFragment(), OnMovementClickListener {
         return true
     }
 
-    private fun setupRecyclerView() {
-        rv_potential_movements.layoutManager = LinearLayoutManager(requireContext())
-        rv_potential_movements.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+    private fun setupRecyclerView() = with(binding) {
+        rvPotentialMovements.layoutManager = LinearLayoutManager(requireContext())
+        rvPotentialMovements.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
     }
 
     private fun setupRecyclerViewData(movements: List<Movement>) {
-        rv_potential_movements.adapter = MovementsAdapter(requireContext(), movements, this)
+        binding.rvPotentialMovements.adapter = MovementsAdapter(requireContext(), movements, this)
         refreshRecyclerViewVisibility()
     }
 
-    private fun refreshRecyclerViewVisibility() {
-        if (rv_potential_movements.adapter?.itemCount!! <= 0) {
-            tv_potential_movements.visibility = View.GONE
-            rv_potential_movements.visibility = View.GONE
+    private fun refreshRecyclerViewVisibility() = with(binding.rvPotentialMovements) {
+        if (adapter?.itemCount!! <= 0) {
+            visibility = View.GONE
+            visibility = View.GONE
         } else {
-            tv_potential_movements.visibility = View.VISIBLE
-            rv_potential_movements.visibility = View.VISIBLE
+            visibility = View.VISIBLE
+            visibility = View.VISIBLE
         }
     }
 
@@ -271,22 +262,22 @@ class BalanceFragment : BaseFragment(), OnMovementClickListener {
     }
 
     override fun onDiscardMovementClicked(id: Int, position: Int) {
-        discard(id, position)
+        discard(id)
     }
 
-    private fun discard(id: Int, position: Int) {
+    private fun discard(id: Int) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(getString(R.string.cd_title_discard))
         builder.setMessage(getString(R.string.cd_desc_discard))
 
-        builder.setPositiveButton(R.string.cd_yes) { dialog, which ->
+        builder.setPositiveButton(R.string.cd_yes) { _, _ ->
             viewModel.insertDiscardedMovement(id)
             getDiscardedMovements()
             refreshRecyclerViewVisibility()
             context?.showShortToast(R.string.info_movement_discarded)
         }
 
-        builder.setNeutralButton(R.string.cd_no) { dialog, which -> }
+        builder.setNeutralButton(R.string.cd_no) { _, _ -> }
         builder.show()
     }
 
@@ -295,4 +286,5 @@ class BalanceFragment : BaseFragment(), OnMovementClickListener {
         bundle.putString(MovementDetailFragment.MOVEMENT_DATA, MovementConverter().movementToString(movement!!))
         findNavController().navigate(R.id.action_balanceFragment_to_movementsFragment, bundle)
     }
+
 }

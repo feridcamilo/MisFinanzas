@@ -8,13 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.domain.model.Master
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseViewHolder
-import com.android.misfinanzas.base.OnMasterClickListener
+import com.android.misfinanzas.base.MasterClickListener
 import kotlinx.android.synthetic.main.row_master.view.*
 
 class MastersAdapter(
     private val context: Context,
     private val masters: List<Master>,
-    private val itemClickListener: OnMasterClickListener
+    private val itemClickListener: MasterClickListener
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {

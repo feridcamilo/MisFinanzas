@@ -11,9 +11,8 @@ import com.android.domain.model.*
 import com.android.domain.utils.StringUtils.Companion.EMPTY
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
-import com.android.misfinanzas.ui.widgets.movementDetail.MovementDetailView
+import com.android.misfinanzas.databinding.FragmentMovementDetailBinding
 import com.android.misfinanzas.utils.showShortToast
-import kotlinx.android.synthetic.main.fragment_movement_detail.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MovementDetailFragment : BaseFragment() {
@@ -30,8 +29,8 @@ class MovementDetailFragment : BaseFragment() {
     private val TAG = this.javaClass.name
 
     private val viewModel by viewModel<MovementDetailViewModel>()
+    private lateinit var binding: FragmentMovementDetailBinding
 
-    private lateinit var movementDetailView: MovementDetailView
     private var movement: Movement? = null
     private var descriptions: List<String>? = null
     private var people: List<Person>? = null
@@ -42,7 +41,9 @@ class MovementDetailFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            movement = MovementConverter().stringToMovement(it.getString(MOVEMENT_DATA, EMPTY))
+            if (it.containsKey(MOVEMENT_DATA)) {
+                movement = MovementConverter().stringToMovement(it.getString(MOVEMENT_DATA, EMPTY))
+            }
             descriptions = it.getStringArrayList(DESCRIPTIONS_DATA)
             people = it.getParcelableArrayList(PEOPLE_DATA)
             places = it.getParcelableArrayList(PLACES_DATA)
@@ -51,8 +52,9 @@ class MovementDetailFragment : BaseFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_movement_detail, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentMovementDetailBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,30 +64,29 @@ class MovementDetailFragment : BaseFragment() {
         setupEvents()
     }
 
-    private fun setupEvents() {
-        ib_save.setOnClickListener {
+    private fun setupEvents() = with(binding) {
+        ibSave.setOnClickListener {
             save()
         }
 
-        ib_delete.setOnClickListener {
+        ibDelete.setOnClickListener {
             delete()
         }
     }
 
-    private fun initMovementDetailView() {
+    private fun initMovementDetailView() = with(binding) {
         val isNewMovement = movement == null || movement?.idMovement!! <= 0
 
         if (isNewMovement) {
             (activity as AppCompatActivity?)!!.supportActionBar!!.title = getString(R.string.title_movements_details_new)
-            ib_delete.visibility = View.GONE
+            ibDelete.visibility = View.GONE
         }
 
-        movementDetailView = movement_detail_view
         movementDetailView.initView(descriptions, people, places, categories, debts)
         movementDetailView.showMovement(movement)
     }
 
-    private fun save() {
+    private fun save() = with(binding) {
         try {
             val movementToSave = movementDetailView.getMovement()
             viewModel.insertLocalMovement(movementToSave)
@@ -109,7 +110,7 @@ class MovementDetailFragment : BaseFragment() {
         builder.setTitle(getString(R.string.cd_title_delete))
         builder.setMessage(getString(R.string.cd_desc_delete))
 
-        builder.setPositiveButton(R.string.cd_yes) { dialog, which ->
+        builder.setPositiveButton(R.string.cd_yes) { _, _ ->
             movement?.let {
                 viewModel.deleteLocalMovement(it)
             }
@@ -117,7 +118,8 @@ class MovementDetailFragment : BaseFragment() {
             context?.showShortToast(R.string.info_movement_deleted)
         }
 
-        builder.setNeutralButton(R.string.cd_no) { dialog, which -> }
+        builder.setNeutralButton(R.string.cd_no) { _, _ -> }
         builder.show()
     }
+
 }

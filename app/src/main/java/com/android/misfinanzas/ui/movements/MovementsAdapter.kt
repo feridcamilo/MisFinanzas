@@ -11,13 +11,13 @@ import com.android.domain.utils.MoneyUtils
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseViewHolder
 import com.android.misfinanzas.base.MovementType
-import com.android.misfinanzas.base.OnMovementClickListener
+import com.android.misfinanzas.base.MovementClickListener
 import kotlinx.android.synthetic.main.row_movement.view.*
 
 class MovementsAdapter(
     private val context: Context,
     private val movements: List<Movement>,
-    private val itemClickListener: OnMovementClickListener
+    private val itemClickListener: MovementClickListener
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {

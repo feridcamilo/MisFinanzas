@@ -10,13 +10,12 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.domain.model.Master
 import com.android.domain.utils.StringUtils
-import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
-import com.android.misfinanzas.base.OnMasterClickListener
-import kotlinx.android.synthetic.main.fragment_masters_list.*
+import com.android.misfinanzas.base.MasterClickListener
+import com.android.misfinanzas.databinding.FragmentMastersListBinding
 import java.util.*
 
-class MastersListFragment : BaseFragment(), OnMasterClickListener {
+class MastersListFragment : BaseFragment(), MasterClickListener {
 
     companion object {
         const val MASTERS_DATA: String = "Masters"
@@ -28,6 +27,8 @@ class MastersListFragment : BaseFragment(), OnMasterClickListener {
     private var masters: List<Master>? = null
     private var title: String = StringUtils.EMPTY
 
+    private lateinit var binding: FragmentMastersListBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -36,8 +37,9 @@ class MastersListFragment : BaseFragment(), OnMasterClickListener {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_masters_list, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentMastersListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,29 +50,33 @@ class MastersListFragment : BaseFragment(), OnMasterClickListener {
         setupRecyclerView()
         masters?.let { setupRecyclerViewData(it) }
         setupSearchView()
+        setupEvents()
 
-        btn_add_master.setOnClickListener {
+    }
+
+    private fun setupEvents() = with(binding) {
+        btnAddMaster.setOnClickListener {
             navigateToDetails(null)
         }
     }
 
     override fun onResume() {
         super.onResume()
-        rv_masters.adapter?.notifyDataSetChanged()
+        binding.rvMasters.adapter?.notifyDataSetChanged()
     }
 
-    private fun setupRecyclerView() {
-        rv_masters.layoutManager = LinearLayoutManager(requireContext())
-        rv_masters.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+    private fun setupRecyclerView() = with(binding.rvMasters) {
+        layoutManager = LinearLayoutManager(requireContext())
+        addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
     }
 
     private fun setupRecyclerViewData(masters: List<Master>) {
-        rv_masters.adapter = MastersAdapter(requireContext(), masters, this)
+        binding.rvMasters.adapter = MastersAdapter(requireContext(), masters, this)
     }
 
     private fun setupSearchView() {
-        sv_search.setOnClickListener { sv_search.isIconified = false }
-        sv_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.svSearch.setOnClickListener { binding.svSearch.isIconified = false }
+        binding.svSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 //implement if you can to change when press search button
                 if (masters != null) {
@@ -113,4 +119,5 @@ class MastersListFragment : BaseFragment(), OnMasterClickListener {
     override fun onMasterClicked(master: Master?) {
         navigateToDetails(master)
     }
+
 }

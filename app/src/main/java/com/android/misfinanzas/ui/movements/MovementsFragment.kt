@@ -18,21 +18,24 @@ import com.android.domain.model.*
 import com.android.domain.result.Result
 import com.android.domain.utils.DateUtils
 import com.android.domain.utils.MoneyUtils
+import com.android.domain.utils.StringUtils.Companion.EMPTY
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
-import com.android.misfinanzas.base.OnMovementClickListener
+import com.android.misfinanzas.base.MovementClickListener
+import com.android.misfinanzas.databinding.FragmentMovementsBinding
 import com.android.misfinanzas.ui.movements.movementDetail.MovementDetailFragment
+import com.android.misfinanzas.ui.movements.movementDetail.MovementDetailFragment.Companion.MOVEMENT_DATA
 import com.android.misfinanzas.ui.sync.SyncFragment
 import com.android.misfinanzas.utils.showShortToast
-import kotlinx.android.synthetic.main.fragment_movements.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
-class MovementsFragment : BaseFragment(), OnMovementClickListener {
+class MovementsFragment : BaseFragment(), MovementClickListener {
 
     private val TAG = this.javaClass.name
 
     private val viewModel by viewModel<MovementsViewModel>()
+    private lateinit var binding: FragmentMovementsBinding
 
     private lateinit var movementsObserver: Observer<Result<List<Movement>>>
     private lateinit var peopleObserver: Observer<Result<List<Person>>>
@@ -56,15 +59,18 @@ class MovementsFragment : BaseFragment(), OnMovementClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            movementToAdd = it.getParcelable(MovementDetailFragment.MOVEMENT_DATA)
+            if (it.containsKey(MOVEMENT_DATA)) {
+                movementToAdd = MovementConverter().stringToMovement(it.getString(MOVEMENT_DATA, EMPTY))
+            }
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_movements, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentMovementsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
 
         if (!UserSesion.hasUser()) {
@@ -75,11 +81,11 @@ class MovementsFragment : BaseFragment(), OnMovementClickListener {
             setupObservers()
             getLocalPeople()
 
-            btn_filtros.setOnClickListener {
+            btnFiltros.setOnClickListener {
                 findNavController().navigate(R.id.filtersFragment)
             }
 
-            btn_add_movement.setOnClickListener {
+            btnAddMovement.setOnClickListener {
                 navigateToDetails(null)
             }
         }
@@ -87,21 +93,21 @@ class MovementsFragment : BaseFragment(), OnMovementClickListener {
 
     override fun onResume() {
         super.onResume()
-        rv_movimientos.adapter?.notifyDataSetChanged()
+        binding.rvMovimientos.adapter?.notifyDataSetChanged()
     }
 
-    private fun setupRecyclerView() {
-        rv_movimientos.layoutManager = LinearLayoutManager(requireContext())
-        rv_movimientos.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+    private fun setupRecyclerView() = with(binding.rvMovimientos) {
+        layoutManager = LinearLayoutManager(requireContext())
+        addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
     }
 
     private fun setupRecyclerViewData(movements: List<Movement>) {
-        rv_movimientos.adapter = MovementsAdapter(requireContext(), movements, this)
+        binding.rvMovimientos.adapter = MovementsAdapter(requireContext(), movements, this)
     }
 
     private fun setupSearchView() {
-        sv_search.setOnClickListener { sv_search.isIconified = false }
-        sv_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.svSearch.setOnClickListener { binding.svSearch.isIconified = false }
+        binding.svSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 //implement if you can to change when press search button
                 filter(query)
@@ -207,8 +213,8 @@ class MovementsFragment : BaseFragment(), OnMovementClickListener {
                     } else {
                         movements = result.data
                         descriptions = result.data.distinctBy { it.description }.map { it.description }
-                        if (sv_search.query.isNotEmpty()) {
-                            sv_search.setQuery(sv_search.query, true)
+                        if (binding.svSearch.query.isNotEmpty()) {
+                            binding.svSearch.setQuery(binding.svSearch.query, true)
                         } else {
                             setupRecyclerViewData(movements!!)
                         }
@@ -235,7 +241,9 @@ class MovementsFragment : BaseFragment(), OnMovementClickListener {
 
     private fun navigateToDetails(movement: Movement?) {
         val bundle = Bundle()
-        bundle.putString(MovementDetailFragment.MOVEMENT_DATA, MovementConverter().movementToString(movement!!))
+        movement?.let {
+            bundle.putString(MOVEMENT_DATA, MovementConverter().movementToString(it))
+        }
         descriptions?.let { bundle.putStringArrayList(MovementDetailFragment.DESCRIPTIONS_DATA, it as ArrayList<String>) }
         peopleActive?.let { bundle.putParcelableArrayList(MovementDetailFragment.PEOPLE_DATA, it as ArrayList<out Parcelable>) }
         placesActive?.let { bundle.putParcelableArrayList(MovementDetailFragment.PLACES_DATA, it as ArrayList<out Parcelable>) }
@@ -271,4 +279,5 @@ class MovementsFragment : BaseFragment(), OnMovementClickListener {
     override fun onDiscardMovementClicked(id: Int, position: Int) {
         TODO("Not yet implemented")
     }
+
 }

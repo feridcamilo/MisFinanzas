@@ -10,8 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.android.misfinanzas.ui.widgets.login.LoginView
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/login_view"
+            android:name="com.android.misfinanzas.ui.login.LoginFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
