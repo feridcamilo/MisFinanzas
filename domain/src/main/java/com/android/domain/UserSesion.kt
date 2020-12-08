@@ -26,34 +26,30 @@ class UserSesion {
 
         fun updateLastSyncMovements(date: Date) {
             val currentUser = getUser()
-            if (currentUser != null) {
-                val newUser = User(
-                    currentUser.user,
-                    currentUser.clientId,
-                    currentUser.name,
-                    currentUser.lastName,
-                    currentUser.email,
-                    date,
-                    currentUser.lastSyncMasters
-                )
-                setUser(newUser)
-            }
+            val newUser = User(
+                currentUser.user,
+                currentUser.clientId,
+                currentUser.name,
+                currentUser.lastName,
+                currentUser.email,
+                date,
+                currentUser.lastSyncMasters
+            )
+            setUser(newUser)
         }
 
         fun updateLastSyncMasters(date: Date) {
             val currentUser = getUser()
-            if (currentUser != null) {
-                val newUser = User(
-                    currentUser.user,
-                    currentUser.clientId,
-                    currentUser.name,
-                    currentUser.lastName,
-                    currentUser.email,
-                    currentUser.lastSyncMovements,
-                    date
-                )
-                setUser(newUser)
-            }
+            val newUser = User(
+                currentUser.user,
+                currentUser.clientId,
+                currentUser.name,
+                currentUser.lastName,
+                currentUser.email,
+                currentUser.lastSyncMovements,
+                date
+            )
+            setUser(newUser)
         }
 
         fun isFirstOpen(): Boolean {

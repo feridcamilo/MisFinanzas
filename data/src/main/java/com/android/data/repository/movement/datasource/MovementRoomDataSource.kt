@@ -40,7 +40,7 @@ class MovementRoomDataSource(private val db: AppDatabase) {
 
     suspend fun deleteMovement(movement: MovementVO) {
         db.movementDAO().delete(movement)
-        val isLocal = movement.dateEntry!! > UserSesion.getUser()?.lastSyncMovements
+        val isLocal = movement.dateEntry!! > UserSesion.getUser().lastSyncMovements
         if (!isLocal) {
             db.deletedMovementDAO().insert(DeletedMovementVO(0, movement.idMovement))
         }

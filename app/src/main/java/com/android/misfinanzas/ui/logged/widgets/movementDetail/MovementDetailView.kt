@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
-import androidx.cardview.widget.CardView
 import com.android.domain.model.*
 import com.android.domain.utils.DateUtils.Companion.getCalendarFromStringDate
 import com.android.domain.utils.DateUtils.Companion.getCurrentDateTime
@@ -20,14 +19,25 @@ import com.android.domain.utils.MoneyUtils
 import com.android.domain.utils.StringUtils.Companion.EMPTY
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.MovementType
-import kotlinx.android.synthetic.main.view_movement_detail.view.*
+import com.android.misfinanzas.databinding.CardViewMovementDetailBinding
+import com.google.android.material.card.MaterialCardView
 import java.math.BigDecimal
 import java.util.*
 
-class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(context, attrs) {
+class MovementDetailView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet?,
+    defStyleAttr: Int = 0
+) : MaterialCardView(context, attrs, defStyleAttr) {
+
+    lateinit var binding: CardViewMovementDetailBinding
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.view_movement_detail, this)
+        inflate()
+    }
+
+    private fun inflate() {
+        binding = CardViewMovementDetailBinding.inflate(LayoutInflater.from(context), this)
     }
 
     private lateinit var movementTypes: List<MovementType>
@@ -58,17 +68,17 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
         setDateControl()
     }
 
-    private fun setMastersPickers() {
+    private fun setMastersPickers() = with(binding) {
         movementTypes = MovementType.getList(context)
         val movementTypeAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, movementTypes)
         movementTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        sp_tipo_movimiento.adapter = movementTypeAdapter
+        spTipoMovimiento.adapter = movementTypeAdapter
 
-        sp_tipo_movimiento.onItemSelectedListener = object : OnItemSelectedListener {
+        spTipoMovimiento.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
                 val movementType: MovementType = parent.getItemAtPosition(pos) as MovementType
                 selectedMovementType = movementType.id
-                iv_tipo_movimiento.setImageResource(MovementType.getImage(selectedMovementType))
+                ivTipoMovimiento.setImageResource(MovementType.getImage(selectedMovementType))
             }
 
             override fun onNothingSelected(arg0: AdapterView<*>?) {}
@@ -76,41 +86,41 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
 
         descriptions?.let {
             val descriptionsAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
-            tv_descripcion_value.setAdapter(descriptionsAdapter)
+            tvDescripcionValue.setAdapter(descriptionsAdapter)
         }
 
         people?.let {
             val peopleAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
-            tv_persona_value.setAdapter(peopleAdapter)
-            tv_persona_value.setOnClickListener { tv_persona_value.showDropDown() }
+            tvPersonaValue.setAdapter(peopleAdapter)
+            tvPersonaValue.setOnClickListener { tvPersonaValue.showDropDown() }
         }
 
         places?.let {
             val placesAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
-            tv_lugar_value.setAdapter(placesAdapter)
-            tv_lugar_value.setOnClickListener { tv_lugar_value.showDropDown() }
+            tvLugarValue.setAdapter(placesAdapter)
+            tvLugarValue.setOnClickListener { tvLugarValue.showDropDown() }
         }
 
         categories?.let {
             val categoriesAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
-            tv_categoria_value.setAdapter(categoriesAdapter)
-            tv_categoria_value.setOnClickListener { tv_categoria_value.showDropDown() }
+            tvCategoriaValue.setAdapter(categoriesAdapter)
+            tvCategoriaValue.setOnClickListener { tvCategoriaValue.showDropDown() }
         }
 
         debts?.let {
             val debtsAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
-            tv_deuda_value.setAdapter(debtsAdapter)
-            tv_deuda_value.setOnClickListener { tv_deuda_value.showDropDown() }
+            tvDeudaValue.setAdapter(debtsAdapter)
+            tvDeudaValue.setOnClickListener { tvDeudaValue.showDropDown() }
         }
 
         val currentDate: Date = getCurrentDateTime()
-        et_fecha_movimiento.setText(getDateFormat().format(currentDate))
+        etFechaMovimiento.setText(getDateFormat().format(currentDate))
     }
 
-    private fun setDateControl() {
-        et_fecha_movimiento.inputType = InputType.TYPE_NULL
-        et_fecha_movimiento.setOnClickListener {
-            val strDate = et_fecha_movimiento.text.toString()
+    private fun setDateControl() = with(binding) {
+        etFechaMovimiento.inputType = InputType.TYPE_NULL
+        etFechaMovimiento.setOnClickListener {
+            val strDate = etFechaMovimiento.text.toString()
             var calendar = Calendar.getInstance()
             if (strDate.isNotEmpty()) {
                 calendar = getCalendarFromStringDate(strDate)
@@ -123,7 +133,7 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
             val picker = DatePickerDialog(
                 context, { _, _year, _month, _day ->
                     val date = context.getString(R.string.md_date, _day.toString(), (_month + 1).toString(), _year.toString())
-                    et_fecha_movimiento.setText(date)
+                    etFechaMovimiento.setText(date)
                 }, year, month, day
             )
             picker.show()
@@ -134,10 +144,10 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
         this.movement = movement
 
         if (movement == null || movement.idMovement <= 0) {
-            tv_fecha_ingreso.visibility = View.GONE
-            tv_fecha_ingreso_value.visibility = View.GONE
-            tv_fecha_upd.visibility = View.GONE
-            tv_fecha_upd_value.visibility = View.GONE
+            binding.tvFechaIngreso.visibility = View.GONE
+            binding.tvFechaIngresoValue.visibility = View.GONE
+            binding.tvFechaUpd.visibility = View.GONE
+            binding.tvFechaUpdValue.visibility = View.GONE
         }
 
         movement?.let {
@@ -148,21 +158,21 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
             val lastUpdate =
                 if (it.dateLastUpd == null) notAssociated else getDateTimeFormat().format(checkNotNull(it.dateLastUpd)).toString()
 
-            iv_tipo_movimiento.setImageResource(MovementType.getImage(it.idType))
-            sp_tipo_movimiento.setSelection(getMovementTypeIndex(it.idType))
-            et_valor.setText(MoneyUtils.getBigDecimalStringValue(it.value.toString()))
-            tv_descripcion_value.setText(it.description)
-            tv_persona_value.setText(getPersonName(it.personId))
-            tv_lugar_value.setText(getPlaceName(it.placeId))
-            tv_categoria_value.setText(getCategoryName(it.categoryId))
-            et_fecha_movimiento.setText(date)
-            tv_deuda_value.setText(getDebtName(it.debtId))
-            tv_fecha_ingreso_value.text = entryDate
+            binding.ivTipoMovimiento.setImageResource(MovementType.getImage(it.idType))
+            binding.spTipoMovimiento.setSelection(getMovementTypeIndex(it.idType))
+            binding.etValor.setText(MoneyUtils.getBigDecimalStringValue(it.value.toString()))
+            binding.tvDescripcionValue.setText(it.description)
+            binding.tvPersonaValue.setText(getPersonName(it.personId))
+            binding.tvLugarValue.setText(getPlaceName(it.placeId))
+            binding.tvCategoriaValue.setText(getCategoryName(it.categoryId))
+            binding.etFechaMovimiento.setText(date)
+            binding.tvDeudaValue.setText(getDebtName(it.debtId))
+            binding.tvFechaIngresoValue.text = entryDate
             if (lastUpdate == notAssociated) {
-                tv_fecha_upd.visibility = View.GONE
-                tv_fecha_upd_value.visibility = View.GONE
+                binding.tvFechaUpd.visibility = View.GONE
+                binding.tvFechaUpdValue.visibility = View.GONE
             } else {
-                tv_fecha_upd_value.text = lastUpdate
+                binding.tvFechaUpdValue.text = lastUpdate
             }
         }
     }
@@ -173,41 +183,41 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
     }
 
     @Throws(Exception::class)
-    private fun validateForm(): Movement {
+    private fun validateForm(): Movement = with(binding) {
         if (selectedMovementType == MovementType.NOT_SELECTED) {
             throw Exception(context.getString(R.string.info_select_movement_type))
         }
 
-        val debtId = getDebtId(tv_deuda_value.text.toString())
+        val debtId = getDebtId(tvDeudaValue.text.toString())
         if (selectedMovementType == MovementType.CREDIT_CARD_BUY && (debtId == null || debtId == 0)) {
-            sp_tipo_movimiento.requestFocus()
+            spTipoMovimiento.requestFocus()
             throw Exception(context.getString(R.string.info_select_debt_by_cc_buy))
         }
 
-        val strValue = et_valor.text.toString()
+        val strValue = etValor.text.toString()
         if (strValue.isEmpty()) {
-            et_valor.requestFocus()
+            etValor.requestFocus()
             throw Exception(context.getString(R.string.info_enter_value))
         }
         val value: BigDecimal
         try {
             value = BigDecimal(strValue)
         } catch (e: Exception) {
-            et_valor.requestFocus()
+            etValor.requestFocus()
             throw Exception(context.getString(R.string.info_only_numbers))
         }
 
-        val description = tv_descripcion_value.text.toString()
-        val personId = getPersonId(tv_persona_value.text.toString())
-        val placeId = getPlaceId(tv_lugar_value.text.toString())
+        val description = tvDescripcionValue.text.toString()
+        val personId = getPersonId(tvPersonaValue.text.toString())
+        val placeId = getPlaceId(tvLugarValue.text.toString())
 
-        val categoryId = getCategoryId(tv_categoria_value.text.toString())
+        val categoryId = getCategoryId(tvCategoriaValue.text.toString())
         if ((categoryId ?: 0) == 0) {
-            tv_categoria_value.requestFocus()
+            tvCategoriaValue.requestFocus()
             throw Exception(context.getString(R.string.info_select_category))
         }
 
-        val strDate = et_fecha_movimiento.text.toString()
+        val strDate = etFechaMovimiento.text.toString()
         if (strDate.isEmpty()) {
             throw Exception(context.getString(R.string.info_select_date))
         }
@@ -215,7 +225,7 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
         try {
             date = getDateToWebService(getDateFormat().parse(strDate)!!)
         } catch (e: Exception) {
-            et_fecha_movimiento.requestFocus()
+            etFechaMovimiento.requestFocus()
             throw Exception(context.getString(R.string.info_enter_valid_date))
         }
 
@@ -251,11 +261,11 @@ class MovementDetailView(context: Context, attrs: AttributeSet?) : CardView(cont
         )
     }
 
-    fun cleanFormAfterSave() {
-        et_valor.setText(EMPTY)
-        et_valor.requestFocus()
-        tv_persona_value.setText(EMPTY)
-        tv_deuda_value.setText(EMPTY)
+    fun cleanFormAfterSave() = with(binding) {
+        etValor.setText(EMPTY)
+        etValor.requestFocus()
+        tvPersonaValue.setText(EMPTY)
+        tvDeudaValue.setText(EMPTY)
     }
 
     private fun getMovementType(id: Int): MovementType? {

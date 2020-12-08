@@ -9,17 +9,19 @@ import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import com.android.misfinanzas.base.ProgressListener
-import kotlinx.android.synthetic.main.activity_main.*
+import com.android.misfinanzas.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), ProgressListener {
 
     lateinit var navController: NavController
     private lateinit var loading: RelativeLayout
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        loading = progressBar
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        loading = binding.progressBar
     }
 
     override fun onSupportNavigateUp(): Boolean {

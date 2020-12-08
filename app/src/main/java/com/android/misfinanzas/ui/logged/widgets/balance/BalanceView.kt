@@ -3,21 +3,30 @@ package com.android.misfinanzas.ui.logged.widgets.balance
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import androidx.cardview.widget.CardView
 import com.android.domain.model.Balance
 import com.android.domain.utils.MoneyUtils
-import com.android.misfinanzas.R
-import kotlinx.android.synthetic.main.card_view_balance.view.*
+import com.android.misfinanzas.databinding.CardViewBalanceBinding
+import com.google.android.material.card.MaterialCardView
 
-class BalanceView(context: Context, attrs: AttributeSet?) : CardView(context, attrs) {
+class BalanceView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : MaterialCardView(context, attrs, defStyleAttr) {
+
+    lateinit var binding: CardViewBalanceBinding
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.card_view_balance, this)
+        inflate()
     }
 
-    fun showBalance(balance: Balance) {
-        tv_cash_value.text = MoneyUtils.getMoneyFormat().format(balance.TengoEfectivo)
-        tv_card_value.text = MoneyUtils.getMoneyFormat().format(balance.TengoElectronico)
-        tv_total_value.text = MoneyUtils.getMoneyFormat().format(balance.TengoTotal)
+    private fun inflate() {
+        binding = CardViewBalanceBinding.inflate(LayoutInflater.from(context), this)
+    }
+
+    fun showBalance(balance: Balance) = with(binding) {
+        tvCashValue.text = MoneyUtils.getMoneyFormat().format(balance.TengoEfectivo)
+        tvCardValue.text = MoneyUtils.getMoneyFormat().format(balance.TengoElectronico)
+        tvTotalValue.text = MoneyUtils.getMoneyFormat().format(balance.TengoTotal)
     }
 }

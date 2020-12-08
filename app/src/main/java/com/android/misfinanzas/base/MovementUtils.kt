@@ -85,7 +85,7 @@ class MovementUtils {
         private fun getStringFromString(text: String, regex: String, group: Int = 0): String {
             val m: Matcher = Pattern.compile(regex).matcher(text)
             if (m.find()) {
-                return m.group(group)
+                return m.group(group)!!
             }
             return EMPTY
         }
@@ -109,7 +109,7 @@ class MovementUtils {
         fun getDateFromString(text: String): Date? {
             val m: Matcher = Pattern.compile(REGEX_DATE).matcher(text)
             if (m.find()) {
-                return DateUtils.getDateFormat().parse(m.group(0))
+                return DateUtils.getDateFormat().parse(m.group(0)!!)
             }
             return null
         }
@@ -123,7 +123,7 @@ class MovementUtils {
         fun getMoneyFromString(text: String): BigDecimal {
             val m: Matcher = Pattern.compile(REGEX_MONEY).matcher(text)
             if (m.find()) {
-                val value = m.group(0).replace(MONEY, EMPTY)
+                val value = m.group(0)!!.replace(MONEY, EMPTY)
                 val commaIndex = value.indexOf(COMMA)
                 val pointIndex = value.indexOf(POINT)
 

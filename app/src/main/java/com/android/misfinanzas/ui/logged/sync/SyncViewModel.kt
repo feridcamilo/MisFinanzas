@@ -106,7 +106,7 @@ class SyncViewModel(
     }
 
     private suspend fun deleteLocalMovementsFromWeb(ids: List<Int>) {
-        if (ids != null && ids.isNotEmpty()) {
+        if (ids.isNotEmpty()) {
             movementRepository.deleteMovementsFromWeb(ids)
         }
     }

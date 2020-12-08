@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".ui.logged.widgets.movementDetail.MovementDetailView"
+    tools:parentTag="com.google.android.material.card.MaterialCardView">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_tipo_movimiento"
+            style="@style/subtitle_text_view_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            android:text="@string/view_md_movement_type"
+            app:layout_constraintBottom_toTopOf="@id/tv_valor"
+            app:layout_constraintEnd_toStartOf="@id/iv_tipo_movimiento"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_tipo_movimiento"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_quarter_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_quarter_margin"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:contentDescription="@string/view_md_movement_type"
+            app:layout_constraintBottom_toBottomOf="@id/tv_tipo_movimiento"
+            app:layout_constraintStart_toEndOf="@id/tv_tipo_movimiento"
+            app:layout_constraintTop_toTopOf="@id/tv_tipo_movimiento"
+            tools:src="@mipmap/ic_money" />
+
+        <Spinner
+            android:id="@+id/sp_tipo_movimiento"
+            android:layout_width="@dimen/zero"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_quarter_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"
+            app:layout_constraintBottom_toBottomOf="@id/tv_tipo_movimiento"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_tipo_movimiento"
+            app:layout_constraintTop_toTopOf="@id/tv_tipo_movimiento" />
+
+        <TextView
+            android:id="@+id/tv_valor"
+            style="@style/subtitle_text_view_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:text="@string/view_md_value"
+            app:layout_constraintBottom_toTopOf="@id/tv_descripcion"
+            app:layout_constraintEnd_toStartOf="@id/et_valor_cont"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_tipo_movimiento" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_valor_cont"
+            android:layout_width="@dimen/zero"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            app:endIconMode="clear_text"
+            app:hintEnabled="false"
+            app:layout_constraintBottom_toBottomOf="@id/tv_valor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_valor"
+            app:layout_constraintTop_toTopOf="@id/tv_valor">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_valor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/view_md_enter"
+                android:importantForAutofill="no"
+                android:inputType="numberDecimal"
+                android:maxLength="12"
+                android:theme="@style/TextInputLabel" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_descripcion"
+            style="@style/subtitle_text_view_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:text="@string/view_md_description"
+            app:layout_constraintBottom_toTopOf="@id/tv_persona"
+            app:layout_constraintEnd_toStartOf="@id/tv_descripcion_cont"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_valor" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tv_descripcion_cont"
+            android:layout_width="@dimen/zero"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            app:endIconMode="clear_text"
+            app:hintEnabled="false"
+            app:layout_constraintBottom_toBottomOf="@id/tv_descripcion"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_descripcion"
+            app:layout_constraintTop_toTopOf="@id/tv_descripcion">
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/tv_descripcion_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:hint="@string/view_md_enter"
+                android:inputType="textCapSentences"
+                android:maxLength="50"
+                android:maxLines="1"
+                android:theme="@style/TextInputLabel" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_persona"
+            style="@style/subtitle_text_view_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:text="@string/view_md_person"
+            app:layout_constraintBottom_toTopOf="@id/tv_lugar"
+            app:layout_constraintEnd_toStartOf="@id/tv_persona_cont"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_descripcion" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tv_persona_cont"
+            android:layout_width="@dimen/zero"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            app:endIconMode="clear_text"
+            app:hintEnabled="false"
+            app:layout_constraintBottom_toBottomOf="@id/tv_persona"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_persona"
+            app:layout_constraintTop_toTopOf="@id/tv_persona">
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/tv_persona_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:hint="@string/view_md_myself_enter"
+                android:inputType="textCapSentences"
+                android:maxLength="50"
+                android:maxLines="1"
+                android:theme="@style/TextInputLabel" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_lugar"
+            style="@style/subtitle_text_view_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:text="@string/view_md_place"
+            app:layout_constraintBottom_toTopOf="@id/tv_categoria"
+            app:layout_constraintEnd_toStartOf="@id/tv_lugar_cont"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_persona" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tv_lugar_cont"
+            android:layout_width="@dimen/zero"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            app:endIconMode="clear_text"
+            app:hintEnabled="false"
+            app:layout_constraintBottom_toBottomOf="@id/tv_lugar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_lugar"
+            app:layout_constraintTop_toTopOf="@id/tv_lugar">
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/tv_lugar_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:hint="@string/view_md_not_associated_male"
+                android:inputType="textCapSentences"
+                android:maxLength="50"
+                android:maxLines="1"
+                android:theme="@style/TextInputLabel" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_categoria"
+            style="@style/subtitle_text_view_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:text="@string/view_md_category"
+            app:layout_constraintBottom_toTopOf="@id/tv_fecha_movimiento"
+            app:layout_constraintEnd_toStartOf="@id/tv_categoria_cont"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_lugar" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tv_categoria_cont"
+            android:layout_width="@dimen/zero"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            app:endIconMode="clear_text"
+            app:hintEnabled="false"
+            app:layout_constraintBottom_toBottomOf="@id/tv_categoria"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_categoria"
+            app:layout_constraintTop_toTopOf="@id/tv_categoria">
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/tv_categoria_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:hint="@string/view_md_enter"
+                android:inputType="textCapSentences"
+                android:maxLength="50"
+                android:maxLines="1"
+                android:theme="@style/TextInputLabel" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_fecha_movimiento"
+            style="@style/subtitle_text_view_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:text="@string/view_md_mov_date"
+            app:layout_constraintBottom_toTopOf="@id/tv_deuda"
+            app:layout_constraintEnd_toStartOf="@id/et_fecha_movimiento"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_categoria" />
+
+        <EditText
+            android:id="@+id/et_fecha_movimiento"
+            android:layout_width="@dimen/zero"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            android:calendarViewShown="false"
+            android:datePickerMode="spinner"
+            android:hint="@string/view_md_select"
+            android:importantForAutofill="no"
+            android:inputType="date"
+            android:maxLength="10"
+            android:maxLines="1"
+            app:layout_constraintBottom_toBottomOf="@id/tv_fecha_movimiento"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_fecha_movimiento"
+            app:layout_constraintTop_toTopOf="@id/tv_fecha_movimiento" />
+
+        <TextView
+            android:id="@+id/tv_deuda"
+            style="@style/subtitle_text_view_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:text="@string/view_md_debt"
+            app:layout_constraintBottom_toTopOf="@id/tv_fecha_ingreso"
+            app:layout_constraintEnd_toStartOf="@id/tv_deuda_cont"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_fecha_movimiento" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tv_deuda_cont"
+            android:layout_width="@dimen/zero"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            android:theme="@style/TextInputLabel"
+            app:endIconMode="clear_text"
+            app:hintEnabled="false"
+            app:layout_constraintBottom_toBottomOf="@id/tv_deuda"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_deuda"
+            app:layout_constraintTop_toTopOf="@id/tv_deuda">
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/tv_deuda_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:hint="@string/view_md_not_associated_female"
+                android:inputType="textCapSentences"
+                android:maxLength="50"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_fecha_ingreso"
+            style="@style/subtitle_text_view_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:text="@string/view_md_entry_date"
+            app:layout_constraintBottom_toTopOf="@id/tv_fecha_upd"
+            app:layout_constraintEnd_toStartOf="@id/tv_fecha_ingreso_value"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_deuda" />
+
+        <TextView
+            android:id="@+id/tv_fecha_ingreso_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            android:text="@string/view_md_not_associated"
+            app:layout_constraintBottom_toBottomOf="@id/tv_fecha_ingreso"
+            app:layout_constraintStart_toEndOf="@id/tv_fecha_ingreso"
+            app:layout_constraintTop_toTopOf="@id/tv_fecha_ingreso" />
+
+        <TextView
+            android:id="@+id/tv_fecha_upd"
+            style="@style/subtitle_text_view_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:text="@string/view_md_lastUpd_date"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_fecha_upd_value"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_fecha_ingreso" />
+
+        <TextView
+            android:id="@+id/tv_fecha_upd_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            android:text="@string/view_md_not_associated"
+            app:layout_constraintBottom_toBottomOf="@id/tv_fecha_upd"
+            app:layout_constraintStart_toEndOf="@id/tv_fecha_upd"
+            app:layout_constraintTop_toTopOf="@id/tv_fecha_upd" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</merge>

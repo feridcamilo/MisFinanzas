@@ -9,7 +9,7 @@ import com.android.domain.model.Master
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseViewHolder
 import com.android.misfinanzas.base.MasterClickListener
-import kotlinx.android.synthetic.main.row_master.view.*
+import com.android.misfinanzas.databinding.RowMasterBinding
 
 class MastersAdapter(
     private val context: Context,
@@ -34,9 +34,12 @@ class MastersAdapter(
 
     //inner class to avoid memory leak, when parent class died (MovementsAdapter) this inner also die
     inner class MastersViewHolder(itemView: View) : BaseViewHolder<Master>(itemView) {
-        override fun bind(item: Master, position: Int) {
-            itemView.iv_enable.setImageResource(if (item.enabled) R.drawable.ic_enable else R.drawable.ic_disable)
-            itemView.tv_name.text = item.name
+
+        val binding = RowMasterBinding.bind(itemView)
+
+        override fun bind(item: Master, position: Int) = with(binding) {
+            ivEnable.setImageResource(if (item.enabled) R.drawable.ic_enable else R.drawable.ic_disable)
+            tvName.text = item.name
             itemView.setOnClickListener { itemClickListener.onMasterClicked(item) }
         }
     }
