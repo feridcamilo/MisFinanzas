@@ -4,22 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.sync.SyncFragment">
+    tools:context=".ui.logged.sync.SyncFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/login_view"
-            android:name="com.android.misfinanzas.ui.login.LoginFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/tv_serverDateTime_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_serverDateTime_title"
@@ -30,11 +19,10 @@
             android:text="@string/server_datetime_title"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"
-            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/tv_serverDateTime"
             app:layout_constraintEnd_toStartOf="@id/ib_info"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/login_view" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/ib_info"
@@ -43,11 +31,10 @@
             android:layout_marginEnd="@dimen/default_margin"
             android:background="@drawable/ic_info"
             android:contentDescription="@string/info_difference_time"
-            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/tv_last_sync"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_serverDateTime_title"
-            app:layout_constraintTop_toBottomOf="@id/login_view" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_serverDateTime"
@@ -57,7 +44,6 @@
             android:layout_marginBottom="@dimen/default_margin"
             android:text="@string/server_datetime_value"
             android:textSize="@dimen/text_size_14"
-            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/tv_last_sync"
             app:layout_constraintEnd_toStartOf="@id/ib_info"
             app:layout_constraintStart_toStartOf="parent"
@@ -72,7 +58,6 @@
             android:text="@string/last_sync"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"
-            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/tv_last_sync_movements"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -86,7 +71,6 @@
             android:layout_marginEnd="@dimen/default_margin"
             android:text="@string/last_sync_movements"
             android:textSize="@dimen/text_size_14"
-            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/tv_last_sync_masters"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -101,7 +85,6 @@
             android:layout_marginBottom="@dimen/default_margin"
             android:text="@string/last_sync_masters"
             android:textSize="@dimen/text_size_14"
-            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/sw_auto_sync"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -118,10 +101,26 @@
             android:text="@string/auto_sync_on_open"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/tv_link"
+            app:layout_constraintBottom_toTopOf="@id/sw_sync_on_edit"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_last_sync_masters" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sw_sync_on_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:checked="true"
+            android:text="@string/auto_sync_on_edit"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/tv_link"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sw_auto_sync" />
 
         <TextView
             android:id="@+id/tv_link"
@@ -137,7 +136,7 @@
             app:layout_constraintBottom_toTopOf="@id/btn_sync_movements"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sw_auto_sync" />
+            app:layout_constraintTop_toBottomOf="@id/sw_sync_on_edit" />
 
         <Button
             android:id="@+id/btn_sync_movements"
@@ -148,7 +147,6 @@
             android:text="@string/sync_movements"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/btn_sync_masters"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -163,7 +161,6 @@
             android:text="@string/sync_masters"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/btn_clean_discarded"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -178,7 +175,6 @@
             android:text="@string/sync_clean_discarded"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

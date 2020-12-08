@@ -10,7 +10,7 @@ class MovementConverter {
     fun stringToMovement(value: String): Movement {
         val gson = Gson()
         val type: Type = object : TypeToken<Movement>() {}.type
-        return gson.fromJson<Movement>(value, type)
+        return gson.fromJson(value, type)
     }
 
     fun movementToString(value: Movement): String {

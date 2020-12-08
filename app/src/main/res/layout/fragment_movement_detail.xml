@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.movements.movementDetail.MovementDetailFragment">
+    tools:context=".ui.logged.movements.movementDetail.MovementDetailFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.android.misfinanzas.ui.widgets.movementDetail.MovementDetailView
+        <com.android.misfinanzas.ui.logged.widgets.movementDetail.MovementDetailView
             android:id="@+id/movement_detail_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -1,37 +1,41 @@
 package com.android.misfinanzas.ui.login
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.android.domain.UserSesion
 import com.android.domain.model.User
 import com.android.domain.repository.UserRepository
-import com.android.domain.result.Result
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    private val credential = MutableLiveData<UserCredential>()
+    val viewState: LiveData<LoginViewState> get() = _viewState
+    private val _viewState = MutableLiveData<LoginViewState>()
 
-    fun setCredential(credential: UserCredential) {
-        this.credential.value = credential
+    fun login(user: String, password: String) {
+        viewModelScope.launch {
+            val response = userRepository.getCloudUser(user, password)
+            if (response != null) {
+                insertLocalUser(response)
+                UserSesion.setUser(response)
+                _viewState.postValue(LoginViewState.Logged)
+            } else {
+                _viewState.postValue(LoginViewState.WrongUserOrPassword)
+            }
+        }
     }
 
-    val syncUser = credential.distinctUntilChanged().switchMap {
-        liveData(Dispatchers.IO) {
-            if (it.user.isNotEmpty() && it.password.isNotEmpty()) {
-                emit(Result.Loading)
-                try {
-                    val user = userRepository.getCloudUser(it.user, it.password)
-                    if (user != null) {
-                        insertLocalUser(user)
-                    }
-                    emit(Result.Success(user))
-                } catch (e: Exception) {
-                    emit(Result.Error(e))
-                }
-            }
+    suspend fun checkSession() {
+        val user = userRepository.getUser()
+        if (user == null) {
+            _viewState.postValue(LoginViewState.NotLogged)
+        } else {
+            UserSesion.setUser(user)
+            _viewState.postValue(LoginViewState.Logged)
         }
     }
 

@@ -69,20 +69,20 @@ class MovementDataRepository(
         roomDataSource.clearDiscardedMovements()
     }
 
-    override suspend fun getCloudMovements(clientId: String, lastSync: Date?): List<Movement> {
-        return cloudDataSource.getMovements(clientId, lastSync).map { mapper.map(it) }
+    override suspend fun getCloudMovements(lastSync: Date?): List<Movement> {
+        return cloudDataSource.getMovements(lastSync).map { mapper.map(it) }
     }
 
-    override suspend fun getCloudDeletedMovements(clientId: String, lastSync: Date?): List<Int> {
-        return cloudDataSource.getDeletedMovements(clientId, lastSync)
+    override suspend fun getCloudDeletedMovements(lastSync: Date?): List<Int> {
+        return cloudDataSource.getDeletedMovements(lastSync)
     }
 
     override suspend fun deleteMovementsInCloud(ids: List<Int>): Boolean {
         return cloudDataSource.deleteMovements(ids)
     }
 
-    override suspend fun sendMovementsToCloud(clientId: String, movements: List<Movement>): Boolean {
-        return cloudDataSource.sendMovements(clientId, movements.map { mapper.mapToDTO(it) })
+    override suspend fun sendMovementsToCloud(movements: List<Movement>): Boolean {
+        return cloudDataSource.sendMovements(movements.map { mapper.mapToDTO(it) })
     }
 
 }

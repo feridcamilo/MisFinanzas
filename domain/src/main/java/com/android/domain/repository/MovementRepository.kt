@@ -23,8 +23,8 @@ interface MovementRepository {
     suspend fun clearDeletedMovements()
     suspend fun clearDiscardedMovements()
 
-    suspend fun getCloudMovements(clientId: String, lastSync: Date?): List<Movement>
-    suspend fun getCloudDeletedMovements(clientId: String, lastSync: Date?): List<Int>
+    suspend fun getCloudMovements(lastSync: Date?): List<Movement>
+    suspend fun getCloudDeletedMovements(lastSync: Date?): List<Int>
     suspend fun deleteMovementsInCloud(ids: List<Int>): Boolean
-    suspend fun sendMovementsToCloud(clientId: String, movements: List<Movement>): Boolean
+    suspend fun sendMovementsToCloud(movements: List<Movement>): Boolean
 }

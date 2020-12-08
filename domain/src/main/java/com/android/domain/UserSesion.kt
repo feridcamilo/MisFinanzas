@@ -7,17 +7,17 @@ import java.util.*
 
 class UserSesion {
     companion object {
-        private var INSTANCE: User? = null
+        private lateinit var INSTANCE: User
         private var FIRST_OPEN: Boolean = true
         private var SERVER_DATETIME: Date? = null
         private var SERVER_TIME_ZONE: TimeZone? = null
 
-        fun getUser(): User? {
+        fun getUser(): User {
             return INSTANCE
         }
 
-        fun hasUser(): Boolean {
-            return INSTANCE != null
+        fun getClientId(): String {
+            return INSTANCE.clientId.toString()
         }
 
         fun setUser(user: User) {

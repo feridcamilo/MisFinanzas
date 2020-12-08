@@ -8,6 +8,7 @@ class SharedPreferencesUtils {
     companion object {
         private const val FILE_NAME = "kotlinsharedpreference"
         private const val AUTO_SYNC_ON_OPEN = "AUTO_SYNC_ON_OPEN"
+        private const val AUTO_SYNC_ON_EDIT = "AUTO_SYNC_ON_EDIT"
         private const val DIFF_TIME_TO_SERVER = "DIFF_TIME_TO_SERVER"
 
         private fun getSharedPreferences(context: Context): SharedPreferences {
@@ -18,12 +19,20 @@ class SharedPreferencesUtils {
             return getSharedPreferences(context).edit()
         }
 
-        fun setAutoSyncConfig(context: Context, value: Boolean) {
+        fun setAutoSyncOnOpen(context: Context, value: Boolean) {
             getEditor(context).putBoolean(AUTO_SYNC_ON_OPEN, value).commit()
         }
 
-        fun getAutoSyncConfig(context: Context): Boolean {
-            return getSharedPreferences(context).getBoolean(AUTO_SYNC_ON_OPEN, false)
+        fun getAutoSyncOnOpen(context: Context): Boolean {
+            return getSharedPreferences(context).getBoolean(AUTO_SYNC_ON_OPEN, true)
+        }
+
+        fun setAutoSyncOnEdit(context: Context, value: Boolean) {
+            getEditor(context).putBoolean(AUTO_SYNC_ON_EDIT, value).commit()
+        }
+
+        fun getAutoSyncOnEdit(context: Context): Boolean {
+            return getSharedPreferences(context).getBoolean(AUTO_SYNC_ON_EDIT, true)
         }
 
         fun setDiffTimeToServer(context: Context, value: String) {

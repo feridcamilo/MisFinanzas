@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Mis Finanzas</string>
+    <string name="title_login">Iniciar sesión</string>
     <string name="title_balance">Saldos</string>
     <string name="title_potential_movements">Potenciales movimientos desde SMS</string>
     <string name="title_movements">Movimientos</string>
@@ -27,6 +28,7 @@
     <string name="never_synced">Nunca sincronizado.</string>
     <string name="server_datetime_value"> %1$s diferencia de %2$s</string>
     <string name="auto_sync_on_open">Sincronizar al iniciar la app</string>
+    <string name="auto_sync_on_edit">Sincronizar al modificar movimientos</string>
     <string name="sync_movements">Sincronizar movimientos</string>
     <string name="sync_masters">Sincronizar maestros</string>
     <string name="sync_clean_discarded">Restaurar descartados</string>
@@ -74,6 +76,7 @@
 
     <!--Error messages-->
     <string name="error_not_network_no_sync">No hay conexión a internet. No se puede sincronizar.</string>
+    <string name="error_not_network_no_sync_detail">No hay conexión a internet. Guardado para sincronizar cuando haya conexión.</string>
     <string name="error_not_network_no_login">No hay conexión a internet. No se puede iniciar sesión.</string>
     <string name="error_not_network_no_continue">No hay conexión a internet. No se puede continuar.</string>
     <string name="error_getting_movements">Ocurrió un error obteniendo los movimientos: %1$s</string>
@@ -99,6 +102,7 @@
     <string name="info_data_synced">Datos sincronizados con éxito.</string>
     <string name="info_movements_synced">Movimientos sincronizados con éxito.</string>
     <string name="info_movements_discarded_restored">Los movimientos descartados fueron restaurados con éxito.</string>
+    <string name="info_movement_synced_details">Movimiento sincronizado también con el servidor.</string>
     <string name="info_movement_saved">Movimiento guardado con éxito.</string>
     <string name="info_movement_deleted">Movimiento eliminado con éxito.</string>
     <string name="info_movement_discarded">Movimiento descartado.</string>

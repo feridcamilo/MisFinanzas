@@ -57,36 +57,36 @@ class MasterDataRepository(
         roomDataSource.insertPeople(people.map { personMapper.mapToVO(personMapper.map(it)) })
     }
 
-    override suspend fun getCloudCategories(clientId: String, lastSync: Date?): List<Master> {
-        return cloudDataSource.getCategories(clientId, lastSync).map { masterMapper.map(it) }
+    override suspend fun getCloudCategories(lastSync: Date?): List<Master> {
+        return cloudDataSource.getCategories(lastSync).map { masterMapper.map(it) }
     }
 
-    override suspend fun getCloudDebts(clientId: String, lastSync: Date?): List<Master> {
-        return cloudDataSource.getDebts(clientId, lastSync).map { masterMapper.map(it) }
+    override suspend fun getCloudDebts(lastSync: Date?): List<Master> {
+        return cloudDataSource.getDebts(lastSync).map { masterMapper.map(it) }
     }
 
-    override suspend fun getCloudPlaces(clientId: String, lastSync: Date?): List<Master> {
-        return cloudDataSource.getPlaces(clientId, lastSync).map { masterMapper.map(it) }
+    override suspend fun getCloudPlaces(lastSync: Date?): List<Master> {
+        return cloudDataSource.getPlaces(lastSync).map { masterMapper.map(it) }
     }
 
-    override suspend fun getCloudPeople(clientId: String, lastSync: Date?): List<Master> {
-        return cloudDataSource.getPeople(clientId, lastSync).map { masterMapper.map(it) }
+    override suspend fun getCloudPeople(lastSync: Date?): List<Master> {
+        return cloudDataSource.getPeople(lastSync).map { masterMapper.map(it) }
     }
 
-    override suspend fun sendCategoriesToCloud(clientId: String, masters: List<Master>): Boolean {
-        return cloudDataSource.sendCategories(clientId, masters.map { masterMapper.mapToDTO(it) })
+    override suspend fun sendCategoriesToCloud(masters: List<Master>): Boolean {
+        return cloudDataSource.sendCategories(masters.map { masterMapper.mapToDTO(it) })
     }
 
-    override suspend fun sendPlacesToCloud(clientId: String, masters: List<Master>): Boolean {
-        return cloudDataSource.sendPlaces(clientId, masters.map { masterMapper.mapToDTO(it) })
+    override suspend fun sendPlacesToCloud(masters: List<Master>): Boolean {
+        return cloudDataSource.sendPlaces(masters.map { masterMapper.mapToDTO(it) })
     }
 
-    override suspend fun sendPeopleToCloud(clientId: String, masters: List<Master>): Boolean {
-        return cloudDataSource.sendPeople(clientId, masters.map { masterMapper.mapToDTO(it) })
+    override suspend fun sendPeopleToCloud(masters: List<Master>): Boolean {
+        return cloudDataSource.sendPeople(masters.map { masterMapper.mapToDTO(it) })
     }
 
-    override suspend fun sendDebtsToCloud(clientId: String, masters: List<Master>): Boolean {
-        return cloudDataSource.sendDebts(clientId, masters.map { masterMapper.mapToDTO(it) })
+    override suspend fun sendDebtsToCloud(masters: List<Master>): Boolean {
+        return cloudDataSource.sendDebts(masters.map { masterMapper.mapToDTO(it) })
     }
 
 }

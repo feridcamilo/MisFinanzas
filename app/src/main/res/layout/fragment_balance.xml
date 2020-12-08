@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.balance.BalanceFragment">
+    tools:context=".ui.logged.balance.BalanceFragment">
 
-    <com.android.misfinanzas.ui.widgets.balance.BalanceView
+    <com.android.misfinanzas.ui.logged.widgets.balance.BalanceView
         android:id="@+id/balance_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

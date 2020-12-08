@@ -19,13 +19,13 @@ interface MasterRepository {
     suspend fun getPeople(): List<Person>
     suspend fun insertPeople(people: List<Master>)
 
-    suspend fun getCloudCategories(clientId: String, lastSync: Date?): List<Master>
-    suspend fun getCloudDebts(clientId: String, lastSync: Date?): List<Master>
-    suspend fun getCloudPlaces(clientId: String, lastSync: Date?): List<Master>
-    suspend fun getCloudPeople(clientId: String, lastSync: Date?): List<Master>
+    suspend fun getCloudCategories(lastSync: Date?): List<Master>
+    suspend fun getCloudDebts(lastSync: Date?): List<Master>
+    suspend fun getCloudPlaces(lastSync: Date?): List<Master>
+    suspend fun getCloudPeople(lastSync: Date?): List<Master>
 
-    suspend fun sendCategoriesToCloud(clientId: String, masters: List<Master>): Boolean
-    suspend fun sendPlacesToCloud(clientId: String, masters: List<Master>): Boolean
-    suspend fun sendPeopleToCloud(clientId: String, masters: List<Master>): Boolean
-    suspend fun sendDebtsToCloud(clientId: String, masters: List<Master>): Boolean
+    suspend fun sendCategoriesToCloud(masters: List<Master>): Boolean
+    suspend fun sendPlacesToCloud(masters: List<Master>): Boolean
+    suspend fun sendPeopleToCloud(masters: List<Master>): Boolean
+    suspend fun sendDebtsToCloud(masters: List<Master>): Boolean
 }
