@@ -9,8 +9,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/gray_background">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tv_title"
@@ -53,7 +52,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
-            android:textColor="@color/gray"
             android:textSize="@dimen/text_size_20"
             app:layout_constraintBottom_toBottomOf="@id/img_cash"
             app:layout_constraintStart_toEndOf="@id/tv_cash_title"
@@ -88,7 +86,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
-            android:textColor="@color/gray"
             android:textSize="@dimen/text_size_20"
             app:layout_constraintBottom_toBottomOf="@id/img_card"
             app:layout_constraintStart_toEndOf="@id/tv_card_title"
@@ -123,7 +120,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
-            android:textColor="@color/gray"
             android:textSize="@dimen/text_size_20"
             app:layout_constraintBottom_toBottomOf="@id/img_total"
             app:layout_constraintStart_toEndOf="@id/tv_total_title"

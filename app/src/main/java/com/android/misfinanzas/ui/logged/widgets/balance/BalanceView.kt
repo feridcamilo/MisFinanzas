@@ -1,6 +1,7 @@
 package com.android.misfinanzas.ui.logged.widgets.balance
 
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import com.android.domain.model.Balance
@@ -22,6 +23,7 @@ class BalanceView @JvmOverloads constructor(
 
     private fun inflate() {
         binding = CardViewBalanceBinding.inflate(LayoutInflater.from(context), this)
+        setBackgroundColor(Color.TRANSPARENT)
     }
 
     fun showBalance(balance: Balance) = with(binding) {

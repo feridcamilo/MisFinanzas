@@ -21,20 +21,17 @@
         <item name="android:colorControlActivated">@color/colorPrimary</item>
     </style>
 
-    <style name="title_text_view">
-        <item name="android:textColor">@color/gray</item>
+    <style name="title_text_view" parent="AppTheme">
         <item name="android:textSize">@dimen/text_size_24</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="subtitle_text_view">
-        <item name="android:textColor">@color/gray</item>
+    <style name="subtitle_text_view" parent="AppTheme">
         <item name="android:textSize">@dimen/text_size_20</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="subtitle_text_view_small">
-        <item name="android:textColor">@color/gray</item>
+    <style name="subtitle_text_view_small" parent="AppTheme">
         <item name="android:textSize">@dimen/text_size_16</item>
         <item name="android:textStyle">bold</item>
     </style>

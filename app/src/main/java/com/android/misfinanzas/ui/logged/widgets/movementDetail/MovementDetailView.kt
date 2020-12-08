@@ -2,6 +2,7 @@ package com.android.misfinanzas.ui.logged.widgets.movementDetail
 
 import android.app.DatePickerDialog
 import android.content.Context
+import android.graphics.Color
 import android.text.InputType
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -38,6 +39,7 @@ class MovementDetailView @JvmOverloads constructor(
 
     private fun inflate() {
         binding = CardViewMovementDetailBinding.inflate(LayoutInflater.from(context), this)
+        setBackgroundColor(Color.TRANSPARENT)
     }
 
     private lateinit var movementTypes: List<MovementType>
