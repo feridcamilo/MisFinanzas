@@ -175,13 +175,13 @@ class BalanceFragment : BaseFragment(), MovementClickListener {
         refreshRecyclerViewVisibility()
     }
 
-    private fun refreshRecyclerViewVisibility() = with(binding.rvPotentialMovements) {
-        if (adapter?.itemCount!! <= 0) {
-            visibility = View.GONE
-            visibility = View.GONE
+    private fun refreshRecyclerViewVisibility() = with(binding) {
+        if (rvPotentialMovements.adapter?.itemCount!! <= 0) {
+            rvPotentialMovements.visibility = View.GONE
+            tvPotentialMovements.visibility = View.GONE
         } else {
-            visibility = View.VISIBLE
-            visibility = View.VISIBLE
+            rvPotentialMovements.visibility = View.VISIBLE
+            tvPotentialMovements.visibility = View.VISIBLE
         }
     }
 
