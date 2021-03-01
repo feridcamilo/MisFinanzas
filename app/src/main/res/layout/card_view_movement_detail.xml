@@ -262,6 +262,7 @@
             android:datePickerMode="spinner"
             android:hint="@string/view_md_select"
             android:importantForAutofill="no"
+            android:focusable="false"
             android:inputType="date"
             android:maxLength="10"
             android:maxLines="1"

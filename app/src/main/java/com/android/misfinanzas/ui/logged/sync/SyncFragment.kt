@@ -31,8 +31,6 @@ class SyncFragment : BaseFragment() {
         const val AUTO_SYNC: String = "AutoSync"
     }
 
-    private val TAG = this.javaClass.name
-
     private val viewModel by viewModel<SyncViewModel>()
     private lateinit var binding: FragmentSyncBinding
 
@@ -152,8 +150,6 @@ class SyncFragment : BaseFragment() {
         tvServerDateTime.text = getString(R.string.server_datetime_value, serverDateTimeFormated, gtmDiff)
     }
 
-    //is Result.Error -> showExceptionMessage(TAG, getString(R.string.error_getting_srv_dtm, result.exception), ErrorType.TYPE_RETROFIT)
-
     private fun determinateProcedure() {
         if (autoSync) {
             autoSync = false
@@ -200,13 +196,9 @@ class SyncFragment : BaseFragment() {
         context?.showShortToast(R.string.info_movements_synced)
     }
 
-    //is Result.Error -> showExceptionMessage(TAG, getString(R.string.error_getting_movements, result.exception), ErrorType.TYPE_RETROFIT)
-
     private fun syncMastersResult() {
         getServerDateTime()
         context?.showShortToast(R.string.info_masters_synced)
     }
-
-    //is Result.Error -> showExceptionMessage(TAG, getString(R.string.error_getting_masters, result.exception), ErrorType.TYPE_RETROFIT)
 
 }

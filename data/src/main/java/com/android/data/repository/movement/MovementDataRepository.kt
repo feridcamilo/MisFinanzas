@@ -21,16 +21,47 @@ class MovementDataRepository(
         return roomDataSource.getLastSyncMovements()
     }
 
+    override suspend fun download() {
+        val lastSync = getLastSyncMovements()
+
+        val movements = cloudDataSource.getMovements(lastSync)
+        if (movements.isNotEmpty()) {
+            roomDataSource.insertMovements(movements.map { mapper.mapToVO(it) })
+        }
+
+        if (lastSync != null) {
+            val idsToDeleteInLocal = cloudDataSource.getDeletedMovements(lastSync)
+            roomDataSource.deleteMovementsFromWeb(idsToDeleteInLocal)
+        }
+    }
+
+    override suspend fun upload() {
+        val lastSync = getLastSyncMovements()
+
+        if (lastSync != null) {
+            val idsToDeleteInWeb = roomDataSource.getMovementsToDelete()
+            if (idsToDeleteInWeb.isNotEmpty()) {
+                if (cloudDataSource.deleteMovements(idsToDeleteInWeb)) {
+                    roomDataSource.clearDeletedMovements()
+                }
+            }
+
+            val movementsToSend = roomDataSource.getMovementsToSync(lastSync)
+            if (movementsToSend.isNotEmpty()) {
+                if (cloudDataSource.sendMovements(movementsToSend.map { mapper.mapToDTO(it, lastSync) })) {
+                    //Delete all news movements from local to allow download them with the right movementId from web
+                    roomDataSource.clearSyncedMovements(lastSync)
+                }
+            }
+        }
+    }
+
     override suspend fun getMovements(): List<Movement> {
         return roomDataSource.getMovements().map { mapper.map(it) }
     }
 
     override suspend fun insertMovement(movement: Movement) {
         roomDataSource.insertMovement(mapper.mapToVO(movement))
-    }
-
-    override suspend fun insertMovements(movements: List<Movement>) {
-        roomDataSource.insertMovements(movements.map { mapper.mapToVO(it) })
     }
 
     override suspend fun deleteMovement(movement: Movement) {
@@ -45,44 +76,8 @@ class MovementDataRepository(
         roomDataSource.discardMovement(id)
     }
 
-    override suspend fun getMovementsToSync(lastSync: Date): List<Movement> {
-        return roomDataSource.getMovementsToSync(lastSync).map { mapper.map(it) }
-    }
-
-    override suspend fun getMovementsToDelete(): List<Int> {
-        return roomDataSource.getMovementsToDelete()
-    }
-
-    override suspend fun deleteMovementsFromWeb(ids: List<Int>) {
-        roomDataSource.deleteMovementsFromWeb(ids)
-    }
-
-    override suspend fun clearSyncedMovements(lastSync: Date) {
-        roomDataSource.clearSyncedMovements(lastSync)
-    }
-
-    override suspend fun clearDeletedMovements() {
-        roomDataSource.clearDeletedMovements()
-    }
-
     override suspend fun clearDiscardedMovements() {
         roomDataSource.clearDiscardedMovements()
-    }
-
-    override suspend fun getCloudMovements(lastSync: Date?): List<Movement> {
-        return cloudDataSource.getMovements(lastSync).map { mapper.map(it) }
-    }
-
-    override suspend fun getCloudDeletedMovements(lastSync: Date?): List<Int> {
-        return cloudDataSource.getDeletedMovements(lastSync)
-    }
-
-    override suspend fun deleteMovementsInCloud(ids: List<Int>): Boolean {
-        return cloudDataSource.deleteMovements(ids)
-    }
-
-    override suspend fun sendMovementsToCloud(movements: List<Movement>): Boolean {
-        return cloudDataSource.sendMovements(movements.map { mapper.mapToDTO(it) })
     }
 
 }

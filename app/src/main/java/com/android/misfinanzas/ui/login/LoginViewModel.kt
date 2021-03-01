@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.domain.UserSesion
-import com.android.domain.model.User
 import com.android.domain.repository.UserRepository
 import kotlinx.coroutines.launch
 
@@ -20,7 +19,7 @@ class LoginViewModel(
         viewModelScope.launch {
             val response = userRepository.getCloudUser(user, password)
             if (response != null) {
-                insertLocalUser(response)
+                userRepository.insertUser(response)
                 UserSesion.setUser(response)
                 _viewState.postValue(LoginViewState.Logged)
             } else {
@@ -36,12 +35,6 @@ class LoginViewModel(
         } else {
             UserSesion.setUser(user)
             _viewState.postValue(LoginViewState.Logged)
-        }
-    }
-
-    private fun insertLocalUser(user: User) {
-        viewModelScope.launch {
-            userRepository.insertUser(user)
         }
     }
 

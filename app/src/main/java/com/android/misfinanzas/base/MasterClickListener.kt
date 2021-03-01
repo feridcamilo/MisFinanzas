@@ -1,8 +1,8 @@
 package com.android.misfinanzas.base
 
-import com.android.domain.model.Master
+import com.android.misfinanzas.models.MasterModel
 
 
 interface MasterClickListener {
-    fun onMasterClicked(master: Master?)
+    fun onMasterClicked(master: MasterModel?)
 }

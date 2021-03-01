@@ -4,6 +4,7 @@ import com.android.data.local.model.MovementVO
 import com.android.data.remote.model.MovementDTO
 import com.android.domain.model.Movement
 import com.android.domain.utils.StringUtils.Companion.EMPTY
+import java.util.*
 
 class MovementDataMapper {
 
@@ -39,23 +40,23 @@ class MovementDataMapper {
         )
     }
 
-    fun mapToDTO(movement: Movement): MovementDTO {
+    fun mapToDTO(vo: MovementVO, lastSync: Date): MovementDTO {
         return MovementDTO(
-            movement.idMovement,
-            movement.value,
-            movement.description,
-            movement.date!!,
-            movement.dateEntry,
-            movement.dateLastUpd,
-            movement.idType,
+            if (vo.dateEntry!! > lastSync) 0 else vo.idMovement, //if 0 is a new movement, else is a old mov updated,
+            vo.value,
+            vo.description,
+            vo.date!!,
+            vo.dateEntry,
+            vo.dateLastUpd,
+            vo.idType,
             EMPTY,
-            movement.categoryId,
+            vo.categoryId,
             EMPTY,
-            movement.debtId,
+            vo.debtId,
             EMPTY,
-            movement.personId,
+            vo.personId,
             EMPTY,
-            movement.placeId,
+            vo.placeId,
             EMPTY
         )
     }

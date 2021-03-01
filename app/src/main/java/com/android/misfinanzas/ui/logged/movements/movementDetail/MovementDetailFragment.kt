@@ -8,14 +8,13 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import com.android.data.local.model.converters.MovementConverter
 import com.android.data.utils.SharedPreferencesUtils
-import com.android.domain.model.*
 import com.android.domain.utils.DateUtils
-import com.android.domain.utils.StringUtils.Companion.EMPTY
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
 import com.android.misfinanzas.databinding.FragmentMovementDetailBinding
+import com.android.misfinanzas.models.MasterModel
+import com.android.misfinanzas.models.MovementModel
 import com.android.misfinanzas.ui.logged.sync.SyncViewModel
 import com.android.misfinanzas.ui.logged.sync.SyncViewState
 import com.android.misfinanzas.utils.isConnected
@@ -40,12 +39,12 @@ class MovementDetailFragment : BaseFragment() {
     private val syncViewModel by viewModel<SyncViewModel>()
     private lateinit var binding: FragmentMovementDetailBinding
 
-    private var movement: Movement? = null
+    private var movement: MovementModel? = null
     private var descriptions: List<String>? = null
-    private var people: List<Person>? = null
-    private var places: List<Place>? = null
-    private var categories: List<Category>? = null
-    private var debts: List<Debt>? = null
+    private var people: List<MasterModel>? = null
+    private var places: List<MasterModel>? = null
+    private var categories: List<MasterModel>? = null
+    private var debts: List<MasterModel>? = null
 
     private var shouldBack: Boolean = false
 
@@ -53,7 +52,7 @@ class MovementDetailFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             if (it.containsKey(MOVEMENT_DATA)) {
-                movement = MovementConverter().stringToMovement(it.getString(MOVEMENT_DATA, EMPTY))
+                movement = it.getSerializable(MOVEMENT_DATA) as? MovementModel
             }
             descriptions = it.getStringArrayList(DESCRIPTIONS_DATA)
             people = it.getParcelableArrayList(PEOPLE_DATA)

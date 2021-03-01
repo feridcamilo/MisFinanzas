@@ -1,58 +1,26 @@
 package com.android.misfinanzas.ui.logged.movements
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
-import com.android.domain.repository.MasterRepository
+import androidx.lifecycle.viewModelScope
 import com.android.domain.repository.MovementRepository
-import com.android.domain.result.Result
+import com.android.misfinanzas.mappers.MovementMapper
+import kotlinx.coroutines.launch
 
 class MovementsViewModel(
     private val movementRepository: MovementRepository,
-    private val masterRepository: MasterRepository
+    private val movementMapper: MovementMapper
 ) : ViewModel() {
 
-    fun getLocalMovements() = liveData {
-        emit(Result.Loading)
-        try {
-            emit(Result.Success(movementRepository.getMovements()))
-        } catch (e: Exception) {
-            emit(Result.Error(e))
-        }
-    }
+    val viewState: LiveData<MovementsViewState> get() = _viewState
+    private val _viewState = MutableLiveData<MovementsViewState>()
 
-    fun getLocalPeople() = liveData {
-        emit(Result.Loading)
-        try {
-            emit(Result.Success(masterRepository.getPeople()))
-        } catch (e: Exception) {
-            emit(Result.Error(e))
-        }
-    }
-
-    fun getLocalPlaces() = liveData {
-        emit(Result.Loading)
-        try {
-            emit(Result.Success(masterRepository.getPlaces()))
-        } catch (e: Exception) {
-            emit(Result.Error(e))
-        }
-    }
-
-    fun getLocalCategories() = liveData {
-        emit(Result.Loading)
-        try {
-            emit(Result.Success(masterRepository.getCategories()))
-        } catch (e: Exception) {
-            emit(Result.Error(e))
-        }
-    }
-
-    fun getLocalDebts() = liveData {
-        emit(Result.Loading)
-        try {
-            emit(Result.Success(masterRepository.getDebts()))
-        } catch (e: Exception) {
-            emit(Result.Error(e))
+    fun getLocalMovements() {
+        viewModelScope.launch {
+            val data = movementRepository.getMovements()
+            val dataMapped = data.map { movementMapper.map(it) }
+            _viewState.postValue(MovementsViewState.MovementsLoaded(dataMapped))
         }
     }
 

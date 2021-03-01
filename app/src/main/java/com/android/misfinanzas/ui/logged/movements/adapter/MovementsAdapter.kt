@@ -1,11 +1,10 @@
-package com.android.misfinanzas.ui.logged.movements
+package com.android.misfinanzas.ui.logged.movements.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.android.domain.model.Movement
 import com.android.domain.utils.DateUtils
 import com.android.domain.utils.MoneyUtils
 import com.android.misfinanzas.R
@@ -13,10 +12,11 @@ import com.android.misfinanzas.base.BaseViewHolder
 import com.android.misfinanzas.base.MovementClickListener
 import com.android.misfinanzas.base.MovementType
 import com.android.misfinanzas.databinding.RowMovementBinding
+import com.android.misfinanzas.models.MovementModel
 
 class MovementsAdapter(
     private val context: Context,
-    private val movements: List<Movement>,
+    private val movements: List<MovementModel>,
     private val itemClickListener: MovementClickListener
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
@@ -36,11 +36,11 @@ class MovementsAdapter(
     }
 
     //inner class to avoid memory leak, when parent class died (MovementsAdapter) this inner also die
-    inner class MovementsViewHolder(itemView: View) : BaseViewHolder<Movement>(itemView) {
+    inner class MovementsViewHolder(itemView: View) : BaseViewHolder<MovementModel>(itemView) {
 
         val binding = RowMovementBinding.bind(itemView)
 
-        override fun bind(item: Movement, position: Int) = with(binding) {
+        override fun bind(item: MovementModel, position: Int) = with(binding) {
             ivTipoMovimiento.setImageResource((MovementType.getImage(item.idType)))
             tvValor.text = MoneyUtils.getMoneyFormat().format(item.value)
             tvFecha.text = DateUtils.getDateFormat().format(item.date!!)
@@ -53,7 +53,7 @@ class MovementsAdapter(
 
             if (item.idMovement < 0) {
                 ibDiscard.visibility = View.VISIBLE
-                ibDiscard.setOnClickListener { itemClickListener.onDiscardMovementClicked(item.idMovement, position) }
+                ibDiscard.setOnClickListener { itemClickListener.onDiscardMovementClicked(item.idMovement) }
             } else {
                 ibDiscard.visibility = View.GONE
             }

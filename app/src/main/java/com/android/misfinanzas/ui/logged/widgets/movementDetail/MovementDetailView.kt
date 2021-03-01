@@ -1,26 +1,26 @@
 package com.android.misfinanzas.ui.logged.widgets.movementDetail
 
-import android.app.DatePickerDialog
 import android.content.Context
 import android.graphics.Color
-import android.text.InputType
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
-import com.android.domain.model.*
-import com.android.domain.utils.DateUtils.Companion.getCalendarFromStringDate
 import com.android.domain.utils.DateUtils.Companion.getCurrentDateTime
 import com.android.domain.utils.DateUtils.Companion.getDateFormat
 import com.android.domain.utils.DateUtils.Companion.getDateTimeFormat
 import com.android.domain.utils.DateUtils.Companion.getDateToWebService
 import com.android.domain.utils.MoneyUtils
 import com.android.domain.utils.StringUtils.Companion.EMPTY
+import com.android.domain.utils.StringUtils.Companion.ZERO
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.MovementType
 import com.android.misfinanzas.databinding.CardViewMovementDetailBinding
+import com.android.misfinanzas.models.MasterModel
+import com.android.misfinanzas.models.MovementModel
+import com.android.misfinanzas.utils.setDateControl
 import com.google.android.material.card.MaterialCardView
 import java.math.BigDecimal
 import java.util.*
@@ -44,22 +44,22 @@ class MovementDetailView @JvmOverloads constructor(
 
     private lateinit var movementTypes: List<MovementType>
     private var descriptions: List<String>? = null
-    private var people: List<Person>? = null
-    private var places: List<Place>? = null
-    private var categories: List<Category>? = null
-    private var debts: List<Debt>? = null
+    private var people: List<MasterModel>? = null
+    private var places: List<MasterModel>? = null
+    private var categories: List<MasterModel>? = null
+    private var debts: List<MasterModel>? = null
 
-    private var movement: Movement? = null
+    private var movement: MovementModel? = null
     private var selectedMovementType: Int = MovementType.NOT_SELECTED
     var shouldDiscard = false
     var idToDiscard = 0
 
     fun initView(
         descriptions: List<String>?,
-        people: List<Person>?,
-        places: List<Place>?,
-        categories: List<Category>?,
-        debts: List<Debt>?
+        people: List<MasterModel>?,
+        places: List<MasterModel>?,
+        categories: List<MasterModel>?,
+        debts: List<MasterModel>?
     ) {
         this.descriptions = descriptions
         this.people = people
@@ -67,7 +67,7 @@ class MovementDetailView @JvmOverloads constructor(
         this.categories = categories
         this.debts = debts
         setMastersPickers()
-        setDateControl()
+        binding.etFechaMovimiento.setDateControl()
     }
 
     private fun setMastersPickers() = with(binding) {
@@ -119,30 +119,7 @@ class MovementDetailView @JvmOverloads constructor(
         etFechaMovimiento.setText(getDateFormat().format(currentDate))
     }
 
-    private fun setDateControl() = with(binding) {
-        etFechaMovimiento.inputType = InputType.TYPE_NULL
-        etFechaMovimiento.setOnClickListener {
-            val strDate = etFechaMovimiento.text.toString()
-            var calendar = Calendar.getInstance()
-            if (strDate.isNotEmpty()) {
-                calendar = getCalendarFromStringDate(strDate)
-            }
-
-            val day = calendar[Calendar.DAY_OF_MONTH]
-            val month = calendar[Calendar.MONTH]
-            val year = calendar[Calendar.YEAR]
-
-            val picker = DatePickerDialog(
-                context, { _, _year, _month, _day ->
-                    val date = context.getString(R.string.md_date, _day.toString(), (_month + 1).toString(), _year.toString())
-                    etFechaMovimiento.setText(date)
-                }, year, month, day
-            )
-            picker.show()
-        }
-    }
-
-    fun showMovement(movement: Movement?) {
+    fun showMovement(movement: MovementModel?) {
         this.movement = movement
 
         if (movement == null || movement.idMovement <= 0) {
@@ -162,7 +139,10 @@ class MovementDetailView @JvmOverloads constructor(
 
             binding.ivTipoMovimiento.setImageResource(MovementType.getImage(it.idType))
             binding.spTipoMovimiento.setSelection(getMovementTypeIndex(it.idType))
-            binding.etValor.setText(MoneyUtils.getBigDecimalStringValue(it.value.toString()))
+            val value = MoneyUtils.getBigDecimalStringValue(it.value.toString())
+            if (value != ZERO) {
+                binding.etValor.setText(value)
+            }
             binding.tvDescripcionValue.setText(it.description)
             binding.tvPersonaValue.setText(getPersonName(it.personId))
             binding.tvLugarValue.setText(getPlaceName(it.placeId))
@@ -180,12 +160,12 @@ class MovementDetailView @JvmOverloads constructor(
     }
 
     @Throws(Exception::class)
-    fun getMovement(): Movement {
+    fun getMovement(): MovementModel {
         return validateForm()
     }
 
     @Throws(Exception::class)
-    private fun validateForm(): Movement = with(binding) {
+    private fun validateForm(): MovementModel = with(binding) {
         if (selectedMovementType == MovementType.NOT_SELECTED) {
             throw Exception(context.getString(R.string.info_select_movement_type))
         }
@@ -248,7 +228,7 @@ class MovementDetailView @JvmOverloads constructor(
             idMovement = 0
         }
 
-        return Movement(
+        return MovementModel(
             idMovement,//Autoincrement
             selectedMovementType,
             value,

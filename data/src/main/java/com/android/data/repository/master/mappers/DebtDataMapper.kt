@@ -1,7 +1,6 @@
 package com.android.data.repository.master.mappers
 
 import com.android.data.local.model.DebtVO
-import com.android.data.local.model.MasterVO
 import com.android.data.remote.model.MasterDTO
 import com.android.domain.model.Debt
 import com.android.domain.model.Master
@@ -21,14 +20,6 @@ class DebtDataMapper {
             debt.id,
             debt.name,
             debt.enabled
-        )
-    }
-
-    fun map(vo: MasterVO): Debt {
-        return Debt(
-            vo.id,
-            vo.name,
-            vo.enabled
         )
     }
 

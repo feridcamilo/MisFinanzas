@@ -15,10 +15,4 @@ data class Movement(
     val debtId: Int?,
     val dateEntry: Date?,
     val dateLastUpd: Date?
-) {
-    companion object {
-        fun getEmpty(): Movement {
-            return Movement(0, 0, BigDecimal.valueOf(0), com.android.domain.utils.StringUtils.EMPTY, null, null, null, null, null, null, null)
-        }
-    }
-}
+)

@@ -5,15 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.android.domain.model.Master
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseViewHolder
 import com.android.misfinanzas.base.MasterClickListener
 import com.android.misfinanzas.databinding.RowMasterBinding
+import com.android.misfinanzas.models.MasterModel
 
 class MastersAdapter(
     private val context: Context,
-    private val masters: List<Master>,
+    private val masters: List<MasterModel>,
     private val itemClickListener: MasterClickListener
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
@@ -33,11 +33,11 @@ class MastersAdapter(
     }
 
     //inner class to avoid memory leak, when parent class died (MovementsAdapter) this inner also die
-    inner class MastersViewHolder(itemView: View) : BaseViewHolder<Master>(itemView) {
+    inner class MastersViewHolder(itemView: View) : BaseViewHolder<MasterModel>(itemView) {
 
         val binding = RowMasterBinding.bind(itemView)
 
-        override fun bind(item: Master, position: Int) = with(binding) {
+        override fun bind(item: MasterModel, position: Int) = with(binding) {
             ivEnable.setImageResource(if (item.enabled) R.drawable.ic_enable else R.drawable.ic_disable)
             tvName.text = item.name
             itemView.setOnClickListener { itemClickListener.onMasterClicked(item) }

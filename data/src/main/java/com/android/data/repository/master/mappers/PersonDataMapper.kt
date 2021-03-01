@@ -1,6 +1,5 @@
 package com.android.data.repository.master.mappers
 
-import com.android.data.local.model.MasterVO
 import com.android.data.local.model.PersonVO
 import com.android.data.remote.model.MasterDTO
 import com.android.domain.model.Master
@@ -21,14 +20,6 @@ class PersonDataMapper {
             person.id,
             person.name,
             person.enabled
-        )
-    }
-
-    fun map(vo: MasterVO): Person {
-        return Person(
-            vo.id,
-            vo.name,
-            vo.enabled
         )
     }
 

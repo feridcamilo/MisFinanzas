@@ -4,9 +4,9 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import com.android.domain.model.Balance
 import com.android.domain.utils.MoneyUtils
 import com.android.misfinanzas.databinding.CardViewBalanceBinding
+import com.android.misfinanzas.models.BalanceModel
 import com.google.android.material.card.MaterialCardView
 
 class BalanceView @JvmOverloads constructor(
@@ -26,7 +26,7 @@ class BalanceView @JvmOverloads constructor(
         setBackgroundColor(Color.TRANSPARENT)
     }
 
-    fun showBalance(balance: Balance) = with(binding) {
+    fun showBalance(balance: BalanceModel) = with(binding) {
         tvCashValue.text = MoneyUtils.getMoneyFormat().format(balance.TengoEfectivo)
         tvCardValue.text = MoneyUtils.getMoneyFormat().format(balance.TengoElectronico)
         tvTotalValue.text = MoneyUtils.getMoneyFormat().format(balance.TengoTotal)

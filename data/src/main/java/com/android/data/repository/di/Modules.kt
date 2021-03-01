@@ -43,12 +43,11 @@ private val balanceRepositoryModule = module {
 private val masterRepositoryModule = module {
     factory { CategoryDataMapper() }
     factory { DebtDataMapper() }
-    factory { MasterDataMapper() }
     factory { PersonDataMapper() }
     factory { PlaceDataMapper() }
     factory { MasterRoomDataSource(get()) }
     factory { MasterCloudDataSource() }
-    factory<MasterRepository> { MasterDataRepository(get(), get(), get(), get(), get(), get(), get()) }
+    factory<MasterRepository> { MasterDataRepository(get(), get(), get(), get(), get(), get()) }
 }
 
 private val movementRepositoryModule = module {

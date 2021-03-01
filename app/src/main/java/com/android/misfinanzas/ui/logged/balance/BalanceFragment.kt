@@ -12,16 +12,15 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.data.local.model.converters.MovementConverter
 import com.android.data.utils.SharedPreferencesUtils
 import com.android.domain.UserSesion
-import com.android.domain.model.Balance
-import com.android.domain.model.Movement
 import com.android.domain.utils.DateUtils
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.*
 import com.android.misfinanzas.databinding.FragmentBalanceBinding
-import com.android.misfinanzas.ui.logged.movements.MovementsAdapter
+import com.android.misfinanzas.models.BalanceModel
+import com.android.misfinanzas.models.MovementModel
+import com.android.misfinanzas.ui.logged.movements.adapter.MovementsAdapter
 import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetailFragment
 import com.android.misfinanzas.ui.logged.sync.SyncFragment
 import com.android.misfinanzas.utils.isConnected
@@ -31,7 +30,6 @@ import java.util.*
 
 class BalanceFragment : BaseFragment(), MovementClickListener {
 
-    private val TAG = this.javaClass.name
     private val REQUEST_PERMISSION_READ_SMS = 1
 
     private val viewModel by viewModel<BalanceViewModel>()
@@ -60,7 +58,7 @@ class BalanceFragment : BaseFragment(), MovementClickListener {
             if (UserSesion.isFirstOpen()) {
                 UserSesion.setFirstOpen(false)
                 if (context?.isConnected(getString(R.string.error_not_network_no_sync)) == true) {
-                    //Makes an autosync
+                    //Makes an auto sync
                     goToSyncScreen()
                     return
                 }
@@ -88,7 +86,7 @@ class BalanceFragment : BaseFragment(), MovementClickListener {
         }
     }
 
-    private fun balanceLoaded(balance: Balance) {
+    private fun balanceLoaded(balance: BalanceModel) {
         binding.balanceView.showBalance(balance)
         setupDiscardedMovs()
     }
@@ -124,13 +122,13 @@ class BalanceFragment : BaseFragment(), MovementClickListener {
 
     private fun setupEvents() = with(binding) {
         btnAddMovement.setOnClickListener {
-            navigateToAddMovement(Movement.getEmpty())
+            navigateToAddMovement(MovementModel.getEmpty())
         }
     }
 
     private fun getPotentialsMovementsFromSMS(discardedIds: List<Int>) {
         val listSms: List<Sms> = Sms.getAllSms(requireContext())
-        val potentialMovements: MutableList<Movement> = ArrayList()
+        val potentialMovements: MutableList<MovementModel> = ArrayList()
 
         listSms.forEach {
             val movementType = MovementUtils.getMovementTypeFromString(it.msg)
@@ -138,7 +136,7 @@ class BalanceFragment : BaseFragment(), MovementClickListener {
 
             if (movementType != MovementType.NOT_SELECTED && !discardedIds.contains(id)) {
                 potentialMovements.add(
-                    Movement(
+                    MovementModel(
                         id,//Autoincrement
                         movementType,
                         MovementUtils.getMoneyFromString(it.msg),
@@ -170,7 +168,7 @@ class BalanceFragment : BaseFragment(), MovementClickListener {
         rvPotentialMovements.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
     }
 
-    private fun setupRecyclerViewData(movements: List<Movement>) {
+    private fun setupRecyclerViewData(movements: List<MovementModel>) {
         binding.rvPotentialMovements.adapter = MovementsAdapter(requireContext(), movements, this)
         refreshRecyclerViewVisibility()
     }
@@ -185,11 +183,11 @@ class BalanceFragment : BaseFragment(), MovementClickListener {
         }
     }
 
-    override fun onMovementClicked(movement: Movement?) {
+    override fun onMovementClicked(movement: MovementModel?) {
         navigateToAddMovement(movement)
     }
 
-    override fun onDiscardMovementClicked(id: Int, position: Int) {
+    override fun onDiscardMovementClicked(id: Int) {
         discard(id)
     }
 
@@ -213,9 +211,9 @@ class BalanceFragment : BaseFragment(), MovementClickListener {
         context?.showShortToast(R.string.info_movement_discarded)
     }
 
-    private fun navigateToAddMovement(movement: Movement?) {
+    private fun navigateToAddMovement(movement: MovementModel?) {
         val bundle = Bundle()
-        bundle.putString(MovementDetailFragment.MOVEMENT_DATA, MovementConverter().movementToString(movement!!))
+        bundle.putSerializable(MovementDetailFragment.MOVEMENT_DATA, movement)
         findNavController().navigate(R.id.action_balanceFragment_to_movementsFragment, bundle)
     }
 

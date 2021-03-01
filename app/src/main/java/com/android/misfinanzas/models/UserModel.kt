@@ -1,8 +1,8 @@
-package com.android.domain.model
+package com.android.misfinanzas.models
 
 import java.util.*
 
-data class User(
+data class UserModel(
     val user: String,
     val clientId: Int,
     val name: String,
@@ -10,4 +10,10 @@ data class User(
     val email: String,
     val lastSyncMovements: Date?,
     val lastSyncMasters: Date?
-)
+) {
+
+    override fun toString(): String {
+        return "${this.name} ${this.lastName}"
+    }
+
+}

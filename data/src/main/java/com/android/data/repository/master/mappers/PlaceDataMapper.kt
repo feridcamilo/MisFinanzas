@@ -1,6 +1,5 @@
 package com.android.data.repository.master.mappers
 
-import com.android.data.local.model.MasterVO
 import com.android.data.local.model.PlaceVO
 import com.android.data.remote.model.MasterDTO
 import com.android.domain.model.Master
@@ -21,14 +20,6 @@ class PlaceDataMapper {
             place.id,
             place.name,
             place.enabled
-        )
-    }
-
-    fun map(vo: MasterVO): Place {
-        return Place(
-            vo.id,
-            vo.name,
-            vo.enabled
         )
     }
 

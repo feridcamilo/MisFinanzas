@@ -10,18 +10,19 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.data.local.model.converters.MovementConverter
 import com.android.domain.AppConfig.Companion.MAX_MOVEMENTS_SIZE
 import com.android.domain.AppConfig.Companion.MIN_LENGTH_SEARCH
-import com.android.domain.model.*
-import com.android.domain.result.Result
 import com.android.domain.utils.DateUtils
 import com.android.domain.utils.MoneyUtils
-import com.android.domain.utils.StringUtils.Companion.EMPTY
 import com.android.misfinanzas.R
 import com.android.misfinanzas.base.BaseFragment
 import com.android.misfinanzas.base.MovementClickListener
 import com.android.misfinanzas.databinding.FragmentMovementsBinding
+import com.android.misfinanzas.models.MasterModel
+import com.android.misfinanzas.models.MovementModel
+import com.android.misfinanzas.ui.logged.masters.mastersList.MastersListViewModel
+import com.android.misfinanzas.ui.logged.masters.mastersList.MastersListViewState
+import com.android.misfinanzas.ui.logged.movements.adapter.MovementsAdapter
 import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetailFragment.Companion.CATEGORIES_DATA
 import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetailFragment.Companion.DEBTS_DATA
 import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetailFragment.Companion.DESCRIPTIONS_DATA
@@ -34,35 +35,30 @@ import java.util.*
 
 class MovementsFragment : BaseFragment(), MovementClickListener {
 
-    private val TAG = this.javaClass.name
-
     private val viewModel by viewModel<MovementsViewModel>()
+    private val mastersViewModel by viewModel<MastersListViewModel>()
+
     private lateinit var binding: FragmentMovementsBinding
 
-    private lateinit var movementsObserver: Observer<Result<List<Movement>>>
-    private lateinit var peopleObserver: Observer<Result<List<Person>>>
-    private lateinit var placesObserver: Observer<Result<List<Place>>>
-    private lateinit var categoryObserver: Observer<Result<List<Category>>>
-    private lateinit var debtsObserver: Observer<Result<List<Debt>>>
-
+    private var movements: List<MovementModel>? = null
     private var descriptions: List<String>? = null
-    private var movements: List<Movement>? = null
-    private var movementToAdd: Movement? = null
 
-    private var people: List<Person>? = null
-    private var peopleActive: List<Person>? = null
-    private var places: List<Place>? = null
-    private var placesActive: List<Place>? = null
-    private var categories: List<Category>? = null
-    private var categoriesActive: List<Category>? = null
-    private var debts: List<Debt>? = null
-    private var debtsActive: List<Debt>? = null
+    private var people: List<MasterModel>? = null
+    private var peopleActive: List<MasterModel>? = null
+    private var places: List<MasterModel>? = null
+    private var placesActive: List<MasterModel>? = null
+    private var categories: List<MasterModel>? = null
+    private var categoriesActive: List<MasterModel>? = null
+    private var debts: List<MasterModel>? = null
+    private var debtsActive: List<MasterModel>? = null
+
+    private var movementToAdd: MovementModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             if (it.containsKey(MOVEMENT_DATA)) {
-                movementToAdd = MovementConverter().stringToMovement(it.getString(MOVEMENT_DATA, EMPTY))
+                movementToAdd = it.getSerializable(MOVEMENT_DATA) as? MovementModel
             }
         }
     }
@@ -72,22 +68,13 @@ class MovementsFragment : BaseFragment(), MovementClickListener {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         setupSearchView()
-        setupObservers()
-        getLocalPeople()
-
-        btnFiltros.setOnClickListener {
-            findNavController().navigate(R.id.filtersFragment)
-        }
-
-        btnAddMovement.setOnClickListener {
-            navigateToDetails(null)
-        }
+        setupViewModel()
+        setupEvents()
     }
-
 
     override fun onResume() {
         super.onResume()
@@ -99,7 +86,7 @@ class MovementsFragment : BaseFragment(), MovementClickListener {
         addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
     }
 
-    private fun setupRecyclerViewData(movements: List<Movement>) {
+    private fun setupRecyclerViewData(movements: List<MovementModel>) {
         binding.rvMovimientos.adapter = MovementsAdapter(requireContext(), movements, this)
     }
 
@@ -153,120 +140,94 @@ class MovementsFragment : BaseFragment(), MovementClickListener {
         progressListener.hide()
     }
 
-    private fun setupObservers() {
-        peopleObserver = Observer { result ->
-            when (result) {
-                is Result.Loading -> progressListener.show()
-                is Result.Success -> {
-                    people = result.data
-                    peopleActive = people?.filter { it.enabled }
-                    getLocalPlaces()
-                }
-                is Result.Error -> showExceptionMessage(TAG, getString(R.string.error_getting_people, result.exception), ErrorType.TYPE_ROOM)
+    private fun setupViewModel() {
+        viewModel.viewState.observe(viewLifecycleOwner, viewStateObserver)
+        mastersViewModel.viewState.observe(viewLifecycleOwner, mastersViewStateObserver)
+
+        progressListener.show()
+        mastersViewModel.getPeople()
+    }
+
+    private val mastersViewStateObserver = Observer<MastersListViewState> { state ->
+        when (state) {
+            is MastersListViewState.PeopleLoaded -> {
+                people = state.people
+                peopleActive = people?.filter { it.enabled }
+                mastersViewModel.getPlaces()
             }
-        }
-
-        placesObserver = Observer { result ->
-            when (result) {
-                is Result.Loading -> progressListener.show()
-                is Result.Success -> {
-                    places = result.data
-                    placesActive = places?.filter { it.enabled }
-                    getLocalCategories()
-                }
-                is Result.Error -> showExceptionMessage(TAG, getString(R.string.error_getting_places, result.exception), ErrorType.TYPE_ROOM)
+            is MastersListViewState.PlacesLoaded -> {
+                places = state.places
+                placesActive = places?.filter { it.enabled }
+                mastersViewModel.getCategories()
             }
-        }
-
-        categoryObserver = Observer { result ->
-            when (result) {
-                is Result.Loading -> progressListener.show()
-                is Result.Success -> {
-                    categories = result.data
-                    categoriesActive = categories?.filter { it.enabled }
-                    getLocalDebts()
-                }
-                is Result.Error -> showExceptionMessage(TAG, getString(R.string.error_getting_categories, result.exception), ErrorType.TYPE_ROOM)
+            is MastersListViewState.CategoriesLoaded -> {
+                categories = state.categories
+                categoriesActive = categories?.filter { it.enabled }
+                mastersViewModel.getDebts()
             }
-        }
-
-        debtsObserver = Observer { result ->
-            when (result) {
-                is Result.Loading -> progressListener.show()
-                is Result.Success -> {
-                    debts = result.data
-                    debtsActive = debts?.filter { it.enabled }
-                    getLocalMovements()
-                }
-                is Result.Error -> showExceptionMessage(TAG, getString(R.string.error_getting_debts, result.exception), ErrorType.TYPE_ROOM)
-            }
-        }
-
-        movementsObserver = Observer { result ->
-            when (result) {
-                is Result.Loading -> progressListener.show()
-                is Result.Success -> {
-                    if (result.data.isEmpty()) {
-                        context?.showShortToast(R.string.info_no_movements)
-                    } else {
-                        movements = result.data
-                        descriptions = result.data.distinctBy { it.description }.map { it.description }
-                        if (binding.svSearch.query.isNotEmpty()) {
-                            binding.svSearch.setQuery(binding.svSearch.query, true)
-                        } else {
-                            setupRecyclerViewData(movements!!)
-                        }
-
-                        //if is an action to add a movement, navigate directly
-                        if (movementToAdd != null) {
-                            navigateToDetails(movementToAdd)
-                            movementToAdd = null
-                            progressListener.hide()
-                        }
-                    }
-                    progressListener.hide()
-                }
-                is Result.Error -> showExceptionMessage(TAG, getString(R.string.error_getting_movements, result.exception), ErrorType.TYPE_ROOM)
+            is MastersListViewState.DebtsLoaded -> {
+                debts = state.debts
+                debtsActive = debts?.filter { it.enabled }
+                viewModel.getLocalMovements()
             }
         }
     }
 
-    private fun navigateToDetails(movement: Movement?) {
+    private val viewStateObserver = Observer<MovementsViewState> { state ->
+        when (state) {
+            is MovementsViewState.MovementsLoaded -> {
+                movements = state.movements
+                descriptions = movements!!.distinctBy { it.description }.map { it.description }
+                loadMovements()
+                progressListener.hide()
+            }
+        }
+    }
+
+    private fun loadMovements() = with(binding) {
+        if (movements!!.isEmpty()) {
+            context?.showShortToast(R.string.info_no_movements)
+        } else {
+            if (svSearch.query.isNotEmpty()) {
+                svSearch.setQuery(svSearch.query, true)
+            } else {
+                setupRecyclerViewData(movements!!)
+            }
+        }
+
+        //if is an action to add a movement, navigate directly
+        if (movementToAdd != null) {
+            navigateToDetails(movementToAdd)
+            movementToAdd = null
+        }
+    }
+
+    private fun setupEvents() = with(binding) {
+        btnFiltros.setOnClickListener {
+            findNavController().navigate(R.id.filtersFragment)
+        }
+
+        btnAddMovement.setOnClickListener {
+            navigateToDetails(null)
+        }
+    }
+
+    private fun navigateToDetails(movement: MovementModel?) {
         val bundle = Bundle()
-        movement?.let { bundle.putString(MOVEMENT_DATA, MovementConverter().movementToString(it)) }
+        movement?.let { bundle.putSerializable(MOVEMENT_DATA, it) }
         descriptions?.let { bundle.putStringArrayList(DESCRIPTIONS_DATA, it as ArrayList<String>) }
-        peopleActive?.let { bundle.putParcelableArrayList(PEOPLE_DATA, it as ArrayList<out Parcelable>) }
+        peopleActive?.let { bundle.putSerializable(PEOPLE_DATA, it as ArrayList<out Parcelable>) }
         placesActive?.let { bundle.putParcelableArrayList(PLACES_DATA, it as ArrayList<out Parcelable>) }
         categoriesActive?.let { bundle.putParcelableArrayList(CATEGORIES_DATA, it as ArrayList<out Parcelable>) }
         debtsActive?.let { bundle.putParcelableArrayList(DEBTS_DATA, it as ArrayList<out Parcelable>) }
         findNavController().navigate(R.id.action_movementsFragment_to_movementDetailFragment, bundle)
     }
 
-    private fun getLocalMovements() {
-        viewModel.getLocalMovements().observe(viewLifecycleOwner, movementsObserver)
-    }
-
-    private fun getLocalPeople() {
-        viewModel.getLocalPeople().observe(viewLifecycleOwner, peopleObserver)
-    }
-
-    private fun getLocalPlaces() {
-        viewModel.getLocalPlaces().observe(viewLifecycleOwner, placesObserver)
-    }
-
-    private fun getLocalCategories() {
-        viewModel.getLocalCategories().observe(viewLifecycleOwner, categoryObserver)
-    }
-
-    private fun getLocalDebts() {
-        viewModel.getLocalDebts().observe(viewLifecycleOwner, debtsObserver)
-    }
-
-    override fun onMovementClicked(movement: Movement?) {
+    override fun onMovementClicked(movement: MovementModel?) {
         navigateToDetails(movement)
     }
 
-    override fun onDiscardMovementClicked(id: Int, position: Int) {
+    override fun onDiscardMovementClicked(id: Int) {
         TODO("Not yet implemented")
     }
 

@@ -2,7 +2,7 @@ package com.android.misfinanzas.ui.di
 
 import com.android.domain.utils.listByElementsOf
 import com.android.misfinanzas.ui.logged.balance.BalanceViewModel
-import com.android.misfinanzas.ui.logged.masters.MastersViewModel
+import com.android.misfinanzas.ui.logged.masters.mastersList.MastersListViewModel
 import com.android.misfinanzas.ui.logged.movements.MovementsViewModel
 import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetailViewModel
 import com.android.misfinanzas.ui.logged.sync.SyncViewModel
@@ -15,7 +15,7 @@ val uiModules by lazy {
     listByElementsOf<Module>(
         loginFeatureModule,
         balanceFeatureModule,
-        mastersFeatureModule,
+        mastersListFeatureModule,
         movementsFeatureModule,
         movementDetailFeatureModule,
         syncFeatureModule
@@ -28,11 +28,11 @@ private val loginFeatureModule = module {
 }
 
 private val balanceFeatureModule = module {
-    viewModel { BalanceViewModel(get(), get()) }
+    viewModel { BalanceViewModel(get(), get(), get()) }
 }
 
-private val mastersFeatureModule = module {
-    viewModel { MastersViewModel(get()) }
+private val mastersListFeatureModule = module {
+    viewModel { MastersListViewModel(get(), get()) }
 }
 
 private val movementsFeatureModule = module {
@@ -40,7 +40,7 @@ private val movementsFeatureModule = module {
 }
 
 private val movementDetailFeatureModule = module {
-    viewModel { MovementDetailViewModel(get()) }
+    viewModel { MovementDetailViewModel(get(), get()) }
 }
 
 private val syncFeatureModule = module {

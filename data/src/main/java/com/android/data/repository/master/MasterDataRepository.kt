@@ -2,8 +2,14 @@ package com.android.data.repository.master
 
 import com.android.data.repository.master.datasource.MasterCloudDataSource
 import com.android.data.repository.master.datasource.MasterRoomDataSource
-import com.android.data.repository.master.mappers.*
-import com.android.domain.model.*
+import com.android.data.repository.master.mappers.CategoryDataMapper
+import com.android.data.repository.master.mappers.DebtDataMapper
+import com.android.data.repository.master.mappers.PersonDataMapper
+import com.android.data.repository.master.mappers.PlaceDataMapper
+import com.android.domain.model.Category
+import com.android.domain.model.Debt
+import com.android.domain.model.Person
+import com.android.domain.model.Place
 import com.android.domain.repository.MasterRepository
 import java.util.*
 
@@ -12,7 +18,6 @@ class MasterDataRepository(
     private val cloudDataSource: MasterCloudDataSource,
     private val categoryMapper: CategoryDataMapper,
     private val debtMapper: DebtDataMapper,
-    private val masterMapper: MasterDataMapper,
     private val personMapper: PersonDataMapper,
     private val placeMapper: PlaceDataMapper
 ) : MasterRepository {
@@ -25,68 +30,52 @@ class MasterDataRepository(
         return roomDataSource.getLastSyncMasters()
     }
 
-    override suspend fun getCategories(): List<Category> {
-        return roomDataSource.getCategories().map { categoryMapper.map(it) }
+    override suspend fun download() {
+        val lastSync = getLastSyncMasters()
+
+        val people = cloudDataSource.getPeople(lastSync)
+        roomDataSource.insertPeople(people.map { personMapper.mapToVO(it) })
+
+        val places = cloudDataSource.getPlaces(lastSync)
+        roomDataSource.insertPlaces(places.map { placeMapper.mapToVO(it) })
+
+        val categories = cloudDataSource.getCategories(lastSync)
+        roomDataSource.insertCategories(categories.map { categoryMapper.mapToVO(it) })
+
+        val debts = cloudDataSource.getDebts(lastSync)
+        roomDataSource.insertDebts(debts.map { debtMapper.mapToVO(it) })
     }
 
-    override suspend fun insertCategories(categories: List<Master>) {
-        roomDataSource.insertCategories(categories.map { categoryMapper.mapToVO(categoryMapper.map(it)) })
+    override suspend fun upload() {
+        /*
+        val categories = roomDataSource.getCategoriesToSync()
+        cloudDataSource.sendCategories(categories.map { categoryMapper.mapToDTO(it) })
+
+        val places = roomDataSource.getPlacesToSync()
+        cloudDataSource.sendPlaces(masters.map { places.mapToDTO(it) })
+
+        val people = roomDataSource.getPeopleToSync()
+        cloudDataSource.sendPeople(masters.map { people.mapToDTO(it) })
+
+        val debts = roomDataSource.getDebtsToSync()
+        cloudDataSource.sendDebts(masters.map { debts.mapToDTO(it) })
+         */
+    }
+
+    override suspend fun getCategories(): List<Category> {
+        return roomDataSource.getCategories().map { categoryMapper.map(it) }
     }
 
     override suspend fun getDebts(): List<Debt> {
         return roomDataSource.getDebts().map { debtMapper.map(it) }
     }
 
-    override suspend fun insertDebts(debts: List<Master>) {
-        roomDataSource.insertDebts(debts.map { debtMapper.mapToVO(debtMapper.map(it)) })
-    }
-
     override suspend fun getPlaces(): List<Place> {
         return roomDataSource.getPlaces().map { placeMapper.map(it) }
     }
 
-    override suspend fun insertPlaces(places: List<Master>) {
-        roomDataSource.insertPlaces(places.map { placeMapper.mapToVO(placeMapper.map(it)) })
-    }
-
     override suspend fun getPeople(): List<Person> {
         return roomDataSource.getPeople().map { personMapper.map(it) }
-    }
-
-    override suspend fun insertPeople(people: List<Master>) {
-        roomDataSource.insertPeople(people.map { personMapper.mapToVO(personMapper.map(it)) })
-    }
-
-    override suspend fun getCloudCategories(lastSync: Date?): List<Master> {
-        return cloudDataSource.getCategories(lastSync).map { masterMapper.map(it) }
-    }
-
-    override suspend fun getCloudDebts(lastSync: Date?): List<Master> {
-        return cloudDataSource.getDebts(lastSync).map { masterMapper.map(it) }
-    }
-
-    override suspend fun getCloudPlaces(lastSync: Date?): List<Master> {
-        return cloudDataSource.getPlaces(lastSync).map { masterMapper.map(it) }
-    }
-
-    override suspend fun getCloudPeople(lastSync: Date?): List<Master> {
-        return cloudDataSource.getPeople(lastSync).map { masterMapper.map(it) }
-    }
-
-    override suspend fun sendCategoriesToCloud(masters: List<Master>): Boolean {
-        return cloudDataSource.sendCategories(masters.map { masterMapper.mapToDTO(it) })
-    }
-
-    override suspend fun sendPlacesToCloud(masters: List<Master>): Boolean {
-        return cloudDataSource.sendPlaces(masters.map { masterMapper.mapToDTO(it) })
-    }
-
-    override suspend fun sendPeopleToCloud(masters: List<Master>): Boolean {
-        return cloudDataSource.sendPeople(masters.map { masterMapper.mapToDTO(it) })
-    }
-
-    override suspend fun sendDebtsToCloud(masters: List<Master>): Boolean {
-        return cloudDataSource.sendDebts(masters.map { masterMapper.mapToDTO(it) })
     }
 
 }

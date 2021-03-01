@@ -8,6 +8,7 @@ class StringUtils {
         const val SPACE = " "
         const val MONEY = "$"
         const val SLASH = "/"
+        const val ZERO = "0"
         const val ONE = "1"
     }
 }

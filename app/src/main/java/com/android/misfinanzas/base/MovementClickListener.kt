@@ -1,8 +1,8 @@
 package com.android.misfinanzas.base
 
-import com.android.domain.model.Movement
+import com.android.misfinanzas.models.MovementModel
 
 interface MovementClickListener {
-    fun onMovementClicked(movement: Movement?)
-    fun onDiscardMovementClicked(id: Int, position: Int)
+    fun onMovementClicked(movement: MovementModel?)
+    fun onDiscardMovementClicked(id: Int)
 }
