@@ -61,5 +61,5 @@ private val userRepositoryModule = module {
     factory { UserDataMapper() }
     factory { UserRoomDataSource(get()) }
     factory { UserCloudDataSource() }
-    factory<UserRepository> { UserDataRepository(get(), get(), get()) }
+    factory<UserRepository> { UserDataRepository(get(), get(), get(), get(), get()) }
 }

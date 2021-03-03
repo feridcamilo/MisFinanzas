@@ -18,11 +18,12 @@
     <string name="masters_people">Personas</string>
     <string name="masters_debts">Deudas</string>
 
-    <!--SyncFragment-->
+    <!--ConfigFragment-->
     <string name="go_to_web"><u>Ir al sitio web</u></string>
     <string name="server_datetime_title">Fecha y hora del servidor</string>
     <string name="info_difference_time">La fecha y hora de sus registros puede variar con respecto a la diferencia horaria del servidor.</string>
     <string name="last_sync">Última sincronización</string>
+    <string name="synchronizing">Sincronizando…</string>
     <string name="last_sync_movements">Movimientos: %1$s</string>
     <string name="last_sync_masters">Maestros: %1$s</string>
     <string name="never_synced">Nunca sincronizado.</string>
@@ -79,6 +80,7 @@
     <string name="error_not_network_no_sync_detail">No hay conexión a internet. Guardado para sincronizar cuando haya conexión.</string>
     <string name="error_not_network_no_login">No hay conexión a internet. No se puede iniciar sesión.</string>
     <string name="error_not_network_no_continue">No hay conexión a internet. No se puede continuar.</string>
+    <string name="error_synchronizing">Ocurrió un error sincronizando los datos: %1$s</string>
     <string name="error_getting_movements">Ocurrió un error obteniendo los movimientos: %1$s</string>
     <string name="error_getting_masters">Ocurrió un error obteniendo los maestros: %1$s</string>
     <string name="error_getting_balance">Ocurrió un error obteniendo los saldos: %1$s</string>

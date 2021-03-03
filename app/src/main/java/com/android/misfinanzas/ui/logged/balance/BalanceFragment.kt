@@ -4,85 +4,87 @@ import android.Manifest
 import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.data.utils.SharedPreferencesUtils
 import com.android.domain.UserSesion
 import com.android.domain.utils.DateUtils
 import com.android.misfinanzas.R
-import com.android.misfinanzas.base.*
+import com.android.misfinanzas.base.MovementClickListener
+import com.android.misfinanzas.base.MovementType
+import com.android.misfinanzas.base.MovementUtils
+import com.android.misfinanzas.base.Sms
 import com.android.misfinanzas.databinding.FragmentBalanceBinding
 import com.android.misfinanzas.models.BalanceModel
 import com.android.misfinanzas.models.MovementModel
+import com.android.misfinanzas.ui.logged.config.ConfigViewModel
 import com.android.misfinanzas.ui.logged.movements.adapter.MovementsAdapter
 import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetailFragment
-import com.android.misfinanzas.ui.logged.sync.SyncFragment
+import com.android.misfinanzas.utils.hideLoader
 import com.android.misfinanzas.utils.isConnected
+import com.android.misfinanzas.utils.showLoader
 import com.android.misfinanzas.utils.showShortToast
+import com.android.misfinanzas.utils.viewbinding.viewBinding
+import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
-class BalanceFragment : BaseFragment(), MovementClickListener {
+class BalanceFragment : Fragment(R.layout.fragment_balance), MovementClickListener {
 
     private val REQUEST_PERMISSION_READ_SMS = 1
 
     private val viewModel by viewModel<BalanceViewModel>()
-    private lateinit var binding: FragmentBalanceBinding
+    private val configViewModel by viewModel<ConfigViewModel>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentBalanceBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    private val binding by viewBinding<FragmentBalanceBinding>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupViewModel()
-        determinateProcedure()
+        checkSync()
     }
 
     private fun setupViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner, viewStateObserver)
     }
 
-    private fun determinateProcedure() {
-        progressListener.show()
+    private fun checkSync() {
+        showLoader()
+        lifecycleScope.launch {
+            if (UserSesion.getServerTimeZone() == null) {
+                //get last gmt diff from shared preferences
+                val gtmDiff = configViewModel.getDiffTimeWithServer()
+                UserSesion.setServerTimeZone(gtmDiff)
+            }
 
-        //If auto sync is configured
-        if (SharedPreferencesUtils.getAutoSyncOnOpen(requireContext())) {
-            if (UserSesion.isFirstOpen()) {
-                UserSesion.setFirstOpen(false)
-                if (context?.isConnected(getString(R.string.error_not_network_no_sync)) == true) {
-                    //Makes an auto sync
-                    goToSyncScreen()
-                    return
-                }
+            val c1 = configViewModel.isAutoSyncOnOpen()
+            val c2 = UserSesion.isFirstOpen()
+            UserSesion.setFirstOpen(false)
+            val c3 = context?.isConnected(getString(R.string.error_not_network_no_sync)) == true
+            if (c1 && c2 && c3) {
+                viewModel.sync()
+            } else {
+                getBalance()
             }
         }
+    }
 
-        if (UserSesion.getServerTimeZone() == null) {
-            //get last gmt diff from shared preferences
-            val gtmDiff = SharedPreferencesUtils.getDiffTimeToServer(requireContext())
-            UserSesion.setServerTimeZone(gtmDiff)
-        }
-
+    private fun getBalance() {
         viewModel.getBalance(getString(R.string.query_balance))
     }
 
     private val viewStateObserver = Observer<BalanceViewState> { state ->
-        progressListener.hide()
+        hideLoader()
         when (state) {
             is BalanceViewState.BalanceLoaded -> balanceLoaded(state.balance)
             is BalanceViewState.DiscardedMovsLoaded -> getPotentialsMovementsFromSMS(state.discardedIds)
-            is BalanceViewState.ErrorLoadingBalance -> TODO()
             is BalanceViewState.MovementDiscarded -> movementDiscarded()
-            is BalanceViewState.ErrorDiscardingMovement -> TODO()
-
+            is BalanceViewState.SynchronizedData -> getBalance()
         }
     }
 
@@ -94,7 +96,7 @@ class BalanceFragment : BaseFragment(), MovementClickListener {
     private fun setupDiscardedMovs() {
         if (checkAndRequestPermissions()) {
             setupRecyclerView()
-            progressListener.show()
+            showLoader()
             viewModel.getDiscardedMovements()
             setupEvents()
         }
@@ -156,13 +158,6 @@ class BalanceFragment : BaseFragment(), MovementClickListener {
         setupRecyclerViewData(potentialMovements)
     }
 
-    private fun goToSyncScreen() {
-        val bundle = Bundle()
-        bundle.putBoolean(SyncFragment.FROM_BALANCE, true)
-        bundle.putBoolean(SyncFragment.AUTO_SYNC, true)
-        findNavController().navigate(R.id.action_balanceFragment_to_syncFragment, bundle)
-    }
-
     private fun setupRecyclerView() = with(binding) {
         rvPotentialMovements.layoutManager = LinearLayoutManager(requireContext())
         rvPotentialMovements.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
@@ -197,7 +192,7 @@ class BalanceFragment : BaseFragment(), MovementClickListener {
         builder.setMessage(getString(R.string.cd_desc_discard))
 
         builder.setPositiveButton(R.string.cd_yes) { _, _ ->
-            progressListener.show()
+            showLoader()
             viewModel.insertDiscardedMovement(id)
         }
 

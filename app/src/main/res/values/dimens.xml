@@ -12,6 +12,18 @@
     <dimen name="default_double_margin">32dp</dimen>
     <dimen name="margin_50">50dp</dimen>
 
+    <!-- Guidelines sizes -->
+    <dimen name="content_inset_tiniest">2dp</dimen>
+    <dimen name="content_inset_tiny">4dp</dimen>
+    <dimen name="content_inset_half">6dp</dimen>
+    <dimen name="content_inset_small">8dp</dimen>
+    <dimen name="content_inset_less">12dp</dimen>
+    <dimen name="content_inset_normal">16dp</dimen>
+    <dimen name="content_inset_medium">24dp</dimen>
+    <dimen name="content_inset_large">32dp</dimen>
+    <dimen name="content_inset_double">48dp</dimen>
+    <dimen name="content_inset_big">56dp</dimen>
+
     <dimen name="text_size_12">12sp</dimen>
     <dimen name="text_size_14">14sp</dimen>
     <dimen name="text_size_16">16sp</dimen>

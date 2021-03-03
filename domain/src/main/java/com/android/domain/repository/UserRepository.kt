@@ -7,4 +7,13 @@ interface UserRepository {
     suspend fun getCloudUser(user: String, password: String): User?
     suspend fun insertUser(user: User)
     suspend fun getServerDateTime(): String
+
+    suspend fun setDiffTimeWithServer(diff: String)
+    suspend fun getDiffTimeWithServer(): String
+
+    suspend fun setAutoSyncOnOpen(value: Boolean)
+    suspend fun isAutoSyncOnOpen(): Boolean
+
+    suspend fun setAutoSyncOnEdit(value: Boolean)
+    suspend fun isAutoSyncOnEdit(): Boolean
 }

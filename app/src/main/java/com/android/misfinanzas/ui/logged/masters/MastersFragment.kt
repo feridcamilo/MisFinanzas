@@ -1,25 +1,19 @@
 package com.android.misfinanzas.ui.logged.masters
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.android.domain.model.Master
 import com.android.misfinanzas.R
-import com.android.misfinanzas.base.BaseFragment
 import com.android.misfinanzas.databinding.FragmentMastersBinding
 import com.android.misfinanzas.ui.logged.masters.mastersList.MastersListFragment
+import com.android.misfinanzas.utils.viewbinding.viewBinding
 
-class MastersFragment : BaseFragment() {
+class MastersFragment : Fragment(R.layout.fragment_masters) {
 
-    private lateinit var binding: FragmentMastersBinding
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentMastersBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    private val binding by viewBinding<FragmentMastersBinding>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

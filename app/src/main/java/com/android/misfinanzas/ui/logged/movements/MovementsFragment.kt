@@ -2,10 +2,9 @@ package com.android.misfinanzas.ui.logged.movements
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -15,7 +14,6 @@ import com.android.domain.AppConfig.Companion.MIN_LENGTH_SEARCH
 import com.android.domain.utils.DateUtils
 import com.android.domain.utils.MoneyUtils
 import com.android.misfinanzas.R
-import com.android.misfinanzas.base.BaseFragment
 import com.android.misfinanzas.base.MovementClickListener
 import com.android.misfinanzas.databinding.FragmentMovementsBinding
 import com.android.misfinanzas.models.MasterModel
@@ -29,16 +27,18 @@ import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetail
 import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetailFragment.Companion.MOVEMENT_DATA
 import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetailFragment.Companion.PEOPLE_DATA
 import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetailFragment.Companion.PLACES_DATA
+import com.android.misfinanzas.utils.hideLoader
+import com.android.misfinanzas.utils.showLoader
 import com.android.misfinanzas.utils.showShortToast
+import com.android.misfinanzas.utils.viewbinding.viewBinding
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
-class MovementsFragment : BaseFragment(), MovementClickListener {
+class MovementsFragment : Fragment(R.layout.fragment_movements), MovementClickListener {
 
     private val viewModel by viewModel<MovementsViewModel>()
     private val mastersViewModel by viewModel<MastersListViewModel>()
-
-    private lateinit var binding: FragmentMovementsBinding
+    private val binding by viewBinding<FragmentMovementsBinding>()
 
     private var movements: List<MovementModel>? = null
     private var descriptions: List<String>? = null
@@ -61,11 +61,6 @@ class MovementsFragment : BaseFragment(), MovementClickListener {
                 movementToAdd = it.getSerializable(MOVEMENT_DATA) as? MovementModel
             }
         }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentMovementsBinding.inflate(inflater, container, false)
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -115,7 +110,7 @@ class MovementsFragment : BaseFragment(), MovementClickListener {
     }
 
     private fun filter(text: String?) {
-        progressListener.show(false)
+        showLoader()
         if (!text.isNullOrEmpty()) {
             val textToCompare = text.toLowerCase(Locale.ROOT)
             val valueToCompare = MoneyUtils.getBigDecimalStringValue(text)
@@ -137,14 +132,14 @@ class MovementsFragment : BaseFragment(), MovementClickListener {
         } else {
             setupRecyclerViewData(movements!!)
         }
-        progressListener.hide()
+        hideLoader()
     }
 
     private fun setupViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner, viewStateObserver)
         mastersViewModel.viewState.observe(viewLifecycleOwner, mastersViewStateObserver)
 
-        progressListener.show()
+        showLoader()
         mastersViewModel.getPeople()
     }
 
@@ -179,7 +174,7 @@ class MovementsFragment : BaseFragment(), MovementClickListener {
                 movements = state.movements
                 descriptions = movements!!.distinctBy { it.description }.map { it.description }
                 loadMovements()
-                progressListener.hide()
+                hideLoader()
             }
         }
     }

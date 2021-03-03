@@ -1,5 +1,7 @@
 package com.android.data.repository.user
 
+import com.android.data.preferences.ConfigPreferences
+import com.android.data.preferences.SyncPreferences
 import com.android.data.repository.user.datasource.UserCloudDataSource
 import com.android.data.repository.user.datasource.UserRoomDataSource
 import com.android.data.repository.user.mappers.UserDataMapper
@@ -9,7 +11,9 @@ import com.android.domain.repository.UserRepository
 class UserDataRepository(
     private val roomDataSource: UserRoomDataSource,
     private val cloudDataSource: UserCloudDataSource,
-    private val mapper: UserDataMapper
+    private val mapper: UserDataMapper,
+    private val syncPreferences: SyncPreferences,
+    private val configPreferences: ConfigPreferences
 ) : UserRepository {
 
     override suspend fun getUser(): User? {
@@ -30,6 +34,30 @@ class UserDataRepository(
 
     override suspend fun getServerDateTime(): String {
         return cloudDataSource.getServerDateTime()
+    }
+
+    override suspend fun setDiffTimeWithServer(diff: String) {
+        syncPreferences.diffTimeWithServer = diff
+    }
+
+    override suspend fun getDiffTimeWithServer(): String {
+        return syncPreferences.diffTimeWithServer.orEmpty()
+    }
+
+    override suspend fun setAutoSyncOnOpen(value: Boolean) {
+        configPreferences.isAutoSyncOnOpen = value
+    }
+
+    override suspend fun isAutoSyncOnOpen(): Boolean {
+        return configPreferences.isAutoSyncOnOpen
+    }
+
+    override suspend fun setAutoSyncOnEdit(value: Boolean) {
+        configPreferences.isAutoSyncOnEdit = value
+    }
+
+    override suspend fun isAutoSyncOnEdit(): Boolean {
+        return configPreferences.isAutoSyncOnEdit
     }
 
 }

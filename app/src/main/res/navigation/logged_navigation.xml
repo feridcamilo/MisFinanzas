@@ -11,15 +11,6 @@
         android:label="@string/title_balance"
         tools:layout="@layout/fragment_balance">
         <action
-            android:id="@+id/action_balanceFragment_to_syncFragment"
-            app:destination="@id/syncFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/mobile_navigation"
-            app:popUpToInclusive="true" />
-        <action
             android:id="@+id/action_balanceFragment_to_movementsFragment"
             app:destination="@id/movementsFragment"
             app:enterAnim="@anim/slide_in_right"
@@ -83,19 +74,9 @@
         tools:layout="@layout/fragment_masters_list" />
 
     <fragment
-        android:id="@+id/syncFragment"
-        android:name="com.android.misfinanzas.ui.logged.sync.SyncFragment"
+        android:id="@+id/configFragment"
+        android:name="com.android.misfinanzas.ui.logged.config.ConfigFragment"
         android:label="@string/title_sync"
-        tools:layout="@layout/fragment_sync">
-        <action
-            android:id="@+id/action_syncFragment_to_balanceFragment"
-            app:destination="@id/balanceFragment"
-            app:enterAnim="@anim/slide_in_left"
-            app:exitAnim="@anim/slide_out_right"
-            app:popEnterAnim="@anim/slide_in_right"
-            app:popExitAnim="@anim/slide_out_left"
-            app:popUpTo="@id/mobile_navigation"
-            app:popUpToInclusive="true" />
-    </fragment>
+        tools:layout="@layout/fragment_config"/>
 
 </navigation>

@@ -1,6 +1,7 @@
 package com.android.data.di
 
 import com.android.data.local.di.databaseModule
+import com.android.data.preferences.di.preferencesModule
 import com.android.data.remote.di.remoteModule
 import com.android.data.repository.di.repositoryModules
 import com.android.domain.utils.listByElementsOf
@@ -10,6 +11,7 @@ val dataModules by lazy {
     listByElementsOf<Module>(
         databaseModule,
         remoteModule,
+        preferencesModule,
         repositoryModules
     )
 }

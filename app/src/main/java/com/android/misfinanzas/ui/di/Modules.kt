@@ -2,10 +2,10 @@ package com.android.misfinanzas.ui.di
 
 import com.android.domain.utils.listByElementsOf
 import com.android.misfinanzas.ui.logged.balance.BalanceViewModel
+import com.android.misfinanzas.ui.logged.config.ConfigViewModel
 import com.android.misfinanzas.ui.logged.masters.mastersList.MastersListViewModel
 import com.android.misfinanzas.ui.logged.movements.MovementsViewModel
 import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetailViewModel
-import com.android.misfinanzas.ui.logged.sync.SyncViewModel
 import com.android.misfinanzas.ui.login.LoginViewModel
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
@@ -18,7 +18,7 @@ val uiModules by lazy {
         mastersListFeatureModule,
         movementsFeatureModule,
         movementDetailFeatureModule,
-        syncFeatureModule
+        configFeatureModule
 
     )
 }
@@ -28,7 +28,7 @@ private val loginFeatureModule = module {
 }
 
 private val balanceFeatureModule = module {
-    viewModel { BalanceViewModel(get(), get(), get()) }
+    viewModel { BalanceViewModel(get(), get(), get(), get()) }
 }
 
 private val mastersListFeatureModule = module {
@@ -40,9 +40,9 @@ private val movementsFeatureModule = module {
 }
 
 private val movementDetailFeatureModule = module {
-    viewModel { MovementDetailViewModel(get(), get()) }
+    viewModel { MovementDetailViewModel(get(), get(), get()) }
 }
 
-private val syncFeatureModule = module {
-    viewModel { SyncViewModel(get(), get(), get()) }
+private val configFeatureModule = module {
+    viewModel { ConfigViewModel(get(), get(), get()) }
 }

@@ -21,6 +21,8 @@ class LoginViewModel(
             if (response != null) {
                 userRepository.insertUser(response)
                 UserSesion.setUser(response)
+                userRepository.setAutoSyncOnOpen(true)
+                userRepository.setAutoSyncOnEdit(true)
                 _viewState.postValue(LoginViewState.Logged)
             } else {
                 _viewState.postValue(LoginViewState.WrongUserOrPassword)
@@ -28,13 +30,15 @@ class LoginViewModel(
         }
     }
 
-    suspend fun checkSession() {
-        val user = userRepository.getUser()
-        if (user == null) {
-            _viewState.postValue(LoginViewState.NotLogged)
-        } else {
-            UserSesion.setUser(user)
-            _viewState.postValue(LoginViewState.Logged)
+    fun checkSession() {
+        viewModelScope.launch {
+            val user = userRepository.getUser()
+            if (user == null) {
+                _viewState.postValue(LoginViewState.NotLogged)
+            } else {
+                UserSesion.setUser(user)
+                _viewState.postValue(LoginViewState.Logged)
+            }
         }
     }
 

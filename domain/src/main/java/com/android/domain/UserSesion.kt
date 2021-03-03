@@ -66,6 +66,9 @@ class UserSesion {
         }
 
         fun getServerDateTime(): Date {
+            if (SERVER_DATETIME == null) {
+                SERVER_DATETIME = DateUtils.getDateTimeToWebService(DateUtils.getCurrentDateTime())
+            }
             return SERVER_DATETIME!!
         }
 

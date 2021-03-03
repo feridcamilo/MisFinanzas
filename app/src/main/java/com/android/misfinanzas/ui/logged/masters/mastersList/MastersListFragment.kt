@@ -1,47 +1,43 @@
 package com.android.misfinanzas.ui.logged.masters.mastersList
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.domain.model.Master
 import com.android.domain.utils.StringUtils.Companion.EMPTY
 import com.android.misfinanzas.R
-import com.android.misfinanzas.base.BaseFragment
 import com.android.misfinanzas.base.MasterClickListener
 import com.android.misfinanzas.databinding.FragmentMastersListBinding
 import com.android.misfinanzas.models.MasterModel
+import com.android.misfinanzas.utils.hideLoader
+import com.android.misfinanzas.utils.showLoader
 import com.android.misfinanzas.utils.showLongToast
+import com.android.misfinanzas.utils.viewbinding.viewBinding
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
-class MastersListFragment : BaseFragment(), MasterClickListener {
+class MastersListFragment : Fragment(R.layout.fragment_masters_list), MasterClickListener {
 
     companion object {
         const val MASTERS_TYPE: String = "MastersType"
     }
 
     private val viewModel by viewModel<MastersListViewModel>()
+    private val binding by viewBinding<FragmentMastersListBinding>()
+
     private var items: List<MasterModel>? = null
     private var type: Int = 0
-
-    private lateinit var binding: FragmentMastersListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             type = it.getInt(MASTERS_TYPE, 0)
         }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentMastersListBinding.inflate(inflater, container, false)
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -77,7 +73,7 @@ class MastersListFragment : BaseFragment(), MasterClickListener {
 
     private fun setupViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner, viewStateObserver)
-        progressListener.show()
+        showLoader()
         when (type) {
             Master.TYPE_PERSON -> viewModel.getPeople()
             Master.TYPE_PLACE -> viewModel.getPlaces()
@@ -87,7 +83,7 @@ class MastersListFragment : BaseFragment(), MasterClickListener {
     }
 
     private val viewStateObserver = Observer<MastersListViewState> { state ->
-        progressListener.hide()
+        hideLoader()
         when (state) {
             is MastersListViewState.PeopleLoaded -> setupRecyclerViewData(state.people)
             is MastersListViewState.PlacesLoaded -> setupRecyclerViewData(state.places)
@@ -131,7 +127,7 @@ class MastersListFragment : BaseFragment(), MasterClickListener {
     }
 
     private fun filter(text: String?) {
-        progressListener.show(false)
+        showLoader()
         if (!text.isNullOrEmpty()) {
             val textToCompare = text.toLowerCase(Locale.ROOT)
             val mastersFiltered = items?.filter {
@@ -141,7 +137,7 @@ class MastersListFragment : BaseFragment(), MasterClickListener {
         } else {
             setupRecyclerViewData(items!!)
         }
-        progressListener.hide()
+        hideLoader()
     }
 
     private fun setupEvents() = with(binding) {

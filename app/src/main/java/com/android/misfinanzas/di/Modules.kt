@@ -8,6 +8,7 @@ import com.android.misfinanzas.mappers.BalanceMapper
 import com.android.misfinanzas.mappers.MastersMapper
 import com.android.misfinanzas.mappers.MovementMapper
 import com.android.misfinanzas.mappers.UserMapper
+import com.android.misfinanzas.sync.SyncManager
 import com.android.misfinanzas.ui.di.uiModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -28,6 +29,8 @@ val appModules by lazy {
     listByElementsOf<Module>(
         uiModules,
         mappersModule,
+        syncModule,
+        utilsModule,
         dataModules,
         domainModules
     )
@@ -38,4 +41,12 @@ private val mappersModule = module {
     factory { MastersMapper() }
     factory { MovementMapper() }
     factory { UserMapper() }
+}
+
+private val syncModule = module {
+    single { SyncManager(get(), get(), get()) }
+}
+
+private val utilsModule = module {
+
 }
