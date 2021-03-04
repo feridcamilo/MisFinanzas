@@ -1,6 +1,5 @@
 package com.android.misfinanzas.base
 
-import android.app.Activity
 import android.content.Context
 import androidx.fragment.app.Fragment
 
@@ -13,11 +12,6 @@ open class BaseFragment : Fragment() {
         setListeners(context)
     }
 
-    override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-        setListeners(activity)
-    }
-
     private fun setListeners(context: Context) {
         setProgressListener(context)
     }
@@ -26,7 +20,7 @@ open class BaseFragment : Fragment() {
         if (context is ProgressListener) {
             progressListener = context
         } else {
-            throw ClassCastException(context.toString() + " must implement ProgressListener.")
+            throw ClassCastException("$context must implement ProgressListener.")
         }
     }
 }

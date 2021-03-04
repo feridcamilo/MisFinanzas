@@ -12,7 +12,7 @@ class BigDecimalConverter {
     fun stringToBigDecimal(value: String): BigDecimal {
         val gson = Gson()
         val type: Type = object : TypeToken<BigDecimal>() {}.type
-        return gson.fromJson<BigDecimal>(value, type)
+        return gson.fromJson(value, type)
     }
 
     @TypeConverter

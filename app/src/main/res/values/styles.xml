@@ -1,27 +1,39 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorSecondary">@color/colorPrimary</item>
+        <item name="colorSecondaryVariant">@color/colorAccent</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="title_text_view">
-        <item name="android:textColor">@color/gray</item>
+    <style name="TextInputLabel" parent="AppTheme">
+        <item name="android:textColorHint">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:colorAccent">@color/colorPrimary</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="android:colorControlNormal">@color/colorPrimary</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="android:colorControlActivated">@color/colorPrimary</item>
+    </style>
+
+    <style name="title_text_view" parent="AppTheme">
         <item name="android:textSize">@dimen/text_size_24</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="subtitle_text_view">
-        <item name="android:textColor">@color/gray</item>
+    <style name="subtitle_text_view" parent="AppTheme">
         <item name="android:textSize">@dimen/text_size_20</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="subtitle_text_view_small">
-        <item name="android:textColor">@color/gray</item>
+    <style name="subtitle_text_view_small" parent="AppTheme">
         <item name="android:textSize">@dimen/text_size_16</item>
         <item name="android:textStyle">bold</item>
     </style>

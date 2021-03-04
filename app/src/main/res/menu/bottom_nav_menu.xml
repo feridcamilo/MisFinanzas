@@ -17,8 +17,8 @@
         android:title="@string/title_masters" />
 
     <item
-        android:id="@+id/syncFragment"
-        android:icon="@drawable/ic_sync"
+        android:id="@+id/configFragment"
+        android:icon="@drawable/ic_config"
         android:title="@string/title_sync" />
 
 </menu>

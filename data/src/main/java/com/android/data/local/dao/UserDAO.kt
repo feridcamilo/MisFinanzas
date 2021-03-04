@@ -10,8 +10,8 @@ import java.util.*
 @Dao
 interface UserDAO {
 
-    @Query("SELECT * FROM User LIMIT 1")
-    suspend fun getUser(): UserVO
+    @Query("SELECT * FROM User")
+    suspend fun getAll(): List<UserVO>
 
     @Query("UPDATE User SET lastSyncMovements = :date ")
     suspend fun updateLastSyncMovements(date: Date)
