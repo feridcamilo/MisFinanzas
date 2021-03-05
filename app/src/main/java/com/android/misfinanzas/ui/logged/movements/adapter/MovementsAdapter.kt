@@ -1,62 +1,71 @@
 package com.android.misfinanzas.ui.logged.movements.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.android.domain.utils.DateUtils
 import com.android.domain.utils.MoneyUtils
-import com.android.misfinanzas.R
-import com.android.misfinanzas.base.BaseViewHolder
-import com.android.misfinanzas.base.MovementClickListener
 import com.android.misfinanzas.base.MovementType
 import com.android.misfinanzas.databinding.RowMovementBinding
 import com.android.misfinanzas.models.MovementModel
+import com.android.misfinanzas.utils.gone
+import com.android.misfinanzas.utils.visible
 
-class MovementsAdapter(
-    private val context: Context,
-    private val movements: List<MovementModel>,
-    private val itemClickListener: MovementClickListener
-) : RecyclerView.Adapter<BaseViewHolder<*>>() {
+class MovementsAdapter : ListAdapter<MovementModel, MovementsAdapter.ViewHolder>(DiffCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
-        return MovementsViewHolder(LayoutInflater.from(context).inflate(R.layout.row_movement, parent, false))
+    private var listener: OnActionItemListener? = null
+
+    fun setOnActionItemListener(listener: OnActionItemListener) {
+        this.listener = listener
     }
 
-    override fun getItemCount(): Int {
-        return movements.size
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = RowMovementBinding.inflate(inflater, parent, false)
+        return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
-        when (holder) {
-            is MovementsViewHolder -> holder.bind(movements[position], position)
-            //put other views here if you want
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
+
+    object DiffCallback : DiffUtil.ItemCallback<MovementModel>() {
+        override fun areItemsTheSame(oldItem: MovementModel, newItem: MovementModel): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: MovementModel, newItem: MovementModel): Boolean {
+            return oldItem == newItem
         }
     }
 
-    //inner class to avoid memory leak, when parent class died (MovementsAdapter) this inner also die
-    inner class MovementsViewHolder(itemView: View) : BaseViewHolder<MovementModel>(itemView) {
+    inner class ViewHolder(private val binding: RowMovementBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        val binding = RowMovementBinding.bind(itemView)
+        fun bind(model: MovementModel) = with(binding) {
+            ivTipoMovimiento.setImageResource((MovementType.getImage(model.idType)))
+            tvValor.text = MoneyUtils.getMoneyFormat().format(model.value)
+            tvFecha.text = DateUtils.getDateFormat().format(model.date!!)
+            tvDescripcion.text = model.description
 
-        override fun bind(item: MovementModel, position: Int) = with(binding) {
-            ivTipoMovimiento.setImageResource((MovementType.getImage(item.idType)))
-            tvValor.text = MoneyUtils.getMoneyFormat().format(item.value)
-            tvFecha.text = DateUtils.getDateFormat().format(item.date!!)
-            tvDescripcion.text = item.description
-
-            itemView.setOnClickListener { itemClickListener.onMovementClicked(item) }
+            itemView.setOnClickListener { listener?.onMovementClicked(model) }
 
             //TODO pending to add category description to model
-            tvCategoria.visibility = View.GONE
+            tvCategoria.gone()
 
-            if (item.idMovement < 0) {
-                ibDiscard.visibility = View.VISIBLE
-                ibDiscard.setOnClickListener { itemClickListener.onDiscardMovementClicked(item.idMovement) }
+            if (model.idMovement < 0) {
+                ibDiscard.visible()
+                ibDiscard.setOnClickListener { listener?.onDiscardMovementClicked(model.idMovement) }
             } else {
-                ibDiscard.visibility = View.GONE
+                ibDiscard.gone()
             }
         }
     }
+
+    interface OnActionItemListener {
+        fun onMovementClicked(movement: MovementModel?)
+        fun onDiscardMovementClicked(id: Int)
+    }
+
 }

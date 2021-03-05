@@ -15,37 +15,39 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.domain.UserSesion
 import com.android.domain.utils.DateUtils
 import com.android.misfinanzas.R
-import com.android.misfinanzas.base.MovementClickListener
 import com.android.misfinanzas.base.MovementType
 import com.android.misfinanzas.base.MovementUtils
 import com.android.misfinanzas.base.Sms
 import com.android.misfinanzas.databinding.FragmentBalanceBinding
 import com.android.misfinanzas.models.BalanceModel
 import com.android.misfinanzas.models.MovementModel
+import com.android.misfinanzas.sync.SyncState
 import com.android.misfinanzas.ui.logged.config.ConfigViewModel
 import com.android.misfinanzas.ui.logged.movements.adapter.MovementsAdapter
 import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetailFragment
-import com.android.misfinanzas.utils.hideLoader
-import com.android.misfinanzas.utils.isConnected
-import com.android.misfinanzas.utils.showLoader
-import com.android.misfinanzas.utils.showShortToast
+import com.android.misfinanzas.utils.*
+import com.android.misfinanzas.utils.events.EventSubject
+import com.android.misfinanzas.utils.events.getEventBus
 import com.android.misfinanzas.utils.viewbinding.viewBinding
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
-class BalanceFragment : Fragment(R.layout.fragment_balance), MovementClickListener {
+class BalanceFragment : Fragment(R.layout.fragment_balance) {
 
     private val REQUEST_PERMISSION_READ_SMS = 1
 
     private val viewModel by viewModel<BalanceViewModel>()
     private val configViewModel by viewModel<ConfigViewModel>()
 
+    private val movementsAdapter by lazy { MovementsAdapter() }
+
     private val binding by viewBinding<FragmentBalanceBinding>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupViewModel()
+        setupSyncObserver()
         checkSync()
     }
 
@@ -71,6 +73,16 @@ class BalanceFragment : Fragment(R.layout.fragment_balance), MovementClickListen
             } else {
                 getBalance()
             }
+        }
+    }
+
+    private fun setupSyncObserver() {
+        getEventBus(EventSubject.SYNC).observe(viewLifecycleOwner, syncStateObserver)
+    }
+
+    private val syncStateObserver = Observer<Any> { state ->
+        when (state) {
+            SyncState.Success -> getBalance()
         }
     }
 
@@ -158,32 +170,35 @@ class BalanceFragment : Fragment(R.layout.fragment_balance), MovementClickListen
         setupRecyclerViewData(potentialMovements)
     }
 
-    private fun setupRecyclerView() = with(binding) {
-        rvPotentialMovements.layoutManager = LinearLayoutManager(requireContext())
-        rvPotentialMovements.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+    private fun setupRecyclerView() = with(binding.rvPotentialMovements) {
+        adapter = movementsAdapter
+        layoutManager = LinearLayoutManager(requireContext())
+        movementsAdapter.setOnActionItemListener(actionListener)
+        addItemDecoration(DividerItemDecoration(requireContext(), androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
     }
 
     private fun setupRecyclerViewData(movements: List<MovementModel>) {
-        binding.rvPotentialMovements.adapter = MovementsAdapter(requireContext(), movements, this)
-        refreshRecyclerViewVisibility()
+        movementsAdapter.submitList(movements)
     }
 
     private fun refreshRecyclerViewVisibility() = with(binding) {
         if (rvPotentialMovements.adapter?.itemCount!! <= 0) {
-            rvPotentialMovements.visibility = View.GONE
-            tvPotentialMovements.visibility = View.GONE
+            rvPotentialMovements.gone()
+            tvPotentialMovements.gone()
         } else {
-            rvPotentialMovements.visibility = View.VISIBLE
-            tvPotentialMovements.visibility = View.VISIBLE
+            rvPotentialMovements.visible()
+            tvPotentialMovements.visible()
         }
     }
 
-    override fun onMovementClicked(movement: MovementModel?) {
-        navigateToAddMovement(movement)
-    }
+    private val actionListener = object : MovementsAdapter.OnActionItemListener {
+        override fun onMovementClicked(movement: MovementModel?) {
+            navigateToAddMovement(movement)
+        }
 
-    override fun onDiscardMovementClicked(id: Int) {
-        discard(id)
+        override fun onDiscardMovementClicked(id: Int) {
+            discard(id)
+        }
     }
 
     private fun discard(id: Int) {

@@ -7,8 +7,8 @@ import com.android.domain.repository.UserRepository
 import com.android.domain.utils.DateUtils
 import com.android.domain.utils.StringUtils.Companion.EMPTY
 import com.android.domain.utils.StringUtils.Companion.POINT
+import com.android.misfinanzas.utils.events.EventBus
 import com.android.misfinanzas.utils.events.EventSubject
-import com.android.misfinanzas.utils.events.StateFlowBus
 import java.util.*
 
 class SyncManager(
@@ -55,7 +55,7 @@ class SyncManager(
     }
 
     private fun publish(state: SyncState) {
-        StateFlowBus.publish(EventSubject.SYNC, state)
+        EventBus.publish(EventSubject.SYNC, state)
     }
 
 }

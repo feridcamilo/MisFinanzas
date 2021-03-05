@@ -5,5 +5,6 @@ import com.android.misfinanzas.models.MovementModel
 sealed class MovementsViewState {
 
     class MovementsLoaded(val movements: List<MovementModel>) : MovementsViewState()
+    class MovementsFiltered(val movements: List<MovementModel>) : MovementsViewState()
 
 }

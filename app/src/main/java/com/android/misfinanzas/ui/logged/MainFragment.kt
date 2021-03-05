@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -16,8 +17,7 @@ import com.android.misfinanzas.sync.SyncWorker
 import com.android.misfinanzas.ui.MainActivity
 import com.android.misfinanzas.utils.*
 import com.android.misfinanzas.utils.events.EventSubject
-import com.android.misfinanzas.utils.events.StateFlowBus
-import com.android.misfinanzas.utils.events.observe
+import com.android.misfinanzas.utils.events.getEventBus
 import com.android.misfinanzas.utils.viewbinding.viewBinding
 
 class MainFragment : Fragment(R.layout.fragment_main) {
@@ -64,10 +64,10 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     }
 
     private fun setupSyncObserver() {
-        StateFlowBus.getStateFlow(EventSubject.SYNC).observe(viewLifecycleOwner, syncStateObserver)
+        getEventBus(EventSubject.SYNC).observe(viewLifecycleOwner, syncStateObserver)
     }
 
-    private val syncStateObserver: suspend (Any) -> Unit = { state ->
+    private val syncStateObserver = Observer<Any> { state ->
         when (state) {
             is SyncState.InProgress -> showSyncingMessage()
             is SyncState.Success -> {

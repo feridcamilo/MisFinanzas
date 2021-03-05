@@ -9,15 +9,10 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.domain.AppConfig.Companion.MAX_MOVEMENTS_SIZE
-import com.android.domain.AppConfig.Companion.MIN_LENGTH_SEARCH
-import com.android.domain.utils.DateUtils
-import com.android.domain.utils.MoneyUtils
 import com.android.misfinanzas.R
-import com.android.misfinanzas.base.MovementClickListener
 import com.android.misfinanzas.databinding.FragmentMovementsBinding
-import com.android.misfinanzas.models.MasterModel
 import com.android.misfinanzas.models.MovementModel
+import com.android.misfinanzas.sync.SyncState
 import com.android.misfinanzas.ui.logged.masters.mastersList.MastersListViewModel
 import com.android.misfinanzas.ui.logged.masters.mastersList.MastersListViewState
 import com.android.misfinanzas.ui.logged.movements.adapter.MovementsAdapter
@@ -27,6 +22,8 @@ import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetail
 import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetailFragment.Companion.MOVEMENT_DATA
 import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetailFragment.Companion.PEOPLE_DATA
 import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetailFragment.Companion.PLACES_DATA
+import com.android.misfinanzas.utils.events.EventSubject
+import com.android.misfinanzas.utils.events.getEventBus
 import com.android.misfinanzas.utils.hideLoader
 import com.android.misfinanzas.utils.showLoader
 import com.android.misfinanzas.utils.showShortToast
@@ -34,23 +31,12 @@ import com.android.misfinanzas.utils.viewbinding.viewBinding
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
-class MovementsFragment : Fragment(R.layout.fragment_movements), MovementClickListener {
+class MovementsFragment : Fragment(R.layout.fragment_movements) {
 
     private val viewModel by viewModel<MovementsViewModel>()
     private val mastersViewModel by viewModel<MastersListViewModel>()
     private val binding by viewBinding<FragmentMovementsBinding>()
-
-    private var movements: List<MovementModel>? = null
-    private var descriptions: List<String>? = null
-
-    private var people: List<MasterModel>? = null
-    private var peopleActive: List<MasterModel>? = null
-    private var places: List<MasterModel>? = null
-    private var placesActive: List<MasterModel>? = null
-    private var categories: List<MasterModel>? = null
-    private var categoriesActive: List<MasterModel>? = null
-    private var debts: List<MasterModel>? = null
-    private var debtsActive: List<MasterModel>? = null
+    private val movementsAdapter by lazy { MovementsAdapter() }
 
     private var movementToAdd: MovementModel? = null
 
@@ -69,20 +55,22 @@ class MovementsFragment : Fragment(R.layout.fragment_movements), MovementClickLi
         setupSearchView()
         setupViewModel()
         setupEvents()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        binding.rvMovimientos.adapter?.notifyDataSetChanged()
+        setupSyncObserver()
     }
 
     private fun setupRecyclerView() = with(binding.rvMovimientos) {
+        adapter = movementsAdapter
         layoutManager = LinearLayoutManager(requireContext())
+        movementsAdapter.setOnActionItemListener(actionListener)
         addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
     }
 
     private fun setupRecyclerViewData(movements: List<MovementModel>) {
-        binding.rvMovimientos.adapter = MovementsAdapter(requireContext(), movements, this)
+        if (movements.isEmpty()) {
+            context?.showShortToast(R.string.info_no_movements)
+            return
+        }
+        movementsAdapter.submitList(movements)
     }
 
     private fun setupSearchView() {
@@ -90,55 +78,25 @@ class MovementsFragment : Fragment(R.layout.fragment_movements), MovementClickLi
         binding.svSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 //implement if you can to change when press search button
-                filter(query)
+                viewModel.filter(query.orEmpty())
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 //implement if you want to change in every letter written
-                if (movements != null) {
-                    if (movements?.size!! > MAX_MOVEMENTS_SIZE && newText?.length!! != 0 && newText.length <= MIN_LENGTH_SEARCH) {
-                        //if the list is big and if text length has less than minLengthToSearch it not search in every letter written
-                        return false
-                    } else {
-                        filter(newText)
-                    }
-                }
+                viewModel.filter(newText.orEmpty())
                 return false
             }
         })
     }
 
-    private fun filter(text: String?) {
-        showLoader()
-        if (!text.isNullOrEmpty()) {
-            val textToCompare = text.toLowerCase(Locale.ROOT)
-            val valueToCompare = MoneyUtils.getBigDecimalStringValue(text)
-            val personToCompare = people?.firstOrNull { it.name.toLowerCase(Locale.ROOT).contains(textToCompare) }
-            val placeToCompare = places?.firstOrNull { it.name.toLowerCase(Locale.ROOT).contains(textToCompare) }
-            val categoryToCompare = categories?.firstOrNull { it.name.toLowerCase(Locale.ROOT).contains(textToCompare) }
-            val debtToCompare = debts?.firstOrNull { it.name.toLowerCase(Locale.ROOT).contains(textToCompare) }
-
-            val movementsFiltered = movements?.filter {
-                it.description.toLowerCase(Locale.ROOT).contains(textToCompare) ||
-                        (valueToCompare.isNotEmpty() && it.value.toString().contains(valueToCompare)) ||
-                        DateUtils.getDateFormat().format(it.date!!).toString().contains(textToCompare) ||
-                        (personToCompare != null && it.personId == personToCompare.id) ||
-                        (placeToCompare != null && it.placeId == placeToCompare.id) ||
-                        (categoryToCompare != null && it.categoryId == categoryToCompare.id) ||
-                        (debtToCompare != null && it.debtId == debtToCompare.id)
-            }
-            setupRecyclerViewData(movementsFiltered!!)
-        } else {
-            setupRecyclerViewData(movements!!)
-        }
-        hideLoader()
-    }
-
     private fun setupViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner, viewStateObserver)
         mastersViewModel.viewState.observe(viewLifecycleOwner, mastersViewStateObserver)
+        getData()
+    }
 
+    private fun getData() {
         showLoader()
         mastersViewModel.getPeople()
     }
@@ -146,48 +104,50 @@ class MovementsFragment : Fragment(R.layout.fragment_movements), MovementClickLi
     private val mastersViewStateObserver = Observer<MastersListViewState> { state ->
         when (state) {
             is MastersListViewState.PeopleLoaded -> {
-                people = state.people
-                peopleActive = people?.filter { it.enabled }
+                viewModel.people = state.people
                 mastersViewModel.getPlaces()
             }
             is MastersListViewState.PlacesLoaded -> {
-                places = state.places
-                placesActive = places?.filter { it.enabled }
+                viewModel.places = state.places
                 mastersViewModel.getCategories()
             }
             is MastersListViewState.CategoriesLoaded -> {
-                categories = state.categories
-                categoriesActive = categories?.filter { it.enabled }
+                viewModel.categories = state.categories
                 mastersViewModel.getDebts()
             }
             is MastersListViewState.DebtsLoaded -> {
-                debts = state.debts
-                debtsActive = debts?.filter { it.enabled }
+                viewModel.debts = state.debts
                 viewModel.getLocalMovements()
             }
+            else -> Unit
         }
     }
 
     private val viewStateObserver = Observer<MovementsViewState> { state ->
+        hideLoader()
         when (state) {
             is MovementsViewState.MovementsLoaded -> {
-                movements = state.movements
-                descriptions = movements!!.distinctBy { it.description }.map { it.description }
-                loadMovements()
-                hideLoader()
+                loadMovements(state.movements)
             }
+            is MovementsViewState.MovementsFiltered -> setupRecyclerViewData(state.movements)
         }
     }
 
-    private fun loadMovements() = with(binding) {
-        if (movements!!.isEmpty()) {
-            context?.showShortToast(R.string.info_no_movements)
+    private fun setupSyncObserver() {
+        getEventBus(EventSubject.SYNC).observe(viewLifecycleOwner, syncStateObserver)
+    }
+
+    private val syncStateObserver = Observer<Any> { state ->
+        when (state) {
+            SyncState.Success -> getData()
+        }
+    }
+
+    private fun loadMovements(movements: List<MovementModel>) = with(binding) {
+        if (svSearch.query.isNotEmpty()) {
+            svSearch.setQuery(svSearch.query, true)
         } else {
-            if (svSearch.query.isNotEmpty()) {
-                svSearch.setQuery(svSearch.query, true)
-            } else {
-                setupRecyclerViewData(movements!!)
-            }
+            setupRecyclerViewData(movements)
         }
 
         //if is an action to add a movement, navigate directly
@@ -210,20 +170,24 @@ class MovementsFragment : Fragment(R.layout.fragment_movements), MovementClickLi
     private fun navigateToDetails(movement: MovementModel?) {
         val bundle = Bundle()
         movement?.let { bundle.putSerializable(MOVEMENT_DATA, it) }
-        descriptions?.let { bundle.putStringArrayList(DESCRIPTIONS_DATA, it as ArrayList<String>) }
-        peopleActive?.let { bundle.putSerializable(PEOPLE_DATA, it as ArrayList<out Parcelable>) }
-        placesActive?.let { bundle.putParcelableArrayList(PLACES_DATA, it as ArrayList<out Parcelable>) }
-        categoriesActive?.let { bundle.putParcelableArrayList(CATEGORIES_DATA, it as ArrayList<out Parcelable>) }
-        debtsActive?.let { bundle.putParcelableArrayList(DEBTS_DATA, it as ArrayList<out Parcelable>) }
+
+        bundle.putStringArrayList(DESCRIPTIONS_DATA, viewModel.descriptions as ArrayList<String>)
+        bundle.putSerializable(PEOPLE_DATA, viewModel.peopleActive as ArrayList<out Parcelable>)
+        bundle.putSerializable(PLACES_DATA, viewModel.placesActive as ArrayList<out Parcelable>)
+        bundle.putSerializable(CATEGORIES_DATA, viewModel.categoriesActive as ArrayList<out Parcelable>)
+        bundle.putSerializable(DEBTS_DATA, viewModel.debtsActive as ArrayList<out Parcelable>)
+
         findNavController().navigate(R.id.action_movementsFragment_to_movementDetailFragment, bundle)
     }
 
-    override fun onMovementClicked(movement: MovementModel?) {
-        navigateToDetails(movement)
-    }
+    private val actionListener = object : MovementsAdapter.OnActionItemListener {
 
-    override fun onDiscardMovementClicked(id: Int) {
-        TODO("Not yet implemented")
+        override fun onMovementClicked(movement: MovementModel?) {
+            navigateToDetails(movement)
+        }
+
+        override fun onDiscardMovementClicked(id: Int) {}
+
     }
 
 }

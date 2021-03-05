@@ -3,12 +3,12 @@ package com.android.misfinanzas.ui
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import com.android.misfinanzas.R
 import com.android.misfinanzas.databinding.ActivityMainBinding
 import com.android.misfinanzas.utils.events.EventSubject
-import com.android.misfinanzas.utils.events.StateFlowBus
-import com.android.misfinanzas.utils.events.observe
+import com.android.misfinanzas.utils.events.getEventBus
 import com.android.misfinanzas.utils.invisible
 import com.android.misfinanzas.utils.viewbinding.viewBinding
 import com.android.misfinanzas.utils.visible
@@ -28,10 +28,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     }
 
     private fun setupLoaderObserver() {
-        StateFlowBus.getStateFlow(EventSubject.LOADER).observe(this, loaderStateObserver)
+        getEventBus(EventSubject.LOADER).observe(this, loaderStateObserver)
     }
 
-    private val loaderStateObserver: suspend (Any) -> Unit = { state ->
+    private val loaderStateObserver = Observer<Any> { state ->
         if (state == true) {
             binding.progressBar.visible()
             window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)

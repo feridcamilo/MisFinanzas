@@ -11,17 +11,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.domain.model.Master
 import com.android.domain.utils.StringUtils.Companion.EMPTY
 import com.android.misfinanzas.R
-import com.android.misfinanzas.base.MasterClickListener
 import com.android.misfinanzas.databinding.FragmentMastersListBinding
 import com.android.misfinanzas.models.MasterModel
+import com.android.misfinanzas.sync.SyncState
+import com.android.misfinanzas.ui.logged.masters.mastersList.adapter.MastersAdapter
+import com.android.misfinanzas.utils.events.EventSubject
+import com.android.misfinanzas.utils.events.getEventBus
 import com.android.misfinanzas.utils.hideLoader
 import com.android.misfinanzas.utils.showLoader
 import com.android.misfinanzas.utils.showLongToast
 import com.android.misfinanzas.utils.viewbinding.viewBinding
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.util.*
 
-class MastersListFragment : Fragment(R.layout.fragment_masters_list), MasterClickListener {
+class MastersListFragment : Fragment(R.layout.fragment_masters_list) {
 
     companion object {
         const val MASTERS_TYPE: String = "MastersType"
@@ -30,7 +32,8 @@ class MastersListFragment : Fragment(R.layout.fragment_masters_list), MasterClic
     private val viewModel by viewModel<MastersListViewModel>()
     private val binding by viewBinding<FragmentMastersListBinding>()
 
-    private var items: List<MasterModel>? = null
+    private val mastersAdapter by lazy { MastersAdapter() }
+
     private var type: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +47,7 @@ class MastersListFragment : Fragment(R.layout.fragment_masters_list), MasterClic
         super.onViewCreated(view, savedInstanceState)
         setTitle()
         setupViewModel()
+        setupSyncObserver()
         setupRecyclerView()
         setupSearchView()
         setupEvents()
@@ -73,12 +77,26 @@ class MastersListFragment : Fragment(R.layout.fragment_masters_list), MasterClic
 
     private fun setupViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner, viewStateObserver)
+        getData()
+    }
+
+    private fun getData() {
         showLoader()
         when (type) {
             Master.TYPE_PERSON -> viewModel.getPeople()
             Master.TYPE_PLACE -> viewModel.getPlaces()
             Master.TYPE_CATEGORY -> viewModel.getCategories()
             Master.TYPE_DEBT -> viewModel.getDebts()
+        }
+    }
+
+    private fun setupSyncObserver() {
+        getEventBus(EventSubject.SYNC).observe(viewLifecycleOwner, syncStateObserver)
+    }
+
+    private val syncStateObserver = Observer<Any> { state ->
+        when (state) {
+            SyncState.Success -> getData()
         }
     }
 
@@ -89,11 +107,14 @@ class MastersListFragment : Fragment(R.layout.fragment_masters_list), MasterClic
             is MastersListViewState.PlacesLoaded -> setupRecyclerViewData(state.places)
             is MastersListViewState.CategoriesLoaded -> setupRecyclerViewData(state.categories)
             is MastersListViewState.DebtsLoaded -> setupRecyclerViewData(state.debts)
+            is MastersListViewState.MastersFiltered -> setupRecyclerViewData(state.masters)
         }
     }
 
     private fun setupRecyclerView() = with(binding.rvMasters) {
+        adapter = mastersAdapter
         layoutManager = LinearLayoutManager(requireContext())
+        mastersAdapter.setOnActionItemListener(actionListener)
         addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
     }
 
@@ -102,7 +123,7 @@ class MastersListFragment : Fragment(R.layout.fragment_masters_list), MasterClic
             context?.showLongToast(R.string.info_no_data)
             return
         }
-        binding.rvMasters.adapter = MastersAdapter(requireContext(), items, this)
+        mastersAdapter.submitList(items)
     }
 
     private fun setupSearchView() {
@@ -110,34 +131,16 @@ class MastersListFragment : Fragment(R.layout.fragment_masters_list), MasterClic
         binding.svSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 //implement if you can to change when press search button
-                if (items != null) {
-                    filter(query)
-                }
+                viewModel.filter(query.orEmpty())
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 //implement if you want to change in every letter written
-                if (items != null) {
-                    filter(newText)
-                }
+                viewModel.filter(newText.orEmpty())
                 return false
             }
         })
-    }
-
-    private fun filter(text: String?) {
-        showLoader()
-        if (!text.isNullOrEmpty()) {
-            val textToCompare = text.toLowerCase(Locale.ROOT)
-            val mastersFiltered = items?.filter {
-                it.name.toLowerCase(Locale.ROOT).contains(textToCompare)
-            }
-            setupRecyclerViewData(mastersFiltered!!)
-        } else {
-            setupRecyclerViewData(items!!)
-        }
-        hideLoader()
     }
 
     private fun setupEvents() = with(binding) {
@@ -153,8 +156,12 @@ class MastersListFragment : Fragment(R.layout.fragment_masters_list), MasterClic
         //findNavController().navigate(R.id., bundle)
     }
 
-    override fun onMasterClicked(master: MasterModel?) {
-        navigateToDetails(master)
+    private val actionListener = object : MastersAdapter.OnActionItemListener {
+
+        override fun onMasterClicked(master: MasterModel?) {
+            navigateToDetails(master)
+        }
+
     }
 
 }
