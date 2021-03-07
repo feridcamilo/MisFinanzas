@@ -10,6 +10,7 @@ import com.android.misfinanzas.mappers.MovementMapper
 import com.android.misfinanzas.mappers.UserMapper
 import com.android.misfinanzas.sync.SyncManager
 import com.android.misfinanzas.ui.di.uiModules
+import com.android.misfinanzas.utils.SmsUtils
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -48,5 +49,5 @@ private val syncModule = module {
 }
 
 private val utilsModule = module {
-
+    factory { SmsUtils(get()) }
 }

@@ -77,7 +77,7 @@ class MovementsFragment : Fragment(R.layout.fragment_movements) {
         binding.svSearch.setOnClickListener { binding.svSearch.isIconified = false }
         binding.svSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                //implement if you can to change when press search button
+                //implement if you want to change when press search button
                 viewModel.filter(query.orEmpty())
                 return false
             }
@@ -117,7 +117,7 @@ class MovementsFragment : Fragment(R.layout.fragment_movements) {
             }
             is MastersListViewState.DebtsLoaded -> {
                 viewModel.debts = state.debts
-                viewModel.getLocalMovements()
+                viewModel.getMovements()
             }
             else -> Unit
         }

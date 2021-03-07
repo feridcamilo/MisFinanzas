@@ -2,14 +2,8 @@ package com.android.data.repository.master
 
 import com.android.data.repository.master.datasource.MasterCloudDataSource
 import com.android.data.repository.master.datasource.MasterRoomDataSource
-import com.android.data.repository.master.mappers.CategoryDataMapper
-import com.android.data.repository.master.mappers.DebtDataMapper
-import com.android.data.repository.master.mappers.PersonDataMapper
-import com.android.data.repository.master.mappers.PlaceDataMapper
-import com.android.domain.model.Category
-import com.android.domain.model.Debt
-import com.android.domain.model.Person
-import com.android.domain.model.Place
+import com.android.data.repository.master.mappers.*
+import com.android.domain.model.*
 import com.android.domain.repository.MasterRepository
 import java.util.*
 
@@ -19,7 +13,8 @@ class MasterDataRepository(
     private val categoryMapper: CategoryDataMapper,
     private val debtMapper: DebtDataMapper,
     private val personMapper: PersonDataMapper,
-    private val placeMapper: PlaceDataMapper
+    private val placeMapper: PlaceDataMapper,
+    private val masterMapper: MasterDataMapper
 ) : MasterRepository {
 
     override suspend fun updateLastSyncMasters(date: Date) {
@@ -46,8 +41,13 @@ class MasterDataRepository(
         roomDataSource.insertDebts(debts.map { debtMapper.mapToVO(it) })
     }
 
+    override suspend fun saveMasterOnCloud(master: Master, type: Int): Boolean {
+        return cloudDataSource.sendMaster(masterMapper.mapToDTO(master), type)
+    }
+
+    /*
     override suspend fun upload() {
-        /*
+
         val categories = roomDataSource.getCategoriesToSync()
         cloudDataSource.sendCategories(categories.map { categoryMapper.mapToDTO(it) })
 
@@ -59,8 +59,8 @@ class MasterDataRepository(
 
         val debts = roomDataSource.getDebtsToSync()
         cloudDataSource.sendDebts(masters.map { debts.mapToDTO(it) })
-         */
     }
+    */
 
     override suspend fun getCategories(): List<Category> {
         return roomDataSource.getCategories().map { categoryMapper.map(it) }

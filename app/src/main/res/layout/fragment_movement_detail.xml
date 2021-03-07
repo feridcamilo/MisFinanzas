@@ -22,7 +22,8 @@
             android:id="@+id/ib_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_save"
+            android:background="@mipmap/ic_save"
+            android:importantForAccessibility="no"
             app:layout_constraintEnd_toStartOf="@id/ib_delete"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/movement_detail_view" />
@@ -31,7 +32,8 @@
             android:id="@+id/ib_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_delete"
+            android:background="@mipmap/ic_delete"
+            android:importantForAccessibility="no"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/ib_save"
             app:layout_constraintTop_toBottomOf="@id/movement_detail_view" />

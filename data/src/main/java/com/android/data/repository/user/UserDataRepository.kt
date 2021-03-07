@@ -36,27 +36,27 @@ class UserDataRepository(
         return cloudDataSource.getServerDateTime()
     }
 
-    override suspend fun setDiffTimeWithServer(diff: String) {
+    override fun setDiffTimeWithServer(diff: String) {
         syncPreferences.diffTimeWithServer = diff
     }
 
-    override suspend fun getDiffTimeWithServer(): String {
+    override fun getDiffTimeWithServer(): String {
         return syncPreferences.diffTimeWithServer.orEmpty()
     }
 
-    override suspend fun setAutoSyncOnOpen(value: Boolean) {
+    override fun setAutoSyncOnOpen(value: Boolean) {
         configPreferences.isAutoSyncOnOpen = value
     }
 
-    override suspend fun isAutoSyncOnOpen(): Boolean {
+    override fun isAutoSyncOnOpen(): Boolean {
         return configPreferences.isAutoSyncOnOpen
     }
 
-    override suspend fun setAutoSyncOnEdit(value: Boolean) {
+    override fun setAutoSyncOnEdit(value: Boolean) {
         configPreferences.isAutoSyncOnEdit = value
     }
 
-    override suspend fun isAutoSyncOnEdit(): Boolean {
+    override fun isAutoSyncOnEdit(): Boolean {
         return configPreferences.isAutoSyncOnEdit
     }
 

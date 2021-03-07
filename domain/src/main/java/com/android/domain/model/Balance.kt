@@ -1,7 +1,6 @@
 package com.android.domain.model
 
 data class Balance(
-    val id: Int = 0,
     val IngresosEfectivo: Double,
     val EgresosEfectivo: Double,
     val IngresosElectronico: Double,

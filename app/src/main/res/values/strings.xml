@@ -7,16 +7,29 @@
     <string name="title_masters">Maestros</string>
     <string name="title_movements_details">Detalle del movimiento</string>
     <string name="title_movements_details_new">Ingresar movimiento</string>
+    <string name="title_master_details">Detalle de %1$s</string>
+    <string name="title_master_details_new">Ingresar %1$s</string>
     <string name="title_filters">Filtros</string>
     <string name="title_sync">Sincronizar</string>
     <string name="loading">Cargando…</string>
     <string name="search">Buscar</string>
+
+    <string name="me">Yo</string>
+    <string name="to_define">Por definir</string>
 
     <!--MastersFragment-->
     <string name="masters_categories">Categorías</string>
     <string name="masters_places">Lugares</string>
     <string name="masters_people">Personas</string>
     <string name="masters_debts">Deudas</string>
+
+    <!--Fragment Master Detail-->
+    <string name="md_name">Nombre</string>
+    <string name="md_active">¿Activo?</string>
+    <string name="md_category">categoría</string>
+    <string name="md_place">lugar</string>
+    <string name="md_person">persona</string>
+    <string name="md_debt">deudas</string>
 
     <!--ConfigFragment-->
     <string name="go_to_web"><u>Ir al sitio web</u></string>
@@ -65,6 +78,7 @@
     <string name="view_md_entry_date">Fecha de ingreso:</string>
     <string name="view_md_lastUpd_date">Fecha de actualización:</string>
     <string name="md_date">%1$s/%2$s/%3$s</string>
+    <string name="md_info">%1$s - %2$s</string>
 
     <!--MovementTypeList-->
     <string name="mt_not_selected">Seleccione</string>
@@ -81,6 +95,7 @@
     <string name="error_not_network_no_login">No hay conexión a internet. No se puede iniciar sesión.</string>
     <string name="error_not_network_no_continue">No hay conexión a internet. No se puede continuar.</string>
     <string name="error_synchronizing">Ocurrió un error sincronizando los datos: %1$s</string>
+    <string name="error_synchronizing_no_info">Ocurrió un error sincronizando los datos. Por favor intenta nuevamente</string>
     <string name="error_getting_movements">Ocurrió un error obteniendo los movimientos: %1$s</string>
     <string name="error_getting_masters">Ocurrió un error obteniendo los maestros: %1$s</string>
     <string name="error_getting_balance">Ocurrió un error obteniendo los saldos: %1$s</string>
@@ -93,6 +108,7 @@
     <string name="error_getting_discarded_movs">Ocurrió un error obteniendo los movimientos descartados: %1$s</string>
     <string name="error_retrofit">Retrofit: %1$s</string>
     <string name="error_room">Room: %1$s</string>
+    <string name="error_master_exists">No se puede guardar \'%1$s\' porque ya existe.</string>
 
     <!--Info messages-->
     <string name="info_enter_user_and_password">Por favor ingrese usuario y contraseña.</string>
@@ -111,10 +127,13 @@
     <string name="info_movement_discarded">Movimiento descartado.</string>
     <string name="info_movement_updated">Movimiento actualizado con éxito.</string>
     <string name="info_masters_synced">Maestros sincronizados con éxito.</string>
+    <string name="info_master_saved">Maestro guardado con éxito.</string>
+    <string name="info_master_updated">Maestro actualizado con éxito.</string>
     <string name="info_user_saved">Usuario guardado con éxito.</string>
     <string name="info_select_movement_type">Por favor seleccione el tipo de movimiento.</string>
     <string name="info_select_debt_by_cc_buy">Una compra con TC debe estar relacionada con una deuda. Por favor seleccione una deuda.</string>
     <string name="info_enter_value">Por favor ingrese el valor del movimiento.</string>
+    <string name="info_enter_name">Por favor ingrese el nombre.</string>
     <string name="info_only_numbers">Solo se permiten valores numéricos.</string>
     <string name="info_select_category">Por favor seleccione la categoría.</string>
     <string name="info_select_date">Por favor seleccione la fecha del movimiento.</string>
@@ -128,49 +147,4 @@
     <string name="cd_yes">Si</string>
     <string name="cd_no">No</string>
 
-    <string name="query_balance">
-        SELECT
-            *,
-            Totales.[TengoEfectivo] + Totales.[TengoElectronico] as [TengoTotal],
-            Totales.[IngresosElectronico] - Totales.[IngresosEfectivo] as [DiferenciaIngresos],
-            Totales.[EgresosElectronico] - Totales.[EgresosEfectivo] as [DiferenciaEgresos],
-            Totales.[IngresosEfectivo] + Totales.[IngresosElectronico] as [TotalIngresos],
-            Totales.[EgresosEfectivo] + Totales.[EgresosElectronico] [TotalEgresos]
-        FROM (
-            SELECT
-                IEF.[IngresosEfectivo], EEF.[EgresosEfectivo], IEL.[IngresosElectronico], EEL.[EgresosElectronico], R.Retiros, CTC.[ComprasTC],
-                (IEF.[IngresosEfectivo] - EEF.[EgresosEfectivo]) + R.Retiros as [TengoEfectivo],
-                (IEL.[IngresosElectronico] - EEL.[EgresosElectronico]) - R.Retiros as [TengoElectronico]
-            FROM (
-                SELECT
-                    COALESCE(SUM(value), 0) as [IngresosEfectivo]
-                FROM Movement WHERE idType = 1
-            ) AS IEF,
-            (SELECT
-                    COALESCE(SUM(value), 0) as [EgresosEfectivo]
-                FROM Movement
-                WHERE idType = 2
-            ) AS EEF,
-            (SELECT
-                    COALESCE(SUM(value), 0) as [IngresosElectronico]
-                FROM Movement
-                WHERE idType = 3
-            ) AS IEL,
-            (SELECT
-                    COALESCE(SUM(value), 0) as [EgresosElectronico]
-                FROM Movement
-                WHERE idType = 4
-            ) AS EEL,
-            (SELECT
-                    COALESCE(SUM(value), 0) as [Retiros]
-                FROM Movement
-                WHERE idType = 5
-            ) AS R,
-            (SELECT
-                    COALESCE(SUM(value), 0) as [ComprasTC]
-                FROM Movement
-                WHERE idType = 6
-            ) AS CTC
-        ) AS Totales
-    </string>
 </resources>

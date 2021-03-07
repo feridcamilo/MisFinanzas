@@ -12,8 +12,8 @@ class BalanceDataRepository(
     private val mapper: BalanceDataMapper
 ) : BalanceRepository {
 
-    override suspend fun getBalance(query: String): Balance {
-        return mapper.map(roomDataSource.getBalance(query))
+    override suspend fun getBalance(): Balance {
+        return mapper.map(roomDataSource.getBalance())
     }
 
     override suspend fun getCloudBalance(clientId: String): Balance {

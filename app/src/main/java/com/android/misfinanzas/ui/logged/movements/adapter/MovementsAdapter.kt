@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.android.domain.utils.DateUtils
 import com.android.domain.utils.MoneyUtils
+import com.android.misfinanzas.R
 import com.android.misfinanzas.base.MovementType
 import com.android.misfinanzas.databinding.RowMovementBinding
 import com.android.misfinanzas.models.MovementModel
@@ -44,15 +45,17 @@ class MovementsAdapter : ListAdapter<MovementModel, MovementsAdapter.ViewHolder>
     inner class ViewHolder(private val binding: RowMovementBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(model: MovementModel) = with(binding) {
-            ivTipoMovimiento.setImageResource((MovementType.getImage(model.idType)))
+            ivMovType.setImageResource((MovementType.getImage(model.idType)))
             tvValor.text = MoneyUtils.getMoneyFormat().format(model.value)
             tvFecha.text = DateUtils.getDateFormat().format(model.date!!)
-            tvDescripcion.text = model.description
+            tvDescription.text = model.description
+            tvInfo.text = root.context.getString(
+                R.string.md_info,
+                model.personName ?: root.context.getString(R.string.me),
+                model.categoryName ?: root.context.getString(R.string.to_define),
+            )
 
             itemView.setOnClickListener { listener?.onMovementClicked(model) }
-
-            //TODO pending to add category description to model
-            tvCategoria.gone()
 
             if (model.idMovement < 0) {
                 ibDiscard.visible()

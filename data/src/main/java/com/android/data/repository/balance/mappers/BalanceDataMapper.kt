@@ -8,7 +8,6 @@ class BalanceDataMapper {
 
     fun mapToVO(dto: BalanceDTO): BalanceVO {
         return BalanceVO(
-            dto.id,
             dto.IngresosEfectivo.toDouble(),
             dto.EgresosEfectivo.toDouble(),
             dto.IngresosElectronico.toDouble(),
@@ -27,7 +26,6 @@ class BalanceDataMapper {
 
     fun map(vo: BalanceVO): Balance {
         return Balance(
-            vo.id,
             vo.IngresosEfectivo,
             vo.EgresosEfectivo,
             vo.IngresosElectronico,

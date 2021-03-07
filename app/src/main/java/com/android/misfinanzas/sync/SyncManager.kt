@@ -17,10 +17,10 @@ class SyncManager(
     private val masterRepository: MasterRepository
 ) {
 
-    suspend fun sync() {
+    suspend fun sync(type: SyncType = SyncType.SYNC_ALL) {
         try {
             publish(SyncState.InProgress)
-            syncAll(DateUtils.getCurrentDateTime())
+            syncProcess(type)
             publish(SyncState.Success)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -28,10 +28,17 @@ class SyncManager(
         }
     }
 
-    private suspend fun syncAll(currentDate: Date) {
+    private suspend fun syncProcess(type: SyncType) {
         syncServerDateTime()
-        syncMovements(currentDate)
-        syncMasters(currentDate)
+        val currentDate = DateUtils.getCurrentDateTime()
+        when (type) {
+            SyncType.SYNC_ALL -> {
+                syncMovements(currentDate)
+                syncMasters(currentDate)
+            }
+            SyncType.SYNC_MOVEMENTS -> syncMovements(currentDate)
+            SyncType.SYNC_MASTERS -> syncMasters(currentDate)
+        }
     }
 
     private suspend fun syncServerDateTime() {
@@ -49,13 +56,17 @@ class SyncManager(
     }
 
     private suspend fun syncMasters(currentDate: Date) {
-        masterRepository.upload()
+        //masterRepository.upload()
         masterRepository.download()
         masterRepository.updateLastSyncMasters(currentDate)
     }
 
     private fun publish(state: SyncState) {
         EventBus.publish(EventSubject.SYNC, state)
+    }
+
+    enum class SyncType {
+        SYNC_ALL, SYNC_MOVEMENTS, SYNC_MASTERS
     }
 
 }

@@ -48,6 +48,12 @@
         tools:layout="@layout/fragment_movement_detail" />
 
     <fragment
+        android:id="@+id/masterDetailFragment"
+        android:name="com.android.misfinanzas.ui.logged.masters.mastersList.masterDetail.MasterDetailFragment"
+        android:label="@string/title_master_details"
+        tools:layout="@layout/fragment_master_detail" />
+
+    <fragment
         android:id="@+id/filtersFragment"
         android:name="com.android.misfinanzas.ui.logged.movements.filters.FiltersFragment"
         android:label="@string/title_filters"
@@ -71,7 +77,11 @@
         android:id="@+id/mastersListFragment"
         android:name="com.android.misfinanzas.ui.logged.masters.mastersList.MastersListFragment"
         android:label="@string/title_masters"
-        tools:layout="@layout/fragment_masters_list" />
+        tools:layout="@layout/fragment_masters_list" >
+        <action
+            android:id="@+id/action_mastersListFragment_to_masterDetailFragment"
+            app:destination="@id/masterDetailFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/configFragment"

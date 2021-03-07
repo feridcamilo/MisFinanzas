@@ -31,7 +31,7 @@ class MovementsViewModel(
     val peopleActive: List<MasterModel> get() = people.filter { it.enabled }
 
     var places: List<MasterModel> = emptyList()
-    val placesActive: List<MasterModel> get() = people.filter { it.enabled }
+    val placesActive: List<MasterModel> get() = places.filter { it.enabled }
 
     var categories: List<MasterModel> = emptyList()
     val categoriesActive: List<MasterModel> get() = categories.filter { it.enabled }
@@ -39,16 +39,16 @@ class MovementsViewModel(
     var debts: List<MasterModel> = emptyList()
     val debtsActive: List<MasterModel> get() = debts.filter { it.enabled }
 
-    fun getLocalMovements() {
-        viewModelScope.launch {
-            val data = movementRepository.getMovements()
+    fun getMovements() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val data = movementRepository.getMovementsDetailed()
             movements = data.map { movementMapper.map(it) }
             _viewState.postValue(MovementsViewState.MovementsLoaded(movements))
         }
     }
 
     fun filter(text: String) {
-        viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch(Dispatchers.IO) {
             if (text.isNotEmpty()) {
                 if (movements.size > MAX_MOVEMENTS_SIZE //if the list is big
                     && text.length <= MIN_LENGTH_SEARCH //and if text length has less than MIN_LENGTH_SEARCH

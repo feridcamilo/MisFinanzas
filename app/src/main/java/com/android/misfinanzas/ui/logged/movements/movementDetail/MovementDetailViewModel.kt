@@ -8,6 +8,8 @@ import com.android.domain.repository.MovementRepository
 import com.android.misfinanzas.mappers.MovementMapper
 import com.android.misfinanzas.models.MovementModel
 import com.android.misfinanzas.sync.SyncManager
+import com.android.misfinanzas.sync.SyncManager.SyncType.SYNC_MOVEMENTS
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MovementDetailViewModel(
@@ -39,8 +41,8 @@ class MovementDetailViewModel(
     }
 
     fun sync() {
-        viewModelScope.launch {
-            syncManager.sync()
+        viewModelScope.launch(Dispatchers.IO) {
+            syncManager.sync(SYNC_MOVEMENTS)
             _viewState.postValue(MovementDetailViewState.SynchronizedData)
         }
     }

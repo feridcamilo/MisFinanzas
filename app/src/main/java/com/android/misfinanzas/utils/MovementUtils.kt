@@ -1,4 +1,4 @@
-package com.android.misfinanzas.base
+package com.android.misfinanzas.utils
 
 import com.android.domain.utils.DateUtils
 import com.android.domain.utils.StringUtils.Companion.COMMA
@@ -6,6 +6,7 @@ import com.android.domain.utils.StringUtils.Companion.EMPTY
 import com.android.domain.utils.StringUtils.Companion.MONEY
 import com.android.domain.utils.StringUtils.Companion.POINT
 import com.android.domain.utils.StringUtils.Companion.SPACE
+import com.android.misfinanzas.base.MovementType
 import java.math.BigDecimal
 import java.util.*
 import java.util.regex.Matcher

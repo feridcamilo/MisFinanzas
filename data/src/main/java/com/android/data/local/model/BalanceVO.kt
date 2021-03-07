@@ -1,12 +1,6 @@
 package com.android.data.local.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity(tableName = "Balance")
 data class BalanceVO(
-    @PrimaryKey
-    val id: Int = 0,
     val IngresosEfectivo: Double,
     val EgresosEfectivo: Double,
     val IngresosElectronico: Double,

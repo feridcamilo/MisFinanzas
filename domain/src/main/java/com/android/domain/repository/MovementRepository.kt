@@ -1,6 +1,7 @@
 package com.android.domain.repository
 
 import com.android.domain.model.Movement
+import com.android.domain.model.MovementDetailed
 import java.util.*
 
 interface MovementRepository {
@@ -11,6 +12,7 @@ interface MovementRepository {
     suspend fun upload()
 
     suspend fun getMovements(): List<Movement>
+    suspend fun getMovementsDetailed(): List<MovementDetailed>
     suspend fun insertMovement(movement: Movement)
     suspend fun deleteMovement(movement: Movement)
 

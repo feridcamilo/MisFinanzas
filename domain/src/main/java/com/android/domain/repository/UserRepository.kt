@@ -8,12 +8,12 @@ interface UserRepository {
     suspend fun insertUser(user: User)
     suspend fun getServerDateTime(): String
 
-    suspend fun setDiffTimeWithServer(diff: String)
-    suspend fun getDiffTimeWithServer(): String
+    fun setDiffTimeWithServer(diff: String)
+    fun getDiffTimeWithServer(): String
 
-    suspend fun setAutoSyncOnOpen(value: Boolean)
-    suspend fun isAutoSyncOnOpen(): Boolean
+    fun setAutoSyncOnOpen(value: Boolean)
+    fun isAutoSyncOnOpen(): Boolean
 
-    suspend fun setAutoSyncOnEdit(value: Boolean)
-    suspend fun isAutoSyncOnEdit(): Boolean
+    fun setAutoSyncOnEdit(value: Boolean)
+    fun isAutoSyncOnEdit(): Boolean
 }

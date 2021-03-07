@@ -6,6 +6,7 @@ import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.domain.model.Master
@@ -15,13 +16,16 @@ import com.android.misfinanzas.databinding.FragmentMastersListBinding
 import com.android.misfinanzas.models.MasterModel
 import com.android.misfinanzas.sync.SyncState
 import com.android.misfinanzas.ui.logged.masters.mastersList.adapter.MastersAdapter
+import com.android.misfinanzas.ui.logged.masters.mastersList.masterDetail.MasterDetailFragment
 import com.android.misfinanzas.utils.events.EventSubject
 import com.android.misfinanzas.utils.events.getEventBus
 import com.android.misfinanzas.utils.hideLoader
+import com.android.misfinanzas.utils.isConnected
 import com.android.misfinanzas.utils.showLoader
 import com.android.misfinanzas.utils.showLongToast
 import com.android.misfinanzas.utils.viewbinding.viewBinding
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.util.*
 
 class MastersListFragment : Fragment(R.layout.fragment_masters_list) {
 
@@ -130,7 +134,7 @@ class MastersListFragment : Fragment(R.layout.fragment_masters_list) {
         binding.svSearch.setOnClickListener { binding.svSearch.isIconified = false }
         binding.svSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                //implement if you can to change when press search button
+                //implement if you want to change when press search button
                 viewModel.filter(query.orEmpty())
                 return false
             }
@@ -150,10 +154,13 @@ class MastersListFragment : Fragment(R.layout.fragment_masters_list) {
     }
 
     private fun navigateToDetails(master: MasterModel?) {
-        //TODO pending to implement master detail fragment and functionality
-        //val bundle = Bundle()
-        //bundle.putParcelable(dataName, master)
-        //findNavController().navigate(R.id., bundle)
+        if (context?.isConnected(getString(R.string.error_not_network_no_continue)) == true) {
+            val bundle = Bundle()
+            bundle.putInt(MasterDetailFragment.MASTER_TYPE, type)
+            bundle.putStringArrayList(MasterDetailFragment.DESCRIPTIONS_DATA, viewModel.descriptions as ArrayList<String>)
+            master?.let { bundle.putSerializable(MasterDetailFragment.MASTER_DATA, it) }
+            findNavController().navigate(R.id.action_mastersListFragment_to_masterDetailFragment, bundle)
+        }
     }
 
     private val actionListener = object : MastersAdapter.OnActionItemListener {

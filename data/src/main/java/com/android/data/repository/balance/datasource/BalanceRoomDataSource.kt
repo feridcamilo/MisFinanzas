@@ -11,4 +11,8 @@ class BalanceRoomDataSource(private val db: AppDatabase) {
         return db.movementDAO().getBalance(sqlQuery)
     }
 
+    suspend fun getBalance(): BalanceVO {
+        return db.movementDAO().getBalance()
+    }
+
 }

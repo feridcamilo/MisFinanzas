@@ -1,9 +1,6 @@
 package com.android.domain.repository
 
-import com.android.domain.model.Category
-import com.android.domain.model.Debt
-import com.android.domain.model.Person
-import com.android.domain.model.Place
+import com.android.domain.model.*
 import java.util.*
 
 interface MasterRepository {
@@ -11,7 +8,8 @@ interface MasterRepository {
     suspend fun getLastSyncMasters(): Date?
 
     suspend fun download()
-    suspend fun upload()
+    //suspend fun upload()
+    suspend fun saveMasterOnCloud(master: Master, type: Int) : Boolean
 
     suspend fun getCategories(): List<Category>
     suspend fun getDebts(): List<Debt>

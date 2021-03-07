@@ -3,6 +3,7 @@ package com.android.data.repository.movement.datasource
 import com.android.data.local.db.AppDatabase
 import com.android.data.local.model.DeletedMovementVO
 import com.android.data.local.model.DiscardedMovementVO
+import com.android.data.local.model.MovementDetailedVO
 import com.android.data.local.model.MovementVO
 import com.android.domain.UserSesion
 import java.util.*
@@ -20,6 +21,10 @@ class MovementRoomDataSource(private val db: AppDatabase) {
 
     suspend fun getMovements(): List<MovementVO> {
         return db.movementDAO().getAll()
+    }
+
+    suspend fun getMovementsDetailed(): List<MovementDetailedVO> {
+        return db.movementDAO().getAllDetailed()
     }
 
     suspend fun getMovementsToSync(lastSync: Date): List<MovementVO> {

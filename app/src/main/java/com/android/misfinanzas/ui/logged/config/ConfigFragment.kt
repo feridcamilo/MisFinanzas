@@ -56,7 +56,6 @@ class ConfigFragment : Fragment(R.layout.fragment_config) {
     private val viewStateObserver = Observer<ConfigViewState> { state ->
         when (state) {
             is ConfigViewState.DiscardedCleared -> context?.showLongToast(R.string.info_movements_discarded_restored)
-
         }
     }
 
@@ -66,7 +65,6 @@ class ConfigFragment : Fragment(R.layout.fragment_config) {
             val serverDateTimeFormatted = DateUtils.getDateTimeFormat_AM_PM().format(diffTimeWithServer)
             val gtmDiff = UserSesion.getServerTimeZone()!!.displayName
             tvServerDateTime.text = getString(R.string.server_datetime_value, serverDateTimeFormatted, gtmDiff)
-
 
             val lastSyncMovements = viewModel.getLastSyncMovements()
             val lastSyncMasters = viewModel.getLastSyncMasters()

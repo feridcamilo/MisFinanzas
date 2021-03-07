@@ -80,7 +80,7 @@ class MovementDetailView @JvmOverloads constructor(
             override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
                 val movementType: MovementType = parent.getItemAtPosition(pos) as MovementType
                 selectedMovementType = movementType.id
-                ivTipoMovimiento.setImageResource(MovementType.getImage(selectedMovementType))
+                ivMovType.setImageResource(MovementType.getImage(selectedMovementType))
             }
 
             override fun onNothingSelected(arg0: AdapterView<*>?) {}
@@ -137,7 +137,7 @@ class MovementDetailView @JvmOverloads constructor(
             val lastUpdate =
                 if (it.dateLastUpd == null) notAssociated else getDateTimeFormat().format(checkNotNull(it.dateLastUpd)).toString()
 
-            binding.ivTipoMovimiento.setImageResource(MovementType.getImage(it.idType))
+            binding.ivMovType.setImageResource(MovementType.getImage(it.idType))
             binding.spTipoMovimiento.setSelection(getMovementTypeIndex(it.idType))
             val value = MoneyUtils.getBigDecimalStringValue(it.value.toString())
             if (value != ZERO) {
@@ -234,10 +234,14 @@ class MovementDetailView @JvmOverloads constructor(
             value,
             description,
             personId,
+            null,
             placeId,
+            null,
             categoryId!!,
+            null,
             date,
             debtId,
+            null,
             dateEntry,
             dateLastUpdate
         )

@@ -20,6 +20,7 @@ class MastersListViewModel(
     private val _viewState = MutableLiveData<MastersListViewState>()
 
     private var items: List<MasterModel> = emptyList()
+    val descriptions: List<String> get() = items.distinctBy { it.name }.map { it.name }
 
     fun getPeople() {
         viewModelScope.launch {

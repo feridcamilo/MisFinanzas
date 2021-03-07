@@ -26,20 +26,30 @@ class MasterCloudDataSource {
         return ApiClient.service.getPeople(UserSesion.getClientId(), ParamsUtils.getLastSyncToWeb(lastSync)).results
     }
 
+    suspend fun sendMaster(master: MasterDTO, type: Int): Boolean {
+        return ApiClient.service.sendMasters(
+            SendMasterDTO(
+                UserSesion.getClientId().toInt(),
+                type,
+                listOf(master)
+            )
+        ).results
+    }
+
     suspend fun sendCategories(masters: List<MasterDTO>): Boolean {
-        return ApiClient.service.sendMasters(SendMasterDTO(Integer.parseInt(UserSesion.getClientId()), Master.TYPE_CATEGORY, masters)).results
+        return ApiClient.service.sendMasters(SendMasterDTO(UserSesion.getClientId().toInt(), Master.TYPE_CATEGORY, masters)).results
     }
 
     suspend fun sendPlaces(masters: List<MasterDTO>): Boolean {
-        return ApiClient.service.sendMasters(SendMasterDTO(Integer.parseInt(UserSesion.getClientId()), Master.TYPE_PLACE, masters)).results
+        return ApiClient.service.sendMasters(SendMasterDTO(UserSesion.getClientId().toInt(), Master.TYPE_PLACE, masters)).results
     }
 
     suspend fun sendPeople(masters: List<MasterDTO>): Boolean {
-        return ApiClient.service.sendMasters(SendMasterDTO(Integer.parseInt(UserSesion.getClientId()), Master.TYPE_PERSON, masters)).results
+        return ApiClient.service.sendMasters(SendMasterDTO(UserSesion.getClientId().toInt(), Master.TYPE_PERSON, masters)).results
     }
 
     suspend fun sendDebts(masters: List<MasterDTO>): Boolean {
-        return ApiClient.service.sendMasters(SendMasterDTO(Integer.parseInt(UserSesion.getClientId()), Master.TYPE_DEBT, masters)).results
+        return ApiClient.service.sendMasters(SendMasterDTO(UserSesion.getClientId().toInt(), Master.TYPE_DEBT, masters)).results
     }
 
 }

@@ -1,8 +1,10 @@
 package com.android.data.repository.movement.mappers
 
+import com.android.data.local.model.MovementDetailedVO
 import com.android.data.local.model.MovementVO
 import com.android.data.remote.model.MovementDTO
 import com.android.domain.model.Movement
+import com.android.domain.model.MovementDetailed
 import com.android.domain.utils.StringUtils.Companion.EMPTY
 import java.util.*
 
@@ -72,6 +74,26 @@ class MovementDataMapper {
             vo.categoryId,
             vo.date,
             vo.debtId,
+            vo.dateEntry,
+            vo.dateLastUpd
+        )
+    }
+
+    fun map(vo: MovementDetailedVO): MovementDetailed {
+        return MovementDetailed(
+            vo.idMovement,
+            vo.idType,
+            vo.value,
+            vo.description,
+            vo.personId,
+            vo.personName,
+            vo.placeId,
+            vo.placeName,
+            vo.categoryId,
+            vo.categoryName,
+            vo.date,
+            vo.debtId,
+            vo.debtName,
             vo.dateEntry,
             vo.dateLastUpd
         )

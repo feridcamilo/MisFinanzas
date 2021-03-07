@@ -19,12 +19,12 @@
             android:layout_margin="@dimen/default_margin"
             android:text="@string/view_md_movement_type"
             app:layout_constraintBottom_toTopOf="@id/tv_valor"
-            app:layout_constraintEnd_toStartOf="@id/iv_tipo_movimiento"
+            app:layout_constraintEnd_toStartOf="@id/iv_mov_type"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/iv_tipo_movimiento"
+            android:id="@+id/iv_mov_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_quarter_margin"
@@ -47,7 +47,7 @@
             android:layout_marginBottom="@dimen/default_margin"
             app:layout_constraintBottom_toBottomOf="@id/tv_tipo_movimiento"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/iv_tipo_movimiento"
+            app:layout_constraintStart_toEndOf="@id/iv_mov_type"
             app:layout_constraintTop_toTopOf="@id/tv_tipo_movimiento" />
 
         <TextView
@@ -59,7 +59,7 @@
             android:layout_marginTop="@dimen/default_margin"
             android:layout_marginBottom="@dimen/default_margin"
             android:text="@string/view_md_value"
-            app:layout_constraintBottom_toTopOf="@id/tv_descripcion"
+            app:layout_constraintBottom_toTopOf="@id/tv_description"
             app:layout_constraintEnd_toStartOf="@id/et_valor_cont"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_tipo_movimiento" />
@@ -88,7 +88,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
-            android:id="@+id/tv_descripcion"
+            android:id="@+id/tv_description"
             style="@style/subtitle_text_view_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -108,10 +108,10 @@
             android:layout_margin="@dimen/default_margin"
             app:endIconMode="clear_text"
             app:hintEnabled="false"
-            app:layout_constraintBottom_toBottomOf="@id/tv_descripcion"
+            app:layout_constraintBottom_toBottomOf="@id/tv_description"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_descripcion"
-            app:layout_constraintTop_toTopOf="@id/tv_descripcion">
+            app:layout_constraintStart_toEndOf="@id/tv_description"
+            app:layout_constraintTop_toTopOf="@id/tv_description">
 
             <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/tv_descripcion_value"
@@ -137,7 +137,7 @@
             app:layout_constraintBottom_toTopOf="@id/tv_lugar"
             app:layout_constraintEnd_toStartOf="@id/tv_persona_cont"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_descripcion" />
+            app:layout_constraintTop_toBottomOf="@id/tv_description" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tv_persona_cont"
@@ -172,7 +172,7 @@
             android:layout_marginTop="@dimen/default_margin"
             android:layout_marginBottom="@dimen/default_margin"
             android:text="@string/view_md_place"
-            app:layout_constraintBottom_toTopOf="@id/tv_categoria"
+            app:layout_constraintBottom_toTopOf="@id/tv_category"
             app:layout_constraintEnd_toStartOf="@id/tv_lugar_cont"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_persona" />
@@ -202,7 +202,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
-            android:id="@+id/tv_categoria"
+            android:id="@+id/tv_category"
             style="@style/subtitle_text_view_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -222,10 +222,10 @@
             android:layout_margin="@dimen/default_margin"
             app:endIconMode="clear_text"
             app:hintEnabled="false"
-            app:layout_constraintBottom_toBottomOf="@id/tv_categoria"
+            app:layout_constraintBottom_toBottomOf="@id/tv_category"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_categoria"
-            app:layout_constraintTop_toTopOf="@id/tv_categoria">
+            app:layout_constraintStart_toEndOf="@id/tv_category"
+            app:layout_constraintTop_toTopOf="@id/tv_category">
 
             <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/tv_categoria_value"
@@ -251,7 +251,7 @@
             app:layout_constraintBottom_toTopOf="@id/tv_deuda"
             app:layout_constraintEnd_toStartOf="@id/et_fecha_movimiento"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_categoria" />
+            app:layout_constraintTop_toBottomOf="@id/tv_category" />
 
         <EditText
             android:id="@+id/et_fecha_movimiento"

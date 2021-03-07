@@ -6,7 +6,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import com.android.misfinanzas.R
 import com.android.misfinanzas.databinding.FragmentMovementDetailBinding
 import com.android.misfinanzas.models.MasterModel
@@ -14,7 +13,6 @@ import com.android.misfinanzas.models.MovementModel
 import com.android.misfinanzas.ui.logged.config.ConfigViewModel
 import com.android.misfinanzas.utils.*
 import com.android.misfinanzas.utils.viewbinding.viewBinding
-import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MovementDetailFragment : Fragment(R.layout.fragment_movement_detail) {
@@ -120,26 +118,22 @@ class MovementDetailFragment : Fragment(R.layout.fragment_movement_detail) {
     }
 
     private fun syncWithWeb() {
-        lifecycleScope.launch {
-            var hasRights = false
-            if (configViewModel.isAutoSyncOnEdit()) {
-                if (context?.isConnected(getString(R.string.error_not_network_no_sync_detail)) == true) {
-                    hasRights = true
-                }
+        var hasRights = false
+        if (configViewModel.isAutoSyncOnEdit()) {
+            if (context?.isConnected(getString(R.string.error_not_network_no_sync_detail)) == true) {
+                hasRights = true
             }
+        }
 
-            if (hasRights) {
-                showLoader()
-                viewModel.sync()
-
-            } else if (shouldBack) {
-                activity?.onBackPressed()
-            }
+        if (hasRights) {
+            showLoader()
+            viewModel.sync()
+        } else {
+            syncMovementsResult()
         }
     }
 
     private fun syncMovementsResult() {
-        //context?.showShortToast(R.string.info_movement_synced_details)
         if (shouldBack) {
             activity?.onBackPressed()
         }

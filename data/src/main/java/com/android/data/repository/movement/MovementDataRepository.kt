@@ -4,6 +4,7 @@ import com.android.data.repository.movement.datasource.MovementCloudDataSource
 import com.android.data.repository.movement.datasource.MovementRoomDataSource
 import com.android.data.repository.movement.mappers.MovementDataMapper
 import com.android.domain.model.Movement
+import com.android.domain.model.MovementDetailed
 import com.android.domain.repository.MovementRepository
 import java.util.*
 
@@ -58,6 +59,10 @@ class MovementDataRepository(
 
     override suspend fun getMovements(): List<Movement> {
         return roomDataSource.getMovements().map { mapper.map(it) }
+    }
+
+    override suspend fun getMovementsDetailed(): List<MovementDetailed> {
+        return roomDataSource.getMovementsDetailed().map { mapper.map(it) }
     }
 
     override suspend fun insertMovement(movement: Movement) {

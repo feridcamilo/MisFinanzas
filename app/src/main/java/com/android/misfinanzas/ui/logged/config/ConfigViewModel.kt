@@ -19,7 +19,7 @@ class ConfigViewModel(
     val viewState: LiveData<ConfigViewState> get() = _viewState
     private val _viewState = MutableLiveData<ConfigViewState>()
 
-    suspend fun getDiffTimeWithServer(): String {
+    fun getDiffTimeWithServer(): String {
         return userRepository.getDiffTimeWithServer()
     }
 
@@ -31,24 +31,20 @@ class ConfigViewModel(
         return masterRepository.getLastSyncMasters()
     }
 
-    suspend fun isAutoSyncOnOpen(): Boolean {
+    fun isAutoSyncOnOpen(): Boolean {
         return userRepository.isAutoSyncOnOpen()
     }
 
-    suspend fun isAutoSyncOnEdit(): Boolean {
+    fun isAutoSyncOnEdit(): Boolean {
         return userRepository.isAutoSyncOnEdit()
     }
 
     fun setAutoSyncOnOpen(value: Boolean) {
-        viewModelScope.launch {
-            userRepository.setAutoSyncOnOpen(value)
-        }
+        userRepository.setAutoSyncOnOpen(value)
     }
 
     fun setAutoSyncOnEdit(value: Boolean) {
-        viewModelScope.launch {
-            userRepository.setAutoSyncOnEdit(value)
-        }
+        userRepository.setAutoSyncOnEdit(value)
     }
 
     fun cleanDiscarded() {

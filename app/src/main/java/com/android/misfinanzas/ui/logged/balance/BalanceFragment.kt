@@ -8,16 +8,11 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.domain.UserSesion
-import com.android.domain.utils.DateUtils
 import com.android.misfinanzas.R
-import com.android.misfinanzas.base.MovementType
-import com.android.misfinanzas.base.MovementUtils
-import com.android.misfinanzas.base.Sms
 import com.android.misfinanzas.databinding.FragmentBalanceBinding
 import com.android.misfinanzas.models.BalanceModel
 import com.android.misfinanzas.models.MovementModel
@@ -29,9 +24,7 @@ import com.android.misfinanzas.utils.*
 import com.android.misfinanzas.utils.events.EventSubject
 import com.android.misfinanzas.utils.events.getEventBus
 import com.android.misfinanzas.utils.viewbinding.viewBinding
-import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.util.*
 
 class BalanceFragment : Fragment(R.layout.fragment_balance) {
 
@@ -49,6 +42,7 @@ class BalanceFragment : Fragment(R.layout.fragment_balance) {
         setupViewModel()
         setupSyncObserver()
         checkSync()
+        setupEvents()
     }
 
     private fun setupViewModel() {
@@ -56,23 +50,21 @@ class BalanceFragment : Fragment(R.layout.fragment_balance) {
     }
 
     private fun checkSync() {
-        showLoader()
-        lifecycleScope.launch {
-            if (UserSesion.getServerTimeZone() == null) {
-                //get last gmt diff from shared preferences
-                val gtmDiff = configViewModel.getDiffTimeWithServer()
-                UserSesion.setServerTimeZone(gtmDiff)
-            }
+        if (UserSesion.getServerTimeZone() == null) {
+            //get last gmt diff from shared preferences
+            val gtmDiff = configViewModel.getDiffTimeWithServer()
+            UserSesion.setServerTimeZone(gtmDiff)
+        }
 
-            val c1 = configViewModel.isAutoSyncOnOpen()
-            val c2 = UserSesion.isFirstOpen()
-            UserSesion.setFirstOpen(false)
-            val c3 = context?.isConnected(getString(R.string.error_not_network_no_sync)) == true
-            if (c1 && c2 && c3) {
-                viewModel.sync()
-            } else {
-                getBalance()
-            }
+        val c1 = configViewModel.isAutoSyncOnOpen()
+        val c2 = UserSesion.isFirstOpen()
+        UserSesion.setFirstOpen(false)
+        val c3 = context?.isConnected(getString(R.string.error_not_network_no_sync)) == true
+        if (c1 && c2 && c3) {
+            showLoader()
+            viewModel.sync()
+        } else {
+            getBalance()
         }
     }
 
@@ -82,36 +74,39 @@ class BalanceFragment : Fragment(R.layout.fragment_balance) {
 
     private val syncStateObserver = Observer<Any> { state ->
         when (state) {
-            SyncState.Success -> getBalance()
+            is SyncState.Success,
+            is SyncState.Failed -> getBalance()
         }
     }
 
     private fun getBalance() {
-        viewModel.getBalance(getString(R.string.query_balance))
+        viewModel.getBalance()
     }
 
     private val viewStateObserver = Observer<BalanceViewState> { state ->
         hideLoader()
         when (state) {
-            is BalanceViewState.BalanceLoaded -> balanceLoaded(state.balance)
-            is BalanceViewState.DiscardedMovsLoaded -> getPotentialsMovementsFromSMS(state.discardedIds)
+            is BalanceViewState.BalanceLoaded -> showBalance(state.balance)
+            is BalanceViewState.PotentialsMovementsLoaded -> setupRecyclerViewData(state.potentialsMovements)
             is BalanceViewState.MovementDiscarded -> movementDiscarded()
-            is BalanceViewState.SynchronizedData -> getBalance()
         }
     }
 
-    private fun balanceLoaded(balance: BalanceModel) {
+    private fun showBalance(balance: BalanceModel) {
         binding.balanceView.showBalance(balance)
-        setupDiscardedMovs()
+        setupPotentialMovements()
     }
 
-    private fun setupDiscardedMovs() {
+    private fun setupPotentialMovements() {
         if (checkAndRequestPermissions()) {
             setupRecyclerView()
-            showLoader()
-            viewModel.getDiscardedMovements()
-            setupEvents()
+            getPotentialMovements()
         }
+    }
+
+    private fun getPotentialMovements() {
+        showLoader()
+        viewModel.getPotentialMovementsFromSMS()
     }
 
     private fun checkAndRequestPermissions(): Boolean {
@@ -128,7 +123,7 @@ class BalanceFragment : Fragment(R.layout.fragment_balance) {
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             when (requestCode) {
                 REQUEST_PERMISSION_READ_SMS -> {
-                    setupDiscardedMovs()
+                    setupPotentialMovements()
                 }
             }
         }
@@ -140,49 +135,20 @@ class BalanceFragment : Fragment(R.layout.fragment_balance) {
         }
     }
 
-    private fun getPotentialsMovementsFromSMS(discardedIds: List<Int>) {
-        val listSms: List<Sms> = Sms.getAllSms(requireContext())
-        val potentialMovements: MutableList<MovementModel> = ArrayList()
-
-        listSms.forEach {
-            val movementType = MovementUtils.getMovementTypeFromString(it.msg)
-            val id = it.id.toInt() * -1
-
-            if (movementType != MovementType.NOT_SELECTED && !discardedIds.contains(id)) {
-                potentialMovements.add(
-                    MovementModel(
-                        id,//Autoincrement
-                        movementType,
-                        MovementUtils.getMoneyFromString(it.msg),
-                        MovementUtils.getMovementDescriptionFromString(it.msg),
-                        null,
-                        null,
-                        null,
-                        DateUtils.getDateToWebService(MovementUtils.getDateFromString(it.msg) ?: DateUtils.getCurrentDateTime()),
-                        null,
-                        null,
-                        null
-                    )
-                )
-            }
-        }
-
-        setupRecyclerViewData(potentialMovements)
-    }
-
     private fun setupRecyclerView() = with(binding.rvPotentialMovements) {
         adapter = movementsAdapter
         layoutManager = LinearLayoutManager(requireContext())
         movementsAdapter.setOnActionItemListener(actionListener)
-        addItemDecoration(DividerItemDecoration(requireContext(), androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
+        addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
     }
 
     private fun setupRecyclerViewData(movements: List<MovementModel>) {
         movementsAdapter.submitList(movements)
+        refreshRecyclerViewVisibility()
     }
 
     private fun refreshRecyclerViewVisibility() = with(binding) {
-        if (rvPotentialMovements.adapter?.itemCount!! <= 0) {
+        if (movementsAdapter.itemCount <= 0) {
             rvPotentialMovements.gone()
             tvPotentialMovements.gone()
         } else {
@@ -216,9 +182,8 @@ class BalanceFragment : Fragment(R.layout.fragment_balance) {
     }
 
     private fun movementDiscarded() {
-        setupDiscardedMovs()
-        refreshRecyclerViewVisibility()
         context?.showShortToast(R.string.info_movement_discarded)
+        getPotentialMovements()
     }
 
     private fun navigateToAddMovement(movement: MovementModel?) {

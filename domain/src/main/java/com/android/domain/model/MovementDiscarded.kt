@@ -1,6 +1,6 @@
 package com.android.domain.model
 
-data class DiscardedMovement(
+data class MovementDiscarded(
     val id: Int,
     val idMovement: Int
 )
