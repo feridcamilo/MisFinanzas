@@ -19,7 +19,7 @@ object EventBus {
             liveData = EventLiveData(uid)
             subjectMap[uid] = liveData
         }
-        Log.e("MAP", subjectMap.toString())
+        Log.i("MAP", subjectMap.toString())
         return liveData
     }
 
@@ -28,8 +28,8 @@ object EventBus {
      */
     internal fun unregister(uid: String) {
         subjectMap.remove(uid)
-        Log.e("UNREGISTER", uid)
-        Log.e("MAP", subjectMap.toString())
+        Log.i("UNREGISTER", uid)
+        Log.i("MAP", subjectMap.toString())
     }
 
     /**

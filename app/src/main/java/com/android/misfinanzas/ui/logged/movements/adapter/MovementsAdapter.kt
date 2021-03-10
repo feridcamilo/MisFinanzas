@@ -53,6 +53,7 @@ class MovementsAdapter : ListAdapter<MovementModel, MovementsAdapter.ViewHolder>
                 R.string.md_info,
                 model.personName ?: root.context.getString(R.string.me),
                 model.categoryName ?: root.context.getString(R.string.to_define),
+                model.placeName?.let { "- $it" }.orEmpty()
             )
 
             itemView.setOnClickListener { listener?.onMovementClicked(model) }

@@ -23,6 +23,10 @@ class MovementRoomDataSource(private val db: AppDatabase) {
         return db.movementDAO().getAll()
     }
 
+    suspend fun getMovementsDescriptions(): List<String> {
+        return db.movementDAO().getDescriptions()
+    }
+
     suspend fun getMovementsDetailed(): List<MovementDetailedVO> {
         return db.movementDAO().getAllDetailed()
     }

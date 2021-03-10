@@ -1,5 +1,6 @@
 package com.android.misfinanzas.utils
 
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -21,4 +22,12 @@ fun Fragment.hideLoader() {
 
 fun Fragment.setActionBar(toolbar: Toolbar) {
     (activity as AppCompatActivity).setSupportActionBar(toolbar)
+}
+
+fun Fragment.setToolbarTitle(@StringRes title: Int) {
+    setToolbarTitle(getString(title))
+}
+
+fun Fragment.setToolbarTitle(title: String) {
+    (activity as AppCompatActivity).supportActionBar?.title = title
 }

@@ -1,7 +1,6 @@
 package com.android.misfinanzas.ui.logged.movements
 
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.View
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -13,15 +12,9 @@ import com.android.misfinanzas.R
 import com.android.misfinanzas.databinding.FragmentMovementsBinding
 import com.android.misfinanzas.models.MovementModel
 import com.android.misfinanzas.sync.SyncState
-import com.android.misfinanzas.ui.logged.masters.mastersList.MastersListViewModel
-import com.android.misfinanzas.ui.logged.masters.mastersList.MastersListViewState
 import com.android.misfinanzas.ui.logged.movements.adapter.MovementsAdapter
-import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetailFragment.Companion.CATEGORIES_DATA
-import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetailFragment.Companion.DEBTS_DATA
 import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetailFragment.Companion.DESCRIPTIONS_DATA
 import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetailFragment.Companion.MOVEMENT_DATA
-import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetailFragment.Companion.PEOPLE_DATA
-import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetailFragment.Companion.PLACES_DATA
 import com.android.misfinanzas.utils.events.EventSubject
 import com.android.misfinanzas.utils.events.getEventBus
 import com.android.misfinanzas.utils.hideLoader
@@ -34,20 +27,8 @@ import java.util.*
 class MovementsFragment : Fragment(R.layout.fragment_movements) {
 
     private val viewModel by viewModel<MovementsViewModel>()
-    private val mastersViewModel by viewModel<MastersListViewModel>()
     private val binding by viewBinding<FragmentMovementsBinding>()
     private val movementsAdapter by lazy { MovementsAdapter() }
-
-    private var movementToAdd: MovementModel? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            if (it.containsKey(MOVEMENT_DATA)) {
-                movementToAdd = it.getSerializable(MOVEMENT_DATA) as? MovementModel
-            }
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -92,35 +73,13 @@ class MovementsFragment : Fragment(R.layout.fragment_movements) {
 
     private fun setupViewModel() {
         viewModel.viewState.observe(viewLifecycleOwner, viewStateObserver)
-        mastersViewModel.viewState.observe(viewLifecycleOwner, mastersViewStateObserver)
+
         getData()
     }
 
     private fun getData() {
         showLoader()
-        mastersViewModel.getPeople()
-    }
-
-    private val mastersViewStateObserver = Observer<MastersListViewState> { state ->
-        when (state) {
-            is MastersListViewState.PeopleLoaded -> {
-                viewModel.people = state.people
-                mastersViewModel.getPlaces()
-            }
-            is MastersListViewState.PlacesLoaded -> {
-                viewModel.places = state.places
-                mastersViewModel.getCategories()
-            }
-            is MastersListViewState.CategoriesLoaded -> {
-                viewModel.categories = state.categories
-                mastersViewModel.getDebts()
-            }
-            is MastersListViewState.DebtsLoaded -> {
-                viewModel.debts = state.debts
-                viewModel.getMovements()
-            }
-            else -> Unit
-        }
+        viewModel.getMovements()
     }
 
     private val viewStateObserver = Observer<MovementsViewState> { state ->
@@ -149,12 +108,6 @@ class MovementsFragment : Fragment(R.layout.fragment_movements) {
         } else {
             setupRecyclerViewData(movements)
         }
-
-        //if is an action to add a movement, navigate directly
-        if (movementToAdd != null) {
-            navigateToDetails(movementToAdd)
-            movementToAdd = null
-        }
     }
 
     private fun setupEvents() = with(binding) {
@@ -170,14 +123,8 @@ class MovementsFragment : Fragment(R.layout.fragment_movements) {
     private fun navigateToDetails(movement: MovementModel?) {
         val bundle = Bundle()
         movement?.let { bundle.putSerializable(MOVEMENT_DATA, it) }
-
         bundle.putStringArrayList(DESCRIPTIONS_DATA, viewModel.descriptions as ArrayList<String>)
-        bundle.putSerializable(PEOPLE_DATA, viewModel.peopleActive as ArrayList<out Parcelable>)
-        bundle.putSerializable(PLACES_DATA, viewModel.placesActive as ArrayList<out Parcelable>)
-        bundle.putSerializable(CATEGORIES_DATA, viewModel.categoriesActive as ArrayList<out Parcelable>)
-        bundle.putSerializable(DEBTS_DATA, viewModel.debtsActive as ArrayList<out Parcelable>)
-
-        findNavController().navigate(R.id.action_movementsFragment_to_movementDetailFragment, bundle)
+        findNavController().navigate(R.id.action_to_movementDetailFragment, bundle)
     }
 
     private val actionListener = object : MovementsAdapter.OnActionItemListener {

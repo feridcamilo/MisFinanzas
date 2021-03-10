@@ -12,6 +12,7 @@ interface MovementRepository {
     suspend fun upload()
 
     suspend fun getMovements(): List<Movement>
+    suspend fun getMovementsDescriptions(): List<String>
     suspend fun getMovementsDetailed(): List<MovementDetailed>
     suspend fun insertMovement(movement: Movement)
     suspend fun deleteMovement(movement: Movement)

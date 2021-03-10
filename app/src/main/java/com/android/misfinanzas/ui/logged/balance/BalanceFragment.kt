@@ -105,7 +105,6 @@ class BalanceFragment : Fragment(R.layout.fragment_balance) {
     }
 
     private fun getPotentialMovements() {
-        showLoader()
         viewModel.getPotentialMovementsFromSMS()
     }
 
@@ -189,7 +188,7 @@ class BalanceFragment : Fragment(R.layout.fragment_balance) {
     private fun navigateToAddMovement(movement: MovementModel?) {
         val bundle = Bundle()
         bundle.putSerializable(MovementDetailFragment.MOVEMENT_DATA, movement)
-        findNavController().navigate(R.id.action_balanceFragment_to_movementsFragment, bundle)
+        findNavController().navigate(R.id.action_to_movementDetailFragment, bundle)
     }
 
 }

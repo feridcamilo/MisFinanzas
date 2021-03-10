@@ -5,41 +5,44 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/balanceFragment">
 
+    <action
+        android:id="@+id/action_to_movementDetailFragment"
+        app:destination="@id/movementDetailFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
+    <action
+        android:id="@+id/action_to_filtersFragment"
+        app:destination="@id/filtersFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_mastersListFragment"
+        app:destination="@id/mastersListFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_to_masterDetailFragment"
+        app:destination="@id/masterDetailFragment" />
+
     <fragment
         android:id="@+id/balanceFragment"
         android:name="com.android.misfinanzas.ui.logged.balance.BalanceFragment"
         android:label="@string/title_balance"
-        tools:layout="@layout/fragment_balance">
-        <action
-            android:id="@+id/action_balanceFragment_to_movementsFragment"
-            app:destination="@id/movementsFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/mobile_navigation" />
-    </fragment>
+        tools:layout="@layout/fragment_balance" />
 
     <fragment
         android:id="@+id/movementsFragment"
         android:name="com.android.misfinanzas.ui.logged.movements.MovementsFragment"
         android:label="@string/title_movements"
-        tools:layout="@layout/fragment_movements">
-        <action
-            android:id="@+id/action_movementsFragment_to_movementDetailFragment"
-            app:destination="@id/movementDetailFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-        <action
-            android:id="@+id/action_movementsFragment_to_filtersFragment"
-            app:destination="@id/filtersFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-    </fragment>
+        tools:layout="@layout/fragment_movements" />
 
     <fragment
         android:id="@+id/movementDetailFragment"
@@ -63,30 +66,18 @@
         android:id="@+id/mastersFragment"
         android:name="com.android.misfinanzas.ui.logged.masters.MastersFragment"
         android:label="@string/title_masters"
-        tools:layout="@layout/fragment_masters">
-        <action
-            android:id="@+id/action_mastersFragment_to_mastersListFragment"
-            app:destination="@id/mastersListFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-    </fragment>
+        tools:layout="@layout/fragment_masters" />
 
     <fragment
         android:id="@+id/mastersListFragment"
         android:name="com.android.misfinanzas.ui.logged.masters.mastersList.MastersListFragment"
         android:label="@string/title_masters"
-        tools:layout="@layout/fragment_masters_list" >
-        <action
-            android:id="@+id/action_mastersListFragment_to_masterDetailFragment"
-            app:destination="@id/masterDetailFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_masters_list" />
 
     <fragment
         android:id="@+id/configFragment"
         android:name="com.android.misfinanzas.ui.logged.config.ConfigFragment"
         android:label="@string/title_sync"
-        tools:layout="@layout/fragment_config"/>
+        tools:layout="@layout/fragment_config" />
 
 </navigation>

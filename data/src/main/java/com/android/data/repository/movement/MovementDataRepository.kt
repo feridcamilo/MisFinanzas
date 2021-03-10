@@ -61,6 +61,10 @@ class MovementDataRepository(
         return roomDataSource.getMovements().map { mapper.map(it) }
     }
 
+    override suspend fun getMovementsDescriptions(): List<String> {
+        return roomDataSource.getMovementsDescriptions()
+    }
+
     override suspend fun getMovementsDetailed(): List<MovementDetailed> {
         return roomDataSource.getMovementsDetailed().map { mapper.map(it) }
     }

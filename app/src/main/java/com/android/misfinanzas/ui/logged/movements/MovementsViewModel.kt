@@ -10,7 +10,6 @@ import com.android.domain.repository.MovementRepository
 import com.android.domain.utils.DateUtils
 import com.android.domain.utils.MoneyUtils
 import com.android.misfinanzas.mappers.MovementMapper
-import com.android.misfinanzas.models.MasterModel
 import com.android.misfinanzas.models.MovementModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,18 +25,6 @@ class MovementsViewModel(
 
     private var movements: List<MovementModel> = emptyList()
     val descriptions: List<String> get() = movements.distinctBy { it.description }.map { it.description }
-
-    var people: List<MasterModel> = emptyList()
-    val peopleActive: List<MasterModel> get() = people.filter { it.enabled }
-
-    var places: List<MasterModel> = emptyList()
-    val placesActive: List<MasterModel> get() = places.filter { it.enabled }
-
-    var categories: List<MasterModel> = emptyList()
-    val categoriesActive: List<MasterModel> get() = categories.filter { it.enabled }
-
-    var debts: List<MasterModel> = emptyList()
-    val debtsActive: List<MasterModel> get() = debts.filter { it.enabled }
 
     fun getMovements() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -58,19 +45,15 @@ class MovementsViewModel(
 
                 val textToCompare = text.toLowerCase(Locale.getDefault())
                 val valueToCompare = MoneyUtils.getBigDecimalStringValue(text)
-                val personToCompare = people.firstOrNull { it.name.toLowerCase(Locale.getDefault()).contains(textToCompare) }
-                val placeToCompare = places.firstOrNull { it.name.toLowerCase(Locale.getDefault()).contains(textToCompare) }
-                val categoryToCompare = categories.firstOrNull { it.name.toLowerCase(Locale.getDefault()).contains(textToCompare) }
-                val debtToCompare = debts.firstOrNull { it.name.toLowerCase(Locale.getDefault()).contains(textToCompare) }
 
                 val movementsFiltered = movements.filter {
                     it.description.toLowerCase(Locale.getDefault()).contains(textToCompare) ||
                             (valueToCompare.isNotEmpty() && it.value.toString().contains(valueToCompare)) ||
                             DateUtils.getDateFormat().format(it.date!!).toString().contains(textToCompare) ||
-                            (personToCompare != null && it.personId == personToCompare.id) ||
-                            (placeToCompare != null && it.placeId == placeToCompare.id) ||
-                            (categoryToCompare != null && it.categoryId == categoryToCompare.id) ||
-                            (debtToCompare != null && it.debtId == debtToCompare.id)
+                            it.personName?.toLowerCase(Locale.getDefault())?.contains(textToCompare) == true ||
+                            it.placeName?.toLowerCase(Locale.getDefault())?.contains(textToCompare) == true ||
+                            it.categoryName?.toLowerCase(Locale.getDefault())?.contains(textToCompare) == true ||
+                            it.debtName?.toLowerCase(Locale.getDefault())?.contains(textToCompare) == true
                 }
                 _viewState.postValue(MovementsViewState.MovementsFiltered(movementsFiltered))
             } else {

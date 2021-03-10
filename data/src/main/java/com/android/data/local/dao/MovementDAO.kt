@@ -13,6 +13,9 @@ interface MovementDAO {
     @Query("SELECT * FROM Movement ORDER BY date desc, dateEntry desc")
     suspend fun getAll(): List<MovementVO>
 
+    @Query("SELECT DISTINCT description from Movement ORDER BY 1")
+    suspend fun getDescriptions(): List<String>
+
     @Query(
         """
         SELECT 

@@ -78,7 +78,7 @@
     <string name="view_md_entry_date">Fecha de ingreso:</string>
     <string name="view_md_lastUpd_date">Fecha de actualización:</string>
     <string name="md_date">%1$s/%2$s/%3$s</string>
-    <string name="md_info">%1$s - %2$s</string>
+    <string name="md_info">%1$s - %2$s %3$s</string>
 
     <!--MovementTypeList-->
     <string name="mt_not_selected">Seleccione</string>
