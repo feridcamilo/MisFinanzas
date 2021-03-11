@@ -65,8 +65,4 @@ class SyncManager(
         EventBus.publish(EventSubject.SYNC, state)
     }
 
-    enum class SyncType {
-        SYNC_ALL, SYNC_MOVEMENTS, SYNC_MASTERS
-    }
-
 }

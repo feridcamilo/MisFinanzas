@@ -5,8 +5,6 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import com.android.domain.utils.DateUtils.Companion.getCurrentDateTime
 import com.android.domain.utils.DateUtils.Companion.getDateFormat
@@ -67,56 +65,60 @@ class MovementDetailView @JvmOverloads constructor(
         this.categories = categories
         this.debts = debts
         setMastersPickers()
-        binding.etFechaMovimiento.setDateControl()
+        binding.etMovDate.setDateControl()
     }
 
     private fun setMastersPickers() = with(binding) {
         movementTypes = MovementType.getList(context)
-        val movementTypeAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, movementTypes)
-        movementTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spTipoMovimiento.adapter = movementTypeAdapter
+        val movementTypeAdapter = ArrayAdapter(context, R.layout.layout_dropdown_item, movementTypes)
+        etMovType.setAdapter(movementTypeAdapter)
+        etMovType.setOnClickListener { etMovType.showDropDown() }
 
-        spTipoMovimiento.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
-                val movementType: MovementType = parent.getItemAtPosition(pos) as MovementType
-                selectedMovementType = movementType.id
+        ivMovType.setImageResource(MovementType.getImage(selectedMovementType))
+        ivMovType.setOnClickListener { etMovType.showDropDown() }
+
+        etMovType.setOnItemClickListener { _, _, position, _ ->
+            val item = movementTypeAdapter.getItem(position)
+            if (item != null) {
+                selectedMovementType = item.id
                 ivMovType.setImageResource(MovementType.getImage(selectedMovementType))
             }
-
-            override fun onNothingSelected(arg0: AdapterView<*>?) {}
         }
 
         descriptions?.let {
             val descriptionsAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
-            tvDescripcionValue.setAdapter(descriptionsAdapter)
+            etDescription.setAdapter(descriptionsAdapter)
+            tilDescription.setEndIconOnClickListener { etDescription.setText(EMPTY) }
         }
+
+        tilValue.setEndIconOnClickListener { etValue.setText(EMPTY) }
 
         people?.let {
             val peopleAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
-            tvPersonaValue.setAdapter(peopleAdapter)
-            tvPersonaValue.setOnClickListener { tvPersonaValue.showDropDown() }
+            etPerson.setAdapter(peopleAdapter)
+            etPerson.setOnClickListener { etPerson.showDropDown() }
         }
 
         places?.let {
             val placesAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
-            tvLugarValue.setAdapter(placesAdapter)
-            tvLugarValue.setOnClickListener { tvLugarValue.showDropDown() }
+            etPlace.setAdapter(placesAdapter)
+            etPlace.setOnClickListener { etPlace.showDropDown() }
         }
 
         categories?.let {
             val categoriesAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
-            tvCategoriaValue.setAdapter(categoriesAdapter)
-            tvCategoriaValue.setOnClickListener { tvCategoriaValue.showDropDown() }
+            etCategory.setAdapter(categoriesAdapter)
+            etCategory.setOnClickListener { etCategory.showDropDown() }
         }
 
         debts?.let {
             val debtsAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
-            tvDeudaValue.setAdapter(debtsAdapter)
-            tvDeudaValue.setOnClickListener { tvDeudaValue.showDropDown() }
+            etDebt.setAdapter(debtsAdapter)
+            etDebt.setOnClickListener { etDebt.showDropDown() }
         }
 
         val currentDate: Date = getCurrentDateTime()
-        etFechaMovimiento.setText(getDateFormat().format(currentDate))
+        etMovDate.setText(getDateFormat().format(currentDate))
     }
 
     fun showMovement(movement: MovementModel?) {
@@ -130,7 +132,7 @@ class MovementDetailView @JvmOverloads constructor(
         }
 
         movement?.let {
-            val notAssociated = context.getString(R.string.view_md_not_associated)
+            val notAssociated = context.getString(R.string.view_md_not_associated_female)
             val date = if (it.date == null) getDateFormat().format(getCurrentDateTime()) else getDateFormat().format(checkNotNull(it.date)).toString()
             val entryDate =
                 if (it.dateEntry == null) notAssociated else getDateTimeFormat().format(checkNotNull(it.dateEntry)).toString()
@@ -138,17 +140,18 @@ class MovementDetailView @JvmOverloads constructor(
                 if (it.dateLastUpd == null) notAssociated else getDateTimeFormat().format(checkNotNull(it.dateLastUpd)).toString()
 
             binding.ivMovType.setImageResource(MovementType.getImage(it.idType))
-            binding.spTipoMovimiento.setSelection(getMovementTypeIndex(it.idType))
+            binding.etMovType.setText(getMovementType(it.idType)?.name.orEmpty(), false)
+            selectedMovementType = it.idType
             val value = MoneyUtils.getBigDecimalStringValue(it.value.toString())
             if (value != ZERO) {
-                binding.etValor.setText(value)
+                binding.etValue.setText(value)
             }
-            binding.tvDescripcionValue.setText(it.description)
-            binding.tvPersonaValue.setText(getPersonName(it.personId))
-            binding.tvLugarValue.setText(getPlaceName(it.placeId))
-            binding.tvCategoriaValue.setText(getCategoryName(it.categoryId))
-            binding.etFechaMovimiento.setText(date)
-            binding.tvDeudaValue.setText(getDebtName(it.debtId))
+            binding.etDescription.setText(it.description)
+            binding.etPerson.setText(getPersonName(it.personId))
+            binding.etPlace.setText(getPlaceName(it.placeId))
+            binding.etCategory.setText(getCategoryName(it.categoryId))
+            binding.etMovDate.setText(date)
+            binding.etDebt.setText(getDebtName(it.debtId))
             binding.tvFechaIngresoValue.text = entryDate
             if (lastUpdate == notAssociated) {
                 binding.tvFechaUpd.visibility = View.GONE
@@ -170,36 +173,36 @@ class MovementDetailView @JvmOverloads constructor(
             throw Exception(context.getString(R.string.info_select_movement_type))
         }
 
-        val debtId = getDebtId(tvDeudaValue.text.toString())
+        val debtId = getDebtId(etDebt.text.toString())
         if (selectedMovementType == MovementType.CREDIT_CARD_BUY && (debtId == null || debtId == 0)) {
-            spTipoMovimiento.requestFocus()
+            etMovType.requestFocus()
             throw Exception(context.getString(R.string.info_select_debt_by_cc_buy))
         }
 
-        val strValue = etValor.text.toString()
+        val strValue = etValue.text.toString()
         if (strValue.isEmpty()) {
-            etValor.requestFocus()
+            etValue.requestFocus()
             throw Exception(context.getString(R.string.info_enter_value))
         }
         val value: BigDecimal
         try {
             value = BigDecimal(strValue)
         } catch (e: Exception) {
-            etValor.requestFocus()
+            etValue.requestFocus()
             throw Exception(context.getString(R.string.info_only_numbers))
         }
 
-        val description = tvDescripcionValue.text.toString()
-        val personId = getPersonId(tvPersonaValue.text.toString())
-        val placeId = getPlaceId(tvLugarValue.text.toString())
+        val description = etDescription.text.toString()
+        val personId = getPersonId(etPerson.text.toString())
+        val placeId = getPlaceId(etPlace.text.toString())
 
-        val categoryId = getCategoryId(tvCategoriaValue.text.toString())
+        val categoryId = getCategoryId(etCategory.text.toString())
         if ((categoryId ?: 0) == 0) {
-            tvCategoriaValue.requestFocus()
+            etCategory.requestFocus()
             throw Exception(context.getString(R.string.info_select_category))
         }
 
-        val strDate = etFechaMovimiento.text.toString()
+        val strDate = etMovDate.text.toString()
         if (strDate.isEmpty()) {
             throw Exception(context.getString(R.string.info_select_date))
         }
@@ -207,7 +210,7 @@ class MovementDetailView @JvmOverloads constructor(
         try {
             date = getDateToWebService(getDateFormat().parse(strDate)!!)
         } catch (e: Exception) {
-            etFechaMovimiento.requestFocus()
+            etMovDate.requestFocus()
             throw Exception(context.getString(R.string.info_enter_valid_date))
         }
 
@@ -248,18 +251,14 @@ class MovementDetailView @JvmOverloads constructor(
     }
 
     fun cleanFormAfterSave() = with(binding) {
-        etValor.setText(EMPTY)
-        etValor.requestFocus()
-        tvPersonaValue.setText(EMPTY)
-        tvDeudaValue.setText(EMPTY)
+        etValue.setText(EMPTY)
+        etValue.requestFocus()
+        etPerson.setText(EMPTY)
+        etDebt.setText(EMPTY)
     }
 
     private fun getMovementType(id: Int): MovementType? {
         return movementTypes.find { id == it.id }
-    }
-
-    private fun getMovementTypeIndex(id: Int): Int {
-        return movementTypes.indexOf(getMovementType(id))
     }
 
     private fun getPersonName(id: Int?): String? {

@@ -12,13 +12,6 @@
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@anim/slide_in_left"
         app:popExitAnim="@anim/slide_out_right" />
-    <action
-        android:id="@+id/action_to_filtersFragment"
-        app:destination="@id/filtersFragment"
-        app:enterAnim="@anim/slide_in_right"
-        app:exitAnim="@anim/slide_out_left"
-        app:popEnterAnim="@anim/slide_in_left"
-        app:popExitAnim="@anim/slide_out_right" />
 
     <action
         android:id="@+id/action_to_mastersListFragment"
@@ -55,12 +48,6 @@
         android:name="com.android.misfinanzas.ui.logged.masters.mastersList.masterDetail.MasterDetailFragment"
         android:label="@string/title_master_details"
         tools:layout="@layout/fragment_master_detail" />
-
-    <fragment
-        android:id="@+id/filtersFragment"
-        android:name="com.android.misfinanzas.ui.logged.movements.filters.FiltersFragment"
-        android:label="@string/title_filters"
-        tools:layout="@layout/fragment_filters" />
 
     <fragment
         android:id="@+id/mastersFragment"

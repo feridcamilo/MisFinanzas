@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import com.android.misfinanzas.R
 import com.android.misfinanzas.databinding.FragmentMovementDetailBinding
 import com.android.misfinanzas.models.MovementModel
+import com.android.misfinanzas.sync.SyncType
 import com.android.misfinanzas.ui.logged.config.ConfigViewModel
 import com.android.misfinanzas.ui.logged.masters.mastersList.MastersListViewModel
 import com.android.misfinanzas.ui.logged.masters.mastersList.MastersListViewState
@@ -31,7 +32,6 @@ class MovementDetailFragment : Fragment(R.layout.fragment_movement_detail) {
     private val binding by viewBinding<FragmentMovementDetailBinding>()
 
     private var movement: MovementModel? = null
-    private var shouldBack: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +64,6 @@ class MovementDetailFragment : Fragment(R.layout.fragment_movement_detail) {
         hideLoader()
         when (state) {
             is MovementDetailViewState.DescriptionsLoaded -> mastersViewModel.getPeople()
-            is MovementDetailViewState.SynchronizedData -> syncMovementsResult()
         }
     }
 
@@ -126,15 +125,16 @@ class MovementDetailFragment : Fragment(R.layout.fragment_movement_detail) {
             if (movementDetailView.shouldDiscard) {
                 viewModel.insertDiscardedMovement(movementDetailView.idToDiscard)
             }
+
+            syncWithWeb()
+
             if (movementToSave.dateLastUpd == null) { //Is insert
                 movementDetailView.cleanFormAfterSave()
                 context?.showShortToast(R.string.info_movement_saved)
             } else { //Is update
-                shouldBack = true
                 context?.showShortToast(R.string.info_movement_updated)
+                activity?.onBackPressed()
             }
-
-            syncWithWeb()
         } catch (e: Exception) {
             hideLoader()
             context?.showExceptionMessage(TAG, e.message!!, ErrorType.TYPE_APP)
@@ -142,24 +142,10 @@ class MovementDetailFragment : Fragment(R.layout.fragment_movement_detail) {
     }
 
     private fun syncWithWeb() {
-        var hasRights = false
         if (configViewModel.isAutoSyncOnEdit()) {
             if (context?.isConnected(getString(R.string.error_not_network_no_sync_detail)) == true) {
-                hasRights = true
+                backgroundSync(SyncType.SYNC_MOVEMENTS)
             }
-        }
-
-        if (hasRights) {
-            showLoader()
-            viewModel.sync()
-        } else {
-            syncMovementsResult()
-        }
-    }
-
-    private fun syncMovementsResult() {
-        if (shouldBack) {
-            activity?.onBackPressed()
         }
     }
 
@@ -172,9 +158,9 @@ class MovementDetailFragment : Fragment(R.layout.fragment_movement_detail) {
             movement?.let {
                 viewModel.deleteLocalMovement(it)
             }
-            shouldBack = true
-            context?.showShortToast(R.string.info_movement_deleted)
             syncWithWeb()
+            context?.showShortToast(R.string.info_movement_deleted)
+            activity?.onBackPressed()
         }
 
         builder.setNeutralButton(R.string.cd_no) { _, _ -> }

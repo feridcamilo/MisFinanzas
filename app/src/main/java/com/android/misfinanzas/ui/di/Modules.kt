@@ -38,7 +38,7 @@ private val mastersListFeatureModule = module {
 }
 
 private val masterDetailFeatureModule = module {
-    viewModel { MasterDetailViewModel(get(), get(), get()) }
+    viewModel { MasterDetailViewModel(get(), get()) }
 }
 
 private val movementsFeatureModule = module {
@@ -46,7 +46,7 @@ private val movementsFeatureModule = module {
 }
 
 private val movementDetailFeatureModule = module {
-    viewModel { MovementDetailViewModel(get(), get(), get()) }
+    viewModel { MovementDetailViewModel(get(), get()) }
 }
 
 private val configFeatureModule = module {

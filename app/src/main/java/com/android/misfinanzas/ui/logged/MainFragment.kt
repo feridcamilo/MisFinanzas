@@ -13,6 +13,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.android.misfinanzas.R
 import com.android.misfinanzas.databinding.FragmentMainBinding
 import com.android.misfinanzas.sync.SyncState
+import com.android.misfinanzas.sync.SyncType
 import com.android.misfinanzas.sync.SyncWorker
 import com.android.misfinanzas.ui.MainActivity
 import com.android.misfinanzas.utils.*
@@ -69,6 +70,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
     private val syncStateObserver = Observer<Any> { state ->
         when (state) {
+            is SyncState.Requested -> startSync(state.type)
             is SyncState.InProgress -> showSyncingMessage()
             is SyncState.Success -> {
                 hideSyncLoader()
@@ -81,10 +83,10 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         }
     }
 
-    private fun startSync() {
+    private fun startSync(type: SyncType = SyncType.SYNC_ALL) {
         if (context?.isConnected(getString(R.string.error_not_network_no_sync)) == false) return
         showSyncLoader()
-        SyncWorker.enqueue(context ?: return)
+        SyncWorker.enqueue(context ?: return, type)
     }
 
     private fun showSyncLoader() = with(binding) {

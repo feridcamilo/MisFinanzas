@@ -111,10 +111,6 @@ class MovementsFragment : Fragment(R.layout.fragment_movements) {
     }
 
     private fun setupEvents() = with(binding) {
-        btnFiltros.setOnClickListener {
-            findNavController().navigate(R.id.filtersFragment)
-        }
-
         btnAddMovement.setOnClickListener {
             navigateToDetails(null)
         }

@@ -8,15 +8,12 @@ import com.android.domain.repository.MovementRepository
 import com.android.misfinanzas.mappers.MovementMapper
 import com.android.misfinanzas.models.MasterModel
 import com.android.misfinanzas.models.MovementModel
-import com.android.misfinanzas.sync.SyncManager
-import com.android.misfinanzas.sync.SyncManager.SyncType.SYNC_MOVEMENTS
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MovementDetailViewModel(
     private val movementRepository: MovementRepository,
-    private val movementMapper: MovementMapper,
-    private val syncManager: SyncManager
+    private val movementMapper: MovementMapper
 ) : ViewModel() {
 
     val viewState: LiveData<MovementDetailViewState> get() = _viewState
@@ -38,9 +35,8 @@ class MovementDetailViewModel(
 
     fun getMovementsDescriptions() {
         viewModelScope.launch(Dispatchers.IO) {
-            val data = movementRepository.getMovementsDescriptions()
-            descriptions = data
-            _viewState.postValue(MovementDetailViewState.DescriptionsLoaded(data))
+            descriptions = movementRepository.getMovementsDescriptions()
+            _viewState.postValue(MovementDetailViewState.DescriptionsLoaded)
         }
     }
 
@@ -59,13 +55,6 @@ class MovementDetailViewModel(
     fun insertDiscardedMovement(id: Int) {
         viewModelScope.launch {
             movementRepository.discardMovement(id)
-        }
-    }
-
-    fun sync() {
-        viewModelScope.launch(Dispatchers.IO) {
-            syncManager.sync(SYNC_MOVEMENTS)
-            _viewState.postValue(MovementDetailViewState.SynchronizedData)
         }
     }
 

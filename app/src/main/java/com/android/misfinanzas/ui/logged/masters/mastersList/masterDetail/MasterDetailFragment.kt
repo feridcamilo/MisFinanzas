@@ -10,6 +10,7 @@ import com.android.domain.utils.StringUtils.Companion.EMPTY
 import com.android.misfinanzas.R
 import com.android.misfinanzas.databinding.FragmentMasterDetailBinding
 import com.android.misfinanzas.models.MasterModel
+import com.android.misfinanzas.sync.SyncType
 import com.android.misfinanzas.utils.*
 import com.android.misfinanzas.utils.viewbinding.viewBinding
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -31,7 +32,6 @@ class MasterDetailFragment : Fragment(R.layout.fragment_master_detail) {
     private var master: MasterModel? = null
     private var descriptions: MutableList<String> = mutableListOf()
     private var isNew: Boolean = false
-    private var shouldBack: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,8 +81,7 @@ class MasterDetailFragment : Fragment(R.layout.fragment_master_detail) {
         hideLoader()
         when (state) {
             MasterDetailViewState.MasterSaved -> masterSaved()
-            MasterDetailViewState.SaveFailed -> context?.showLongToast(getString(R.string.error_synchronizing_no_info))
-            MasterDetailViewState.SynchronizedData -> syncMastersResult()
+            MasterDetailViewState.SaveFailed -> context?.showLongToast(getString(R.string.error_saving_master_no_info))
         }
     }
 
@@ -114,15 +113,14 @@ class MasterDetailFragment : Fragment(R.layout.fragment_master_detail) {
     }
 
     private fun masterSaved() {
+        backgroundSync(SyncType.SYNC_MASTERS)
         if (isNew) { //Is insert
             cleanFormAfterSave()
             context?.showShortToast(R.string.info_master_saved)
         } else { //Is update
-            shouldBack = true
             context?.showShortToast(R.string.info_master_updated)
+            activity?.onBackPressed()
         }
-
-        syncWithWeb()
     }
 
     @Throws(Exception::class)
@@ -150,21 +148,6 @@ class MasterDetailFragment : Fragment(R.layout.fragment_master_detail) {
             name,
             swEnabled.isChecked
         )
-    }
-
-    private fun syncWithWeb() {
-        if (context?.isConnected(getString(R.string.error_not_network_no_sync)) == true) {
-            showLoader()
-            viewModel.sync()
-        } else {
-            syncMastersResult()
-        }
-    }
-
-    private fun syncMastersResult() {
-        if (shouldBack) {
-            activity?.onBackPressed()
-        }
     }
 
     private fun cleanFormAfterSave() = with(binding) {

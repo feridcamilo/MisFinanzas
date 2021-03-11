@@ -1,6 +1,5 @@
 package com.android.misfinanzas.models
 
-import com.android.domain.utils.StringUtils.Companion.EMPTY
 import java.io.Serializable
 import java.math.BigDecimal
 import java.util.*
@@ -21,28 +20,4 @@ data class MovementModel(
     val debtName: String?,
     val dateEntry: Date?,
     val dateLastUpd: Date?
-) : Serializable {
-
-    companion object {
-        fun getEmpty(): MovementModel {
-            return MovementModel(
-                0,
-                0,
-                BigDecimal.valueOf(0),
-                EMPTY,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-            )
-        }
-    }
-
-}
+) : Serializable

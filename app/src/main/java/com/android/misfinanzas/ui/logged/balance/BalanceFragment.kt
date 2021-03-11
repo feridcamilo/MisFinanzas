@@ -130,7 +130,7 @@ class BalanceFragment : Fragment(R.layout.fragment_balance) {
 
     private fun setupEvents() = with(binding) {
         btnAddMovement.setOnClickListener {
-            navigateToAddMovement(MovementModel.getEmpty())
+            navigateToAddMovement(null)
         }
     }
 
@@ -172,7 +172,6 @@ class BalanceFragment : Fragment(R.layout.fragment_balance) {
         builder.setMessage(getString(R.string.cd_desc_discard))
 
         builder.setPositiveButton(R.string.cd_yes) { _, _ ->
-            showLoader()
             viewModel.insertDiscardedMovement(id)
         }
 

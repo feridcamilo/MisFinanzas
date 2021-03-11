@@ -9,7 +9,7 @@
         android:id="@+id/loginFragment"
         android:name="com.android.misfinanzas.ui.login.LoginFragment"
         android:label="@string/title_login"
-        tools:layout="@layout/fragment_config">
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_mainFragment"
             app:destination="@id/mainFragment"

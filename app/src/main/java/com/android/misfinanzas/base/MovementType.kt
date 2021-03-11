@@ -30,7 +30,6 @@ class MovementType(
 
         fun getList(context: Context): List<MovementType> {
             val movementList: MutableList<MovementType> = ArrayList()
-            movementList.add(MovementType(NOT_SELECTED, context.getString(R.string.mt_not_selected)))
             movementList.add(MovementType(CASH_INCOME, context.getString(R.string.mt_cash_income)))
             movementList.add(MovementType(CASH_OUT, context.getString(R.string.mt_cash_out)))
             movementList.add(MovementType(CARD_INCOME, context.getString(R.string.mt_card_income)))

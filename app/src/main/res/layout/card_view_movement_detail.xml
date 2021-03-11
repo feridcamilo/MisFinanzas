@@ -9,19 +9,34 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/default_margin">
 
-        <TextView
-            android:id="@+id/tv_tipo_movimiento"
-            style="@style/subtitle_text_view_small"
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_mov_type"
+            android:layout_width="@dimen/zero"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:text="@string/view_md_movement_type"
-            app:layout_constraintBottom_toTopOf="@id/tv_valor"
+            android:layout_marginTop="@dimen/content_inset_small"
+            android:hint="@string/view_md_movement_type"
+            android:theme="@style/TextInputLabel"
+            app:boxBackgroundMode="none"
+            app:expandedHintEnabled="false"
+            app:hintTextAppearance="@style/TextInputLabel"
+            app:layout_constraintBottom_toTopOf="@id/til_value"
             app:layout_constraintEnd_toStartOf="@id/iv_mov_type"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/et_mov_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:hint="@string/view_md_select"
+                android:importantForAutofill="no"
+                android:inputType="none"
+                app:boxBackgroundMode="none" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <ImageView
             android:id="@+id/iv_mov_type"
@@ -32,281 +47,225 @@
             android:layout_marginEnd="@dimen/default_quarter_margin"
             android:layout_marginBottom="@dimen/default_margin"
             android:contentDescription="@string/view_md_movement_type"
-            app:layout_constraintBottom_toBottomOf="@id/tv_tipo_movimiento"
-            app:layout_constraintStart_toEndOf="@id/tv_tipo_movimiento"
-            app:layout_constraintTop_toTopOf="@id/tv_tipo_movimiento"
+            app:layout_constraintBottom_toBottomOf="@id/til_mov_type"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/til_mov_type"
             tools:src="@mipmap/ic_money" />
 
-        <Spinner
-            android:id="@+id/sp_tipo_movimiento"
-            android:layout_width="@dimen/zero"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_quarter_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:layout_marginBottom="@dimen/default_margin"
-            app:layout_constraintBottom_toBottomOf="@id/tv_tipo_movimiento"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/iv_mov_type"
-            app:layout_constraintTop_toTopOf="@id/tv_tipo_movimiento" />
-
-        <TextView
-            android:id="@+id/tv_valor"
-            style="@style/subtitle_text_view_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:text="@string/view_md_value"
-            app:layout_constraintBottom_toTopOf="@id/tv_description"
-            app:layout_constraintEnd_toStartOf="@id/et_valor_cont"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_tipo_movimiento" />
-
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/et_valor_cont"
+            android:id="@+id/til_value"
             android:layout_width="@dimen/zero"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            app:endIconMode="clear_text"
-            app:hintEnabled="false"
-            app:layout_constraintBottom_toBottomOf="@id/tv_valor"
+            android:layout_marginTop="@dimen/content_inset_small"
+            android:hint="@string/view_md_value"
+            android:theme="@style/TextInputLabel"
+            app:boxBackgroundMode="none"
+            app:endIconDrawable="@drawable/ic_money_value"
+            app:endIconMode="custom"
+            app:endIconTint="@color/colorPrimary"
+            app:expandedHintEnabled="false"
+            app:hintTextAppearance="@style/TextInputLabel"
+            app:layout_constraintBottom_toTopOf="@id/til_description"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_valor"
-            app:layout_constraintTop_toTopOf="@id/tv_valor">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/til_mov_type">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_valor"
+                android:id="@+id/et_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/view_md_enter"
                 android:importantForAutofill="no"
                 android:inputType="numberDecimal"
                 android:maxLength="12"
-                android:theme="@style/TextInputLabel" />
+                app:boxBackgroundMode="none" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/tv_description"
-            style="@style/subtitle_text_view_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:text="@string/view_md_description"
-            app:layout_constraintBottom_toTopOf="@id/tv_persona"
-            app:layout_constraintEnd_toStartOf="@id/tv_descripcion_cont"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_valor" />
-
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tv_descripcion_cont"
+            android:id="@+id/til_description"
             android:layout_width="@dimen/zero"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            app:endIconMode="clear_text"
-            app:hintEnabled="false"
-            app:layout_constraintBottom_toBottomOf="@id/tv_description"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_description"
-            app:layout_constraintTop_toTopOf="@id/tv_description">
-
-            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                android:id="@+id/tv_descripcion_value"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:completionThreshold="1"
-                android:hint="@string/view_md_enter"
-                android:inputType="textCapSentences"
-                android:maxLength="50"
-                android:maxLines="1"
-                android:theme="@style/TextInputLabel" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:id="@+id/tv_persona"
-            style="@style/subtitle_text_view_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:text="@string/view_md_person"
-            app:layout_constraintBottom_toTopOf="@id/tv_lugar"
-            app:layout_constraintEnd_toStartOf="@id/tv_persona_cont"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_description" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tv_persona_cont"
-            android:layout_width="@dimen/zero"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            app:endIconMode="clear_text"
-            app:hintEnabled="false"
-            app:layout_constraintBottom_toBottomOf="@id/tv_persona"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_persona"
-            app:layout_constraintTop_toTopOf="@id/tv_persona">
-
-            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                android:id="@+id/tv_persona_value"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:completionThreshold="1"
-                android:hint="@string/view_md_myself_enter"
-                android:inputType="textCapSentences"
-                android:maxLength="50"
-                android:maxLines="1"
-                android:theme="@style/TextInputLabel" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:id="@+id/tv_lugar"
-            style="@style/subtitle_text_view_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:text="@string/view_md_place"
-            app:layout_constraintBottom_toTopOf="@id/tv_category"
-            app:layout_constraintEnd_toStartOf="@id/tv_lugar_cont"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_persona" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tv_lugar_cont"
-            android:layout_width="@dimen/zero"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            app:endIconMode="clear_text"
-            app:hintEnabled="false"
-            app:layout_constraintBottom_toBottomOf="@id/tv_lugar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_lugar"
-            app:layout_constraintTop_toTopOf="@id/tv_lugar">
-
-            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                android:id="@+id/tv_lugar_value"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:completionThreshold="1"
-                android:hint="@string/view_md_not_associated_male"
-                android:inputType="textCapSentences"
-                android:maxLength="50"
-                android:maxLines="1"
-                android:theme="@style/TextInputLabel" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:id="@+id/tv_category"
-            style="@style/subtitle_text_view_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:text="@string/view_md_category"
-            app:layout_constraintBottom_toTopOf="@id/tv_fecha_movimiento"
-            app:layout_constraintEnd_toStartOf="@id/tv_categoria_cont"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_lugar" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tv_categoria_cont"
-            android:layout_width="@dimen/zero"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            app:endIconMode="clear_text"
-            app:hintEnabled="false"
-            app:layout_constraintBottom_toBottomOf="@id/tv_category"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_category"
-            app:layout_constraintTop_toTopOf="@id/tv_category">
-
-            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                android:id="@+id/tv_categoria_value"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:completionThreshold="1"
-                android:hint="@string/view_md_enter"
-                android:inputType="textCapSentences"
-                android:maxLength="50"
-                android:maxLines="1"
-                android:theme="@style/TextInputLabel" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:id="@+id/tv_fecha_movimiento"
-            style="@style/subtitle_text_view_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:text="@string/view_md_mov_date"
-            app:layout_constraintBottom_toTopOf="@id/tv_deuda"
-            app:layout_constraintEnd_toStartOf="@id/et_fecha_movimiento"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_category" />
-
-        <EditText
-            android:id="@+id/et_fecha_movimiento"
-            android:layout_width="@dimen/zero"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:calendarViewShown="false"
-            android:datePickerMode="spinner"
-            android:hint="@string/view_md_select"
-            android:importantForAutofill="no"
-            android:focusable="false"
-            android:inputType="date"
-            android:maxLength="10"
-            android:maxLines="1"
-            app:layout_constraintBottom_toBottomOf="@id/tv_fecha_movimiento"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_fecha_movimiento"
-            app:layout_constraintTop_toTopOf="@id/tv_fecha_movimiento" />
-
-        <TextView
-            android:id="@+id/tv_deuda"
-            style="@style/subtitle_text_view_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:text="@string/view_md_debt"
-            app:layout_constraintBottom_toTopOf="@id/tv_fecha_ingreso"
-            app:layout_constraintEnd_toStartOf="@id/tv_deuda_cont"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_fecha_movimiento" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tv_deuda_cont"
-            android:layout_width="@dimen/zero"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
+            android:layout_marginTop="@dimen/content_inset_small"
+            android:hint="@string/view_md_description"
             android:theme="@style/TextInputLabel"
-            app:endIconMode="clear_text"
-            app:hintEnabled="false"
-            app:layout_constraintBottom_toBottomOf="@id/tv_deuda"
+            app:boxBackgroundMode="none"
+            app:endIconDrawable="@drawable/ic_description"
+            app:endIconMode="custom"
+            app:endIconTint="@color/colorPrimary"
+            app:expandedHintEnabled="false"
+            app:hintTextAppearance="@style/TextInputLabel"
+            app:layout_constraintBottom_toTopOf="@id/til_person"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_deuda"
-            app:layout_constraintTop_toTopOf="@id/tv_deuda">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/til_value">
 
-            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                android:id="@+id/tv_deuda_value"
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/et_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:completionThreshold="1"
-                android:hint="@string/view_md_not_associated_female"
+                android:hint="@string/view_md_enter"
+                android:importantForAutofill="no"
                 android:inputType="textCapSentences"
                 android:maxLength="50"
+                android:maxLines="1"
+                app:boxBackgroundMode="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_person"
+            android:layout_width="@dimen/zero"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/content_inset_small"
+            android:hint="@string/view_md_person"
+            android:theme="@style/TextInputLabel"
+            app:boxBackgroundMode="none"
+            app:endIconDrawable="@drawable/ic_person"
+            app:endIconMode="custom"
+            app:endIconTint="@color/colorPrimary"
+            app:expandedHintEnabled="false"
+            app:hintTextAppearance="@style/TextInputLabel"
+            app:layout_constraintBottom_toTopOf="@id/til_place"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/til_description">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/et_person"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:hint="@string/view_md_person_not_associated"
+                android:importantForAutofill="no"
+                android:inputType="textCapSentences"
+                android:maxLength="50"
+                android:maxLines="1"
+                app:boxBackgroundMode="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_place"
+            android:layout_width="@dimen/zero"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/content_inset_small"
+            android:hint="@string/view_md_place"
+            android:theme="@style/TextInputLabel"
+            app:boxBackgroundMode="none"
+            app:endIconDrawable="@drawable/ic_location"
+            app:endIconMode="custom"
+            app:endIconTint="@color/colorPrimary"
+            app:expandedHintEnabled="false"
+            app:hintTextAppearance="@style/TextInputLabel"
+            app:layout_constraintBottom_toTopOf="@id/til_category"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/til_person">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/et_place"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:hint="@string/view_md_not_associated_select_male"
+                android:importantForAutofill="no"
+                android:inputType="textCapSentences"
+                android:maxLength="50"
+                android:maxLines="1"
+                app:boxBackgroundMode="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_category"
+            android:layout_width="@dimen/zero"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/content_inset_small"
+            android:hint="@string/view_md_category"
+            android:theme="@style/TextInputLabel"
+            app:boxBackgroundMode="none"
+            app:endIconDrawable="@drawable/ic_category"
+            app:endIconMode="custom"
+            app:endIconTint="@color/colorPrimary"
+            app:expandedHintEnabled="false"
+            app:hintTextAppearance="@style/TextInputLabel"
+            app:layout_constraintBottom_toTopOf="@id/til_mov_date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/til_place">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/et_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:hint="@string/view_md_not_associated_select_female"
+                android:importantForAutofill="no"
+                android:inputType="textCapSentences"
+                android:maxLength="50"
+                android:maxLines="1"
+                app:boxBackgroundMode="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_mov_date"
+            android:layout_width="@dimen/zero"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/content_inset_small"
+            android:hint="@string/view_md_mov_date"
+            android:theme="@style/TextInputLabel"
+            app:boxBackgroundMode="none"
+            app:endIconDrawable="@drawable/ic_calendar"
+            app:endIconMode="custom"
+            app:endIconTint="@color/colorPrimary"
+            app:expandedHintEnabled="false"
+            app:hintTextAppearance="@style/TextInputLabel"
+            app:layout_constraintBottom_toTopOf="@id/til_debt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/til_category">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_mov_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner"
+                android:focusable="false"
+                android:hint="@string/view_md_not_associated_female"
+                android:importantForAutofill="no"
+                android:inputType="date"
+                android:maxLength="10"
                 android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_debt"
+            android:layout_width="@dimen/zero"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/content_inset_small"
+            android:hint="@string/view_md_debt"
+            android:theme="@style/TextInputLabel"
+            app:boxBackgroundMode="none"
+            app:endIconDrawable="@drawable/ic_debt"
+            app:endIconMode="custom"
+            app:endIconTint="@color/colorPrimary"
+            app:expandedHintEnabled="false"
+            app:hintTextAppearance="@style/TextInputLabel"
+            app:layout_constraintBottom_toTopOf="@id/tv_fecha_ingreso"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/til_mov_date">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/et_debt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:hint="@string/view_md_not_associated_select_female"
+                android:importantForAutofill="no"
+                android:inputType="textCapSentences"
+                android:maxLength="50"
+                android:maxLines="1"
+                app:boxBackgroundMode="none" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -314,21 +273,19 @@
             style="@style/subtitle_text_view_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginTop="@dimen/content_inset_small"
             android:text="@string/view_md_entry_date"
             app:layout_constraintBottom_toTopOf="@id/tv_fecha_upd"
             app:layout_constraintEnd_toStartOf="@id/tv_fecha_ingreso_value"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_deuda" />
+            app:layout_constraintTop_toBottomOf="@id/til_debt" />
 
         <TextView
             android:id="@+id/tv_fecha_ingreso_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:text="@string/view_md_not_associated"
+            android:layout_marginStart="@dimen/content_inset_small"
+            android:text="@string/view_md_not_associated_female"
             app:layout_constraintBottom_toBottomOf="@id/tv_fecha_ingreso"
             app:layout_constraintStart_toEndOf="@id/tv_fecha_ingreso"
             app:layout_constraintTop_toTopOf="@id/tv_fecha_ingreso" />
@@ -338,9 +295,8 @@
             style="@style/subtitle_text_view_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginTop="@dimen/content_inset_small"
+            android:layout_marginBottom="@dimen/content_inset_less"
             android:text="@string/view_md_lastUpd_date"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_fecha_upd_value"
@@ -351,8 +307,8 @@
             android:id="@+id/tv_fecha_upd_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:text="@string/view_md_not_associated"
+            android:layout_marginStart="@dimen/content_inset_small"
+            android:text="@string/view_md_not_associated_female"
             app:layout_constraintBottom_toBottomOf="@id/tv_fecha_upd"
             app:layout_constraintStart_toEndOf="@id/tv_fecha_upd"
             app:layout_constraintTop_toTopOf="@id/tv_fecha_upd" />

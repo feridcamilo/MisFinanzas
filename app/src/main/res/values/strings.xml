@@ -64,21 +64,21 @@
     <string name="view_md_enter">Ingrese</string>
     <string name="view_md_not_associated_male">No asociado</string>
     <string name="view_md_not_associated_female">No asociada</string>
-    <string name="view_md_myself_enter">Yo (Ingrese para asociar)</string>
-    <string name="view_md_money_hint">$ 0.00</string>
-    <string name="view_md_not_associated">No asociada</string>
-    <string name="view_md_movement_type">Tipo de\nmovimiento:</string>
-    <string name="view_md_value">Valor:</string>
-    <string name="view_md_description">Descripción:</string>
-    <string name="view_md_person">Persona:</string>
-    <string name="view_md_place">Lugar:</string>
-    <string name="view_md_category">Categoría:</string>
-    <string name="view_md_mov_date">Fecha del movimiento:</string>
-    <string name="view_md_debt">Deuda:</string>
+    <string name="view_md_movement_type">Tipo de movimiento</string>
+    <string name="view_md_value">Valor</string>
+    <string name="view_md_description">Descripción</string>
+    <string name="view_md_person">Persona</string>
+    <string name="view_md_person_not_associated">Yo (seleccione para asociar)</string>
+    <string name="view_md_place">Lugar</string>
+    <string name="view_md_category">Categoría</string>
+    <string name="view_md_mov_date">Fecha del movimiento</string>
+    <string name="view_md_debt">Deuda</string>
+    <string name="view_md_not_associated_select_male">No asociado (seleccione para asociar)</string>
+    <string name="view_md_not_associated_select_female">No asociada (seleccione para asociar)</string>
     <string name="view_md_entry_date">Fecha de ingreso:</string>
     <string name="view_md_lastUpd_date">Fecha de actualización:</string>
     <string name="md_date">%1$s/%2$s/%3$s</string>
-    <string name="md_info">%1$s - %2$s %3$s</string>
+    <string name="md_info">%1$s - %2$s %3$s %4$s</string>
 
     <!--MovementTypeList-->
     <string name="mt_not_selected">Seleccione</string>
@@ -95,7 +95,8 @@
     <string name="error_not_network_no_login">No hay conexión a internet. No se puede iniciar sesión.</string>
     <string name="error_not_network_no_continue">No hay conexión a internet. No se puede continuar.</string>
     <string name="error_synchronizing">Ocurrió un error sincronizando los datos: %1$s</string>
-    <string name="error_synchronizing_no_info">Ocurrió un error sincronizando los datos. Por favor intenta nuevamente</string>
+    <string name="error_synchronizing_no_info">Ocurrió un error sincronizando los datos. Por favor intenta nuevamente.</string>
+    <string name="error_saving_master_no_info">Ocurrió un error guardando el maestro. Por favor intenta nuevamente.</string>
     <string name="error_getting_movements">Ocurrió un error obteniendo los movimientos: %1$s</string>
     <string name="error_getting_masters">Ocurrió un error obteniendo los maestros: %1$s</string>
     <string name="error_getting_balance">Ocurrió un error obteniendo los saldos: %1$s</string>
