@@ -41,18 +41,31 @@
         <item name="android:colorControlActivated">@color/colorPrimary</item>
     </style>
 
-    <style name="title_text_view" parent="AppTheme">
+    <style name="TextAppearance.Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">@dimen/text_size_caption</item>
+    </style>
+
+    <style name="Title" parent="AppTheme">
         <item name="android:textSize">@dimen/text_size_24</item>
+    </style>
+
+    <style name="Title.Bold" parent="Title">
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="subtitle_text_view" parent="AppTheme">
+    <style name="Subtitle" parent="AppTheme">
         <item name="android:textSize">@dimen/text_size_20</item>
+    </style>
+
+    <style name="Subtitle.Bold" parent="Subtitle">
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="subtitle_text_view_small" parent="AppTheme">
+    <style name="Description" parent="AppTheme">
         <item name="android:textSize">@dimen/text_size_16</item>
+    </style>
+
+    <style name="Description.Bold" parent="Description">
         <item name="android:textStyle">bold</item>
     </style>
 

@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.android.domain.utils.StringUtils
 import com.android.misfinanzas.R
+import kotlin.math.roundToInt
 
 fun Context.showShortToast(stringResId: Int) {
     showShortToast(getString(stringResId))
@@ -84,4 +85,9 @@ fun Context.openURL(url: String) {
         intent.setPackage(null)
         startActivity(intent)
     }
+}
+
+fun Context.dpToPx(dp: Int): Int {
+    val density: Float = resources.displayMetrics.density
+    return (dp.toFloat() * density).roundToInt()
 }

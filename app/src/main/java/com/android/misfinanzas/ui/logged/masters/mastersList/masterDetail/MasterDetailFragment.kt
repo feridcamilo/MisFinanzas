@@ -93,6 +93,7 @@ class MasterDetailFragment : Fragment(R.layout.fragment_master_detail) {
     }
 
     private fun setupEvents() = with(binding) {
+        tilName.setEndIconOnClickListener { etName.setText(EMPTY) }
         ibSave.setOnClickListener {
             save()
         }

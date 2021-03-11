@@ -13,7 +13,7 @@
 
         <TextView
             android:id="@+id/tv_title"
-            style="@style/title_text_view"
+            style="@style/Title.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
@@ -37,7 +37,7 @@
 
         <TextView
             android:id="@+id/tv_cash_title"
-            style="@style/subtitle_text_view"
+            style="@style/Subtitle.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
@@ -71,7 +71,7 @@
 
         <TextView
             android:id="@+id/tv_card_title"
-            style="@style/subtitle_text_view"
+            style="@style/Subtitle.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
@@ -105,7 +105,7 @@
 
         <TextView
             android:id="@+id/tv_total_title"
-            style="@style/subtitle_text_view"
+            style="@style/Subtitle.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"

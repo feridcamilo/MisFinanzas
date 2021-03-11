@@ -45,17 +45,34 @@ class MovementsAdapter : ListAdapter<MovementModel, MovementsAdapter.ViewHolder>
     inner class ViewHolder(private val binding: RowMovementBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(model: MovementModel) = with(binding) {
+            itgDescription.setupBodyBold(R.drawable.ic_description, model.description, false)
             ivMovType.setImageResource((MovementType.getImage(model.idType)))
-            tvValor.text = MoneyUtils.getMoneyFormat().format(model.value)
-            tvFecha.text = DateUtils.getDateFormat().format(model.date!!)
-            tvDescription.text = model.description
-            tvInfo.text = root.context.getString(
-                R.string.md_info,
-                model.personName ?: root.context.getString(R.string.me),
-                model.categoryName ?: root.context.getString(R.string.to_define),
-                model.placeName?.let { "- $it" }.orEmpty(),
-                model.debtName?.let { "- $it" }.orEmpty()
-            )
+
+            val person = model.personName ?: root.context.getString(R.string.me)
+            itgPerson.setupBodySmallImageView(R.drawable.ic_person, person)
+
+            val category = model.categoryName ?: root.context.getString(R.string.to_define)
+            itgCategory.setupBodySmallImageView(R.drawable.ic_category, category)
+
+            itgPlace.gone()
+            model.placeName?.let {
+                itgPlace.visible()
+                itgPlace.setupBodySmallImageView(R.drawable.ic_location, it)
+            }
+
+            itgDebt.gone()
+            model.debtName?.let {
+                itgDebt.visible()
+                itgDebt.setupBodySmallImageView(R.drawable.ic_debt, it)
+            }
+
+            val value = MoneyUtils.getMoneyFormat().format(model.value)
+            itgValue.setupBodyBold(R.drawable.ic_money_value, value)
+
+            model.date?.let {
+                val date = DateUtils.getDateFormat().format(it)
+                itgDate.setupBodySmallImageView(R.drawable.ic_calendar, date)
+            }
 
             itemView.setOnClickListener { listener?.onMovementClicked(model) }
 

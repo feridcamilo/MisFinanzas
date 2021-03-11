@@ -270,7 +270,7 @@
 
         <TextView
             android:id="@+id/tv_fecha_ingreso"
-            style="@style/subtitle_text_view_small"
+            style="@style/Description.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/content_inset_small"
@@ -282,6 +282,7 @@
 
         <TextView
             android:id="@+id/tv_fecha_ingreso_value"
+            style="@style/Description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/content_inset_small"
@@ -292,7 +293,7 @@
 
         <TextView
             android:id="@+id/tv_fecha_upd"
-            style="@style/subtitle_text_view_small"
+            style="@style/Description.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/content_inset_small"
@@ -305,6 +306,7 @@
 
         <TextView
             android:id="@+id/tv_fecha_upd_value"
+            style="@style/Description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/content_inset_small"
