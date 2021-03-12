@@ -101,7 +101,7 @@ class MovementDetailFragment : Fragment(R.layout.fragment_movement_detail) {
     }
 
     private fun initMovementDetailView() = with(binding) {
-        val isNewMovement = movement == null || movement?.idMovement!! <= 0
+        val isNewMovement = (movement?.idMovement ?: 0) <= 0
 
         if (isNewMovement) {
             setToolbarTitle(R.string.title_movements_details_new)
@@ -109,35 +109,44 @@ class MovementDetailFragment : Fragment(R.layout.fragment_movement_detail) {
         }
 
         movementDetailView.initView(
+            movement,
             viewModel.descriptions,
             viewModel.peopleActive,
             viewModel.placesActive,
             viewModel.categoriesActive,
             viewModel.debtsActive
         )
-        movementDetailView.showMovement(movement)
     }
 
-    private fun save() = with(binding) {
+    private fun save() {
         try {
-            val movementToSave = movementDetailView.getMovement()
-            viewModel.insertLocalMovement(movementToSave)
-            if (movementDetailView.shouldDiscard) {
-                viewModel.insertDiscardedMovement(movementDetailView.idToDiscard)
+            val movView = binding.movementDetailView
+
+            val movement = movView.getMovement()
+            viewModel.saveLocalMovement(movement)
+
+            var shouldBack = false
+            if (movView.shouldDiscard) {
+                viewModel.insertDiscardedMovement(movView.idToDiscard)
+                shouldBack = true
             }
 
             syncWithWeb()
 
-            if (movementToSave.dateLastUpd == null) { //Is insert
-                movementDetailView.cleanFormAfterSave()
+            if (movement.idMovement == 0) { //Was insert
+                movView.cleanFormAfterSave()
                 context?.showShortToast(R.string.info_movement_saved)
-            } else { //Is update
+            } else { //Was update
                 context?.showShortToast(R.string.info_movement_updated)
+                shouldBack = true
+            }
+
+            if (shouldBack) {
                 activity?.onBackPressed()
             }
         } catch (e: Exception) {
             hideLoader()
-            context?.showExceptionMessage(TAG, e.message!!, ErrorType.TYPE_APP)
+            context?.showExceptionMessage(TAG, e.message.orEmpty(), ErrorType.TYPE_APP)
         }
     }
 

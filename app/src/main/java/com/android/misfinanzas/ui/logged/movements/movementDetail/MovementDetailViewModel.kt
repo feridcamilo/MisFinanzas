@@ -40,7 +40,7 @@ class MovementDetailViewModel(
         }
     }
 
-    fun insertLocalMovement(movement: MovementModel) {
+    fun saveLocalMovement(movement: MovementModel) {
         viewModelScope.launch {
             movementRepository.insertMovement(movementMapper.mapToDomain(movement))
         }

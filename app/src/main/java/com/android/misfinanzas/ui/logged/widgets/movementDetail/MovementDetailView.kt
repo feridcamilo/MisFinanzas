@@ -18,6 +18,7 @@ import com.android.misfinanzas.base.MovementType
 import com.android.misfinanzas.databinding.CardViewMovementDetailBinding
 import com.android.misfinanzas.models.MasterModel
 import com.android.misfinanzas.models.MovementModel
+import com.android.misfinanzas.utils.gone
 import com.android.misfinanzas.utils.setDateControl
 import com.google.android.material.card.MaterialCardView
 import java.math.BigDecimal
@@ -40,43 +41,48 @@ class MovementDetailView @JvmOverloads constructor(
         setBackgroundColor(Color.TRANSPARENT)
     }
 
-    private lateinit var movementTypes: List<MovementType>
-    private var descriptions: List<String>? = null
-    private var people: List<MasterModel>? = null
-    private var places: List<MasterModel>? = null
-    private var categories: List<MasterModel>? = null
-    private var debts: List<MasterModel>? = null
+    private var movementTypes: List<MovementType> = emptyList()
+    private var descriptions: List<String> = emptyList()
+    private var people: List<MasterModel> = emptyList()
+    private var places: List<MasterModel> = emptyList()
+    private var categories: List<MasterModel> = emptyList()
+    private var debts: List<MasterModel> = emptyList()
 
     private var movement: MovementModel? = null
+    private var movementId: Int = 0
     private var selectedMovementType: Int = MovementType.NOT_SELECTED
     var shouldDiscard = false
     var idToDiscard = 0
 
     fun initView(
-        descriptions: List<String>?,
-        people: List<MasterModel>?,
-        places: List<MasterModel>?,
-        categories: List<MasterModel>?,
-        debts: List<MasterModel>?
+        movement: MovementModel?,
+        descriptions: List<String>,
+        people: List<MasterModel>,
+        places: List<MasterModel>,
+        categories: List<MasterModel>,
+        debts: List<MasterModel>
     ) {
+        this.movement = movement
+        this.movementTypes = MovementType.getList(context)
         this.descriptions = descriptions
         this.people = people
         this.places = places
         this.categories = categories
         this.debts = debts
+        movementId = movement?.idMovement ?: 0
         setMastersPickers()
+        setupView()
+
         binding.etMovDate.setDateControl()
     }
 
     private fun setMastersPickers() = with(binding) {
-        movementTypes = MovementType.getList(context)
-        val movementTypeAdapter = ArrayAdapter(context, R.layout.layout_dropdown_item, movementTypes)
-        etMovType.setAdapter(movementTypeAdapter)
-        etMovType.setOnClickListener { etMovType.showDropDown() }
-
         ivMovType.setImageResource(MovementType.getImage(selectedMovementType))
         ivMovType.setOnClickListener { etMovType.showDropDown() }
 
+        val movementTypeAdapter = ArrayAdapter(context, R.layout.layout_dropdown_item, movementTypes)
+        etMovType.setAdapter(movementTypeAdapter)
+        etMovType.setOnClickListener { etMovType.showDropDown() }
         etMovType.setOnItemClickListener { _, _, position, _ ->
             val item = movementTypeAdapter.getItem(position)
             if (item != null) {
@@ -85,79 +91,86 @@ class MovementDetailView @JvmOverloads constructor(
             }
         }
 
-        descriptions?.let {
-            val descriptionsAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
-            etDescription.setAdapter(descriptionsAdapter)
-            tilDescription.setEndIconOnClickListener { etDescription.setText(EMPTY) }
-        }
+        val descriptionsAdapter = ArrayAdapter(context, R.layout.layout_dropdown_item, descriptions)
+        etDescription.setAdapter(descriptionsAdapter)
+        tilDescription.setEndIconOnClickListener { etDescription.setText(EMPTY) }
 
         tilValue.setEndIconOnClickListener { etValue.setText(EMPTY) }
 
-        people?.let {
-            val peopleAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
-            etPerson.setAdapter(peopleAdapter)
-            etPerson.setOnClickListener { etPerson.showDropDown() }
-        }
+        //TODO cerrar el teclado onitemselected en maestros (falta crear el método)
 
-        places?.let {
-            val placesAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
-            etPlace.setAdapter(placesAdapter)
-            etPlace.setOnClickListener { etPlace.showDropDown() }
-        }
+        val peopleAdapter = ArrayAdapter(context, R.layout.layout_dropdown_item, people)
+        etPerson.setAdapter(peopleAdapter)
+        etPerson.setOnClickListener { etPerson.showDropDown() }
+        tilPerson.setEndIconOnClickListener { etPerson.showDropDown() }
 
-        categories?.let {
-            val categoriesAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
-            etCategory.setAdapter(categoriesAdapter)
-            etCategory.setOnClickListener { etCategory.showDropDown() }
-        }
+        val placesAdapter = ArrayAdapter(context, R.layout.layout_dropdown_item, places)
+        etPlace.setAdapter(placesAdapter)
+        etPlace.setOnClickListener { etPlace.showDropDown() }
+        tilPlace.setEndIconOnClickListener { etPlace.showDropDown() }
 
-        debts?.let {
-            val debtsAdapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, it)
-            etDebt.setAdapter(debtsAdapter)
-            etDebt.setOnClickListener { etDebt.showDropDown() }
-        }
+        val categoriesAdapter = ArrayAdapter(context, R.layout.layout_dropdown_item, categories)
+        etCategory.setAdapter(categoriesAdapter)
+        etCategory.setOnClickListener { etCategory.showDropDown() }
+        tilCategory.setEndIconOnClickListener { etCategory.showDropDown() }
+
+        val debtsAdapter = ArrayAdapter(context, R.layout.layout_dropdown_item, debts)
+        etDebt.setAdapter(debtsAdapter)
+        etDebt.setOnClickListener { etDebt.showDropDown() }
+        tilDebt.setEndIconOnClickListener { etDebt.showDropDown() }
 
         val currentDate: Date = getCurrentDateTime()
         etMovDate.setText(getDateFormat().format(currentDate))
     }
 
-    fun showMovement(movement: MovementModel?) {
-        this.movement = movement
-
-        if (movement == null || movement.idMovement <= 0) {
-            binding.tvFechaIngreso.visibility = View.GONE
-            binding.tvFechaIngresoValue.visibility = View.GONE
-            binding.tvFechaUpd.visibility = View.GONE
-            binding.tvFechaUpdValue.visibility = View.GONE
+    private fun setupView() = with(binding) {
+        if (movementId <= 0) {
+            tvFechaIngreso.gone()
+            tvFechaIngresoValue.gone()
+            tvFechaUpd.gone()
+            tvFechaUpdValue.gone()
         }
+        loadMovement()
+    }
 
+    private fun loadMovement() = with(binding) {
         movement?.let {
             val notAssociated = context.getString(R.string.view_md_not_associated_female)
-            val date = if (it.date == null) getDateFormat().format(getCurrentDateTime()) else getDateFormat().format(checkNotNull(it.date)).toString()
-            val entryDate =
-                if (it.dateEntry == null) notAssociated else getDateTimeFormat().format(checkNotNull(it.dateEntry)).toString()
-            val lastUpdate =
-                if (it.dateLastUpd == null) notAssociated else getDateTimeFormat().format(checkNotNull(it.dateLastUpd)).toString()
 
-            binding.ivMovType.setImageResource(MovementType.getImage(it.idType))
-            binding.etMovType.setText(getMovementType(it.idType)?.name.orEmpty(), false)
+            var movDate = getDateFormat().format(getCurrentDateTime())
+            it.date?.let { date ->
+                movDate = getDateFormat().format(date)
+            }
+
+            var entryDate = notAssociated
+            it.dateEntry?.let { date ->
+                entryDate = getDateTimeFormat().format(date)
+            }
+
+            var lastUpdate = notAssociated
+            it.dateLastUpd?.let { date ->
+                lastUpdate = getDateTimeFormat().format(date)
+            }
+
+            ivMovType.setImageResource(MovementType.getImage(it.idType))
+            etMovType.setText(getMovementType(it.idType)?.name.orEmpty(), false)
             selectedMovementType = it.idType
             val value = MoneyUtils.getBigDecimalStringValue(it.value.toString())
             if (value != ZERO) {
-                binding.etValue.setText(value)
+                etValue.setText(value)
             }
-            binding.etDescription.setText(it.description)
-            binding.etPerson.setText(getPersonName(it.personId))
-            binding.etPlace.setText(getPlaceName(it.placeId))
-            binding.etCategory.setText(getCategoryName(it.categoryId))
-            binding.etMovDate.setText(date)
-            binding.etDebt.setText(getDebtName(it.debtId))
-            binding.tvFechaIngresoValue.text = entryDate
+            etDescription.setText(it.description, false)
+            etPerson.setText(getPersonName(it.personId), false)
+            etPlace.setText(getPlaceName(it.placeId), false)
+            etCategory.setText(getCategoryName(it.categoryId), false)
+            etMovDate.setText(movDate)
+            etDebt.setText(getDebtName(it.debtId), false)
+            tvFechaIngresoValue.text = entryDate
             if (lastUpdate == notAssociated) {
-                binding.tvFechaUpd.visibility = View.GONE
-                binding.tvFechaUpdValue.visibility = View.GONE
+                tvFechaUpd.visibility = View.GONE
+                tvFechaUpdValue.visibility = View.GONE
             } else {
-                binding.tvFechaUpdValue.text = lastUpdate
+                tvFechaUpdValue.text = lastUpdate
             }
         }
     }
@@ -170,6 +183,7 @@ class MovementDetailView @JvmOverloads constructor(
     @Throws(Exception::class)
     private fun validateForm(): MovementModel = with(binding) {
         if (selectedMovementType == MovementType.NOT_SELECTED) {
+            etMovType.requestFocus()
             throw Exception(context.getString(R.string.info_select_movement_type))
         }
 
@@ -192,23 +206,23 @@ class MovementDetailView @JvmOverloads constructor(
             throw Exception(context.getString(R.string.info_only_numbers))
         }
 
-        val description = etDescription.text.toString()
-        val personId = getPersonId(etPerson.text.toString())
-        val placeId = getPlaceId(etPlace.text.toString())
+        val description = etDescription.text.toString().trim()
+        val personId = getPersonId(etPerson.text.toString().trim())
+        val placeId = getPlaceId(etPlace.text.toString().trim())
 
-        val categoryId = getCategoryId(etCategory.text.toString())
+        val categoryId = getCategoryId(etCategory.text.toString().trim())
         if ((categoryId ?: 0) == 0) {
             etCategory.requestFocus()
             throw Exception(context.getString(R.string.info_select_category))
         }
 
-        val strDate = etMovDate.text.toString()
+        val strDate = etMovDate.text.toString().trim()
         if (strDate.isEmpty()) {
             throw Exception(context.getString(R.string.info_select_date))
         }
-        val date: Date
+        val moveDate: Date
         try {
-            date = getDateToWebService(getDateFormat().parse(strDate)!!)
+            moveDate = getDateToWebService(getDateFormat().parse(strDate)!!)
         } catch (e: Exception) {
             etMovDate.requestFocus()
             throw Exception(context.getString(R.string.info_enter_valid_date))
@@ -217,22 +231,20 @@ class MovementDetailView @JvmOverloads constructor(
         val currentDateTime: Date = getCurrentDateTime()
 
         var dateLastUpdate: Date? = null
-        var dateEntry: Date? = currentDateTime
-        if (movement != null && movement?.idMovement!! > 0) {
+        var dateEntry: Date = currentDateTime
+        if (movementId > 0) {
             dateLastUpdate = currentDateTime
-            dateEntry = movement?.dateEntry
+            dateEntry = movement?.dateEntry ?: currentDateTime
         }
 
-        var idMovement = movement?.idMovement ?: 0
-
-        if (movement != null && movement?.idMovement!! <= 0) {
+        if (movementId < 0) {
             shouldDiscard = true
-            idToDiscard = movement?.idMovement!!
-            idMovement = 0
+            idToDiscard = movementId
+            movementId = 0
         }
 
         return MovementModel(
-            idMovement,//Autoincrement
+            movementId,
             selectedMovementType,
             value,
             description,
@@ -242,7 +254,7 @@ class MovementDetailView @JvmOverloads constructor(
             null,
             categoryId!!,
             null,
-            date,
+            moveDate,
             debtId,
             null,
             dateEntry,
@@ -262,34 +274,35 @@ class MovementDetailView @JvmOverloads constructor(
     }
 
     private fun getPersonName(id: Int?): String? {
-        return people?.find { id == it.id }?.name
+        return people.find { id == it.id }?.name
     }
 
     private fun getPersonId(name: String): Int? {
-        return people?.find { name == it.name }?.id
+        return people.find { name == it.name }?.id
     }
 
     private fun getPlaceName(id: Int?): String? {
-        return places?.find { id == it.id }?.name
+        return places.find { id == it.id }?.name
     }
 
     private fun getPlaceId(name: String): Int? {
-        return places?.find { name == it.name }?.id
+        return places.find { name == it.name }?.id
     }
 
     private fun getCategoryName(id: Int?): String? {
-        return categories?.find { id == it.id }?.name
+        return categories.find { id == it.id }?.name
     }
 
     private fun getCategoryId(name: String): Int? {
-        return categories?.find { name == it.name }?.id
+        return categories.find { name == it.name }?.id
     }
 
     private fun getDebtName(id: Int?): String? {
-        return debts?.find { id == it.id }?.name
+        return debts.find { id == it.id }?.name
     }
 
     private fun getDebtId(name: String): Int? {
-        return debts?.find { name == it.name }?.id
+        return debts.find { name == it.name }?.id
     }
+
 }
