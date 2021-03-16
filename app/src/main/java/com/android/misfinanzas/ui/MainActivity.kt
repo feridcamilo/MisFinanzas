@@ -19,6 +19,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Thread.sleep(1000)
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setupLoaderObserver()
     }

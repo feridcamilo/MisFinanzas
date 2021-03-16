@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "30246047001",
+    "project_id": "misfinanzas-c2dc3",
+    "storage_bucket": "misfinanzas-c2dc3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30246047001:android:3887b5f597098f05660988",
+        "android_client_info": {
+          "package_name": "com.android.misfinanzas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "30246047001-f0gbbhajslard5ab1h19u2stsue5el2r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android.misfinanzas",
+            "certificate_hash": "8ebed4b13e9502a57496a6b6b388d789e76babc6"
+          }
+        },
+        {
+          "client_id": "30246047001-pi9pk27r9karkva3g0be6o37rs83a3i0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1UE9dJeQB3SmsKzV_5lKgDRtEaHruzPY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "30246047001-pi9pk27r9karkva3g0be6o37rs83a3i0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
