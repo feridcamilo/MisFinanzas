@@ -14,8 +14,16 @@
     <string name="loading">Cargando…</string>
     <string name="search">Buscar</string>
 
+    <string name="dialog_percent">0.9</string>
+
     <string name="me">Yo</string>
     <string name="to_define">Por definir</string>
+    <string name="close">Cerrar</string>
+    <string name="add">Agregar</string>
+    <string name="accept">Aceptar</string>
+    <string name="txt_continue">Continuar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="back">Volver</string>
 
     <!--MastersFragment-->
     <string name="masters_categories">Categorías</string>
@@ -28,6 +36,7 @@
     <string name="md_active">¿Activo?</string>
     <string name="md_category">categoría</string>
     <string name="md_place">lugar</string>
+    <string name="md_select_place_location">Selecciona la ubicación del lugar en el mapa</string>
     <string name="md_person">persona</string>
     <string name="md_debt">deudas</string>
 
@@ -147,5 +156,16 @@
     <string name="cd_desc_discard">¿Está seguro que desea descartar el movimiento?</string>
     <string name="cd_yes">Si</string>
     <string name="cd_no">No</string>
+    <string name="title_activity_maps">Map</string>
+
+    <!-- Permission Messages -->
+    <plurals name="rationale_title">
+        <item quantity="one">Este permiso es requerido</item>
+        <item quantity="other">Estos permisos son requeridos</item>
+    </plurals>
+    <string name="read_permission_message">\u25CF Se necesita acceso a la memoria para poder seleccionar la foto.</string>
+    <string name="write_permission_message">\u25CF Se necesita acceso a la memoria para poder guardar las fotos tomadas por la cámara.</string>
+    <string name="camera_permission_message">\u25CF Se necesita acceso a la cámara para poder tomar la foto.</string>
+    <string name="location_permission_message">\u25CF Se necesita acceso a la ubicación para poder mostrar el mapa.</string>
 
 </resources>

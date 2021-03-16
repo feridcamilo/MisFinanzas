@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_margin="@dimen/default_margin"
     tools:context=".ui.logged.masters.mastersList.masterDetail.MasterDetailFragment">
 
@@ -20,7 +20,7 @@
         app:endIconTint="@color/colorPrimary"
         app:expandedHintEnabled="false"
         app:hintTextAppearance="@style/TextInputLabel"
-        app:layout_constraintBottom_toTopOf="@id/sw_enabled"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -47,7 +47,6 @@
         android:text="@string/md_active"
         android:textColor="@color/colorPrimary"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/ib_save"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/til_name" />
 
@@ -59,7 +58,31 @@
         android:background="@mipmap/ic_save"
         android:importantForAccessibility="no"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/sw_enabled"
+        app:layout_constraintTop_toBottomOf="@id/til_name" />
+
+    <TextView
+        android:id="@+id/tv_select_place_location"
+        style="@style/Description.Bold"
+        android:layout_width="@dimen/zero"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="@string/md_select_place_location"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/mapView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sw_enabled" />
+        app:layout_constraintTop_toBottomOf="@id/sw_enabled"
+        tools:visibility="visible" />
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="@dimen/zero"
+        android:layout_height="@dimen/zero"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_select_place_location"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

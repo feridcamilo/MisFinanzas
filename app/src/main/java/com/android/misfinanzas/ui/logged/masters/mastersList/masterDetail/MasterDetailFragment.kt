@@ -1,5 +1,6 @@
 package com.android.misfinanzas.ui.logged.masters.mastersList.masterDetail
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -12,8 +13,20 @@ import com.android.misfinanzas.databinding.FragmentMasterDetailBinding
 import com.android.misfinanzas.models.MasterModel
 import com.android.misfinanzas.sync.SyncType
 import com.android.misfinanzas.utils.*
+import com.android.misfinanzas.utils.permissions.Permission
+import com.android.misfinanzas.utils.permissions.requestPermissions
 import com.android.misfinanzas.utils.viewbinding.viewBinding
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener
+import com.google.android.gms.maps.MapsInitializer
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import org.koin.android.viewmodel.ext.android.viewModel
+
 
 class MasterDetailFragment : Fragment(R.layout.fragment_master_detail) {
 
@@ -33,6 +46,10 @@ class MasterDetailFragment : Fragment(R.layout.fragment_master_detail) {
     private var descriptions: MutableList<String> = mutableListOf()
     private var isNew: Boolean = false
 
+    private val locationPermissions = requestPermissions(Permission.LocationFine(), Permission.LocationCoarse())
+    private lateinit var googleMap: GoogleMap
+    private var latLng: LatLng? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -48,10 +65,27 @@ class MasterDetailFragment : Fragment(R.layout.fragment_master_detail) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.mapView.onCreate(savedInstanceState)
         setTitle()
         setupViewModel()
         showMaster()
         setupEvents()
+        setupMap()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.mapView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.mapView.onPause()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        binding.mapView.onLowMemory()
     }
 
     private fun setTitle() {
@@ -96,6 +130,63 @@ class MasterDetailFragment : Fragment(R.layout.fragment_master_detail) {
         tilName.setEndIconOnClickListener { etName.setText(EMPTY) }
         ibSave.setOnClickListener {
             save()
+        }
+    }
+
+    private fun setupMap() = with(binding) {
+        if (type != Master.TYPE_PLACE) {
+            return
+        }
+
+        try {
+            MapsInitializer.initialize(requireContext())
+            mapView.getMapAsync { map ->
+                googleMap = map
+                setupMapEvents()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun setupMapEvents() = with(binding) {
+        locationPermissions.runWithPermissions {
+            tvSelectPlaceLocation.visible()
+            mapView.visible()
+
+            val location = LocationServices.getFusedLocationProviderClient(requireActivity())
+            googleMap.isMyLocationEnabled = true
+            googleMap.uiSettings.isZoomControlsEnabled = true
+
+            location.lastLocation.addOnSuccessListener {
+                it?.let {
+                    val latLng = LatLng(it.latitude, it.longitude)
+                    val cameraPosition = CameraPosition.Builder()
+                        .target(latLng)
+                        .zoom(12f)
+                        .build()
+                    // For zooming automatically to the location of the marker
+                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+                }
+            }
+
+            googleMap.setOnMapClickListener {
+                latLng = it
+                googleMap.clear()
+                val marker = MarkerOptions().position(it).draggable(true)
+                googleMap.addMarker(marker)
+            }
+
+            googleMap.setOnMarkerDragListener(object : OnMarkerDragListener {
+                override fun onMarkerDragStart(marker: Marker) {}
+
+                override fun onMarkerDrag(marker: Marker) {}
+
+                override fun onMarkerDragEnd(marker: Marker) {
+                    latLng = marker.position
+                }
+            })
         }
     }
 

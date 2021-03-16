@@ -46,4 +46,14 @@
     <dimen name="text_size_button">14sp</dimen>
     <dimen name="text_size_caption">12sp</dimen>
     <dimen name="text_size_overline">10sp</dimen>
+
+    <!-- Icon sizes -->
+    <dimen name="icon_size_mini">16dp</dimen>
+    <dimen name="icon_size_small">22dp</dimen>
+    <dimen name="icon_size_normal">24dp</dimen>
+    <dimen name="icon_size_medium">32dp</dimen>
+    <dimen name="icon_size_large">48dp</dimen>
+    <dimen name="icon_size_big">56dp</dimen>
+    <dimen name="icon_size_bigger">64dp</dimen>
+    <dimen name="icon_size_ultra_big">72dp</dimen>
 </resources>
