@@ -1,11 +1,12 @@
 package com.android.data.remote.model
 
-import java.io.Serializable
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class UserDTO(
     val Usuario: String,
     val IdCliente: Int,
     val Nombres: String,
     val Apellidos: String,
     val Correo: String
-) : Serializable
+)

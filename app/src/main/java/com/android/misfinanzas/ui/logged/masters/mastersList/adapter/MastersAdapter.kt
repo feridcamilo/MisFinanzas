@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.misfinanzas.R
 import com.android.misfinanzas.databinding.RowMasterBinding
 import com.android.misfinanzas.models.MasterModel
+import com.android.misfinanzas.utils.visible
 
 class MastersAdapter : ListAdapter<MasterModel, MastersAdapter.ViewHolder>(DiffCallback) {
 
@@ -40,8 +41,9 @@ class MastersAdapter : ListAdapter<MasterModel, MastersAdapter.ViewHolder>(DiffC
     inner class ViewHolder(private val binding: RowMasterBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(model: MasterModel) = with(binding) {
-            ivEnable.setImageResource(if (model.enabled) R.drawable.ic_enable else R.drawable.ic_disable)
             tvName.text = model.name
+            ivLocation.visible(model.latLng != null)
+            ivEnable.setImageResource(if (model.enabled) R.drawable.ic_enable else R.drawable.ic_disable)
             itemView.setOnClickListener { listener?.onMasterClicked(model) }
         }
     }

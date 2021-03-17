@@ -10,11 +10,11 @@
 
     <TextView
         android:id="@+id/tv_title"
+        style="@style/Caption"
         android:layout_width="@dimen/zero"
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textAppearance="@style/TextAppearance.Caption"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/tv_text"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,12 +24,12 @@
 
     <TextView
         android:id="@+id/tv_text"
+        style="@style/Caption"
         android:layout_width="@dimen/zero"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/content_inset_tiny"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textAppearance="@style/TextAppearance.Caption"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title"

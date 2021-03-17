@@ -45,10 +45,6 @@
         <item name="android:colorControlActivated">@color/colorPrimary</item>
     </style>
 
-    <style name="TextAppearance.Caption" parent="TextAppearance.MaterialComponents.Caption">
-        <item name="android:textSize">@dimen/text_size_caption</item>
-    </style>
-
     <style name="Title" parent="AppTheme">
         <item name="android:textSize">@dimen/text_size_24</item>
     </style>
@@ -70,6 +66,14 @@
     </style>
 
     <style name="Description.Bold" parent="Description">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Caption" parent="AppTheme">
+        <item name="android:textSize">@dimen/text_size_caption</item>
+    </style>
+
+    <style name="Caption.Bold" parent="Caption">
         <item name="android:textStyle">bold</item>
     </style>
 

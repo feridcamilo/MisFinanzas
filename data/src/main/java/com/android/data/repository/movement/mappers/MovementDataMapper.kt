@@ -5,6 +5,7 @@ import com.android.data.local.model.MovementVO
 import com.android.data.remote.model.MovementDTO
 import com.android.domain.model.Movement
 import com.android.domain.model.MovementDetailed
+import com.android.domain.utils.DateUtils
 import com.android.domain.utils.StringUtils.Companion.EMPTY
 import java.util.*
 
@@ -12,17 +13,17 @@ class MovementDataMapper {
 
     fun mapToVO(dto: MovementDTO): MovementVO {
         return MovementVO(
-            dto.IdMovimiento,
-            dto.IdTipoMovimiento,
-            dto.Valor,
-            dto.Descripcion,
-            dto.IdPersona,
-            dto.IdLugar,
-            dto.IdCategoria,
-            dto.FechaMovimiento,
-            dto.IdDeuda,
-            dto.FechaIngreso,
-            dto.FechaActualizacion
+            dto.id,
+            dto.idMovType,
+            dto.value,
+            dto.description,
+            dto.idPerson,
+            dto.idPlace,
+            dto.idCategory,
+            DateUtils.deserialize(dto.date),
+            dto.idDebt,
+            DateUtils.deserialize(dto.dateEntry),
+            DateUtils.deserialize(dto.dateUpdate)
         )
     }
 
@@ -47,19 +48,14 @@ class MovementDataMapper {
             if (vo.dateEntry!! > lastSync) 0 else vo.idMovement, //if 0 is a new movement, else is a old mov updated,
             vo.value,
             vo.description,
-            vo.date!!,
-            vo.dateEntry,
-            vo.dateLastUpd,
+            DateUtils.serialize(vo.date!!),
+            DateUtils.serialize(vo.dateEntry),
+            vo.dateLastUpd?.let { DateUtils.serialize(it) },
             vo.idType,
-            EMPTY,
             vo.categoryId,
-            EMPTY,
             vo.debtId,
-            EMPTY,
             vo.personId,
-            EMPTY,
-            vo.placeId,
-            EMPTY
+            vo.placeId
         )
     }
 

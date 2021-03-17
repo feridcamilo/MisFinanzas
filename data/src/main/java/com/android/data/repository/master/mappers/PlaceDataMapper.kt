@@ -11,6 +11,7 @@ class PlaceDataMapper {
         return PlaceVO(
             dto.Id,
             dto.Nombre,
+            dto.LatLng,
             dto.Activo
         )
     }
@@ -19,6 +20,7 @@ class PlaceDataMapper {
         return PlaceVO(
             place.id,
             place.name,
+            place.latLng,
             place.enabled
         )
     }
@@ -27,6 +29,7 @@ class PlaceDataMapper {
         return Place(
             master.id,
             master.name,
+            master.latLng,
             master.enabled
         )
     }
@@ -35,6 +38,7 @@ class PlaceDataMapper {
         return Place(
             vo.id,
             vo.name,
+            vo.latLng,
             vo.enabled
         )
     }

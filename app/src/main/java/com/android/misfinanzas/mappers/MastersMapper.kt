@@ -2,6 +2,8 @@ package com.android.misfinanzas.mappers
 
 import com.android.domain.model.*
 import com.android.misfinanzas.models.MasterModel
+import com.android.misfinanzas.utils.toLatLng
+import com.android.misfinanzas.utils.toLatLngString
 
 class MastersMapper {
 
@@ -9,6 +11,7 @@ class MastersMapper {
         return Master(
             model.id,
             model.name,
+            model.latLng?.toLatLngString(),
             model.enabled
         )
     }
@@ -17,6 +20,7 @@ class MastersMapper {
         return MasterModel(
             domain.id,
             domain.name,
+            domain.latLng?.toLatLng(),
             domain.enabled
         )
     }
@@ -25,6 +29,7 @@ class MastersMapper {
         return MasterModel(
             domain.id,
             domain.name,
+            null,
             domain.enabled
         )
     }
@@ -33,6 +38,7 @@ class MastersMapper {
         return MasterModel(
             domain.id,
             domain.name,
+            domain.latLng?.toLatLng(),
             domain.enabled
         )
     }
@@ -41,6 +47,7 @@ class MastersMapper {
         return MasterModel(
             domain.id,
             domain.name,
+            null,
             domain.enabled
         )
     }
@@ -49,6 +56,7 @@ class MastersMapper {
         return MasterModel(
             domain.id,
             domain.name,
+            null,
             domain.enabled
         )
     }

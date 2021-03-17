@@ -9,6 +9,7 @@ class MasterDataMapper {
         return MasterDTO(
             domain.id,
             domain.name,
+            domain.latLng,
             domain.enabled
         )
     }

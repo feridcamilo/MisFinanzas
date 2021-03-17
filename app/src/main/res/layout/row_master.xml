@@ -8,16 +8,28 @@
 
     <TextView
         android:id="@+id/tv_name"
+        style="@style/Description.Bold"
         android:layout_width="@dimen/zero"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_margin"
-        android:textSize="@dimen/text_size_18"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/iv_enable"
+        app:layout_constraintEnd_toStartOf="@id/iv_location"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Nombre" />
+
+    <ImageView
+        android:id="@+id/iv_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_location"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_enable"
+        app:layout_constraintStart_toEndOf="@id/tv_name"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/iv_enable"
@@ -27,7 +39,7 @@
         android:src="@drawable/ic_enable"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tv_name"
+        app:layout_constraintStart_toEndOf="@id/iv_location"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

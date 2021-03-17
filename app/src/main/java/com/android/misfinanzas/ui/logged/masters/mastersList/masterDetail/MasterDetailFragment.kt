@@ -17,14 +17,11 @@ import com.android.misfinanzas.utils.permissions.Permission
 import com.android.misfinanzas.utils.permissions.requestPermissions
 import com.android.misfinanzas.utils.viewbinding.viewBinding
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener
 import com.google.android.gms.maps.MapsInitializer
-import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
@@ -142,51 +139,53 @@ class MasterDetailFragment : Fragment(R.layout.fragment_master_detail) {
             MapsInitializer.initialize(requireContext())
             mapView.getMapAsync { map ->
                 googleMap = map
+                tvSelectPlaceLocation.visible()
+                mapView.visible()
                 setupMapEvents()
+                setInitialPosition()
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    @SuppressLint("MissingPermission")
     private fun setupMapEvents() = with(binding) {
+        googleMap.uiSettings.isZoomControlsEnabled = true
+
+        googleMap.setOnMapClickListener {
+            latLng = it
+            googleMap.clear()
+            googleMap.addMarker(it)
+        }
+
+        googleMap.setOnMarkerDragListener(object : OnMarkerDragListener {
+            override fun onMarkerDragStart(marker: Marker) {}
+
+            override fun onMarkerDrag(marker: Marker) {}
+
+            override fun onMarkerDragEnd(marker: Marker) {
+                latLng = marker.position
+            }
+        })
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun setInitialPosition() {
+        var posLoaded = false
+        master?.latLng?.let {
+            posLoaded = true
+            googleMap.addMarker(it)
+            googleMap.centerMapCamera(it)
+        }
+
         locationPermissions.runWithPermissions {
-            tvSelectPlaceLocation.visible()
-            mapView.visible()
-
-            val location = LocationServices.getFusedLocationProviderClient(requireActivity())
             googleMap.isMyLocationEnabled = true
-            googleMap.uiSettings.isZoomControlsEnabled = true
-
-            location.lastLocation.addOnSuccessListener {
-                it?.let {
-                    val latLng = LatLng(it.latitude, it.longitude)
-                    val cameraPosition = CameraPosition.Builder()
-                        .target(latLng)
-                        .zoom(12f)
-                        .build()
-                    // For zooming automatically to the location of the marker
-                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+            if (!posLoaded) {
+                val location = LocationServices.getFusedLocationProviderClient(requireActivity())
+                location.lastLocation.addOnSuccessListener {
+                    it?.let { googleMap.centerMapCamera(LatLng(it.latitude, it.longitude)) }
                 }
             }
-
-            googleMap.setOnMapClickListener {
-                latLng = it
-                googleMap.clear()
-                val marker = MarkerOptions().position(it).draggable(true)
-                googleMap.addMarker(marker)
-            }
-
-            googleMap.setOnMarkerDragListener(object : OnMarkerDragListener {
-                override fun onMarkerDragStart(marker: Marker) {}
-
-                override fun onMarkerDrag(marker: Marker) {}
-
-                override fun onMarkerDragEnd(marker: Marker) {
-                    latLng = marker.position
-                }
-            })
         }
     }
 
@@ -238,6 +237,7 @@ class MasterDetailFragment : Fragment(R.layout.fragment_master_detail) {
         return MasterModel(
             idMaster,
             name,
+            latLng,
             swEnabled.isChecked
         )
     }

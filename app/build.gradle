@@ -41,7 +41,9 @@ dependencies {
     implementation project(':domain')
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
     implementation "androidx.appcompat:appcompat:$app_compat_version"
     implementation "androidx.core:core-ktx:$core_ktx_version"
     implementation "com.google.android.material:material:$material_design_version"
@@ -92,6 +94,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:26.7.0')
     // Add the dependency for the Firebase SDK for Google Analytics
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    //implementation("com.google.firebase:firebase-crashlytics")
 
     //Google maps
     implementation 'com.google.android.gms:play-services-maps:17.0.0'

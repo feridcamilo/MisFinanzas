@@ -34,4 +34,9 @@ sealed class Permission(
         key: String = Manifest.permission.ACCESS_COARSE_LOCATION
     ) : Permission(messageResId, key)
 
+    class SmsRead(
+        @StringRes messageResId: Int = R.string.sms_permission_message,
+        key: String = Manifest.permission.READ_SMS
+    ) : Permission(messageResId, key)
+
 }

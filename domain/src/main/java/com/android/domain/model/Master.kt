@@ -3,6 +3,7 @@ package com.android.domain.model
 data class Master(
     val id: Int,
     val name: String,
+    val latLng: String?,
     val enabled: Boolean
 ) {
 

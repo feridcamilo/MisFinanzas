@@ -1,9 +1,10 @@
 package com.android.data.remote.model.result
 
-import com.google.gson.annotations.SerializedName
-import java.io.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ServerDateTimeResult(
-    @SerializedName("getServerDateTimeResult")
+    @SerialName("getServerDateTimeResult")
     val result: String
-) : Serializable
+)

@@ -1,7 +1,6 @@
 package com.android.data.repository.di
 
 import com.android.data.repository.balance.BalanceDataRepository
-import com.android.data.repository.balance.datasource.BalanceCloudDataSource
 import com.android.data.repository.balance.datasource.BalanceRoomDataSource
 import com.android.data.repository.balance.mappers.BalanceDataMapper
 import com.android.data.repository.master.MasterDataRepository
@@ -36,8 +35,7 @@ val repositoryModules by lazy {
 private val balanceRepositoryModule = module {
     factory { BalanceDataMapper() }
     factory { BalanceRoomDataSource(get()) }
-    factory { BalanceCloudDataSource() }
-    factory<BalanceRepository> { BalanceDataRepository(get(), get(), get()) }
+    factory<BalanceRepository> { BalanceDataRepository(get(), get()) }
 }
 
 private val masterRepositoryModule = module {

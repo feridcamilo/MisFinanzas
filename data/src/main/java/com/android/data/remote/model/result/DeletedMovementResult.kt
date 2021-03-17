@@ -1,11 +1,10 @@
 package com.android.data.remote.model.result
 
-import com.google.gson.annotations.SerializedName
-import java.io.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class DeletedMovementResult(
-    @SerializedName("eliminarMovimientosResult")
-    val result: Boolean,
-    @SerializedName("getMovimientosEliminadosResult")
+    @SerialName("getMovimientosEliminadosResult")
     val results: List<Int>
-) : Serializable
+)

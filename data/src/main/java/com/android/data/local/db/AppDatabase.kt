@@ -5,10 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.android.data.local.converters.BigDecimalConverter
+import com.android.data.local.converters.DateConverter
 import com.android.data.local.dao.*
 import com.android.data.local.model.*
-import com.android.data.local.model.converters.BigDecimalConverter
-import com.android.data.local.model.converters.DateConverter
 
 @Database(
     entities = [

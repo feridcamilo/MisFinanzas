@@ -1,24 +1,26 @@
-package com.android.data.local.model.converters
+package com.android.data.local.converters
 
 import androidx.room.TypeConverter
 import java.util.*
 
 class DateConverter {
+
     @TypeConverter
-    fun toDate(timestamp: Long?): Date? {
+    fun toDate(time: Long?): Date? {
         var date: Date? = null
-        if (timestamp != null) {
-            date = Date(timestamp)
+        if (time != null) {
+            date = Date(time)
         }
         return date
     }
 
     @TypeConverter
-    fun toTimestamp(date: Date?): Long? {
+    fun toLong(date: Date?): Long? {
         var long: Long? = null
         if (date != null) {
             long = date.time
         }
         return long
     }
+
 }

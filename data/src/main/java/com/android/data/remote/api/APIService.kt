@@ -30,9 +30,6 @@ interface APIService {
     @GET("Maestros.svc/getUsuario/{user}/{password}")
     suspend fun getUser(@Path("user") user: String, @Path("password") password: String): UserResult
 
-    @POST("Movimientos.svc/getSaldos")
-    suspend fun getSaldo(@Body parametros: APIParameterBody): BalanceResult
-
     @POST("Movimientos.svc/getMovimientos")
     suspend fun getMovements(@Body parametros: APIParameterBody): MovementResult
 
@@ -40,7 +37,7 @@ interface APIService {
     suspend fun getDeletedMovements(@Body parametros: APIParameterBody): DeletedMovementResult
 
     @POST("Movimientos.svc/eliminarMovimientos")
-    suspend fun deleteMovements(@Body deletedMovement: DeletedMovementDTO): DeletedMovementResult
+    suspend fun deleteMovements(@Body deletedMovement: DeletedMovementDTO): DeleteMovementResult
 
     @POST("Movimientos.svc/recibirMovimientos")
     suspend fun sendMovements(@Body sendMovement: SendMovementDTO): SendMovementResult

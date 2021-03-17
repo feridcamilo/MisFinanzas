@@ -167,5 +167,6 @@
     <string name="write_permission_message">\u25CF Se necesita acceso a la memoria para poder guardar las fotos tomadas por la cámara.</string>
     <string name="camera_permission_message">\u25CF Se necesita acceso a la cámara para poder tomar la foto.</string>
     <string name="location_permission_message">\u25CF Se necesita acceso a la ubicación para poder mostrar el mapa.</string>
+    <string name="sms_permission_message">\u25CF Se necesita acceso a los mensajes de texto para obtener potenciales movimientos desde su banco.</string>
 
 </resources>

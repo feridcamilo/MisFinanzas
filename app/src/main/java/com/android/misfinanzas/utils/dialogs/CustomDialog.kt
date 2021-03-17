@@ -70,9 +70,9 @@ class CustomDialog(
 
     private fun setupView() = with(binding) {
         when (builder.dialogType) {
-            DialogType.ALERT_DIALOG -> tvTitle.setTextColor(context.getColor(android.R.color.black))
+            //DialogType.ALERT_DIALOG -> tvTitle.setTextColor(context.getColor(android.R.color.black))
             DialogType.ERROR_DIALOG -> tvTitle.setTextColor(context.getColor(android.R.color.holo_red_dark))
-            DialogType.SUCCESS_DIALOG -> tvTitle.setTextColor(context.getColor(android.R.color.black))
+            //DialogType.SUCCESS_DIALOG -> tvTitle.setTextColor(context.getColor(android.R.color.black))
         }
 
         if (builder.icon == null) {

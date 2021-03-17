@@ -81,5 +81,22 @@ class DateUtils {
 
             return gmt
         }
+
+        fun deserialize(date: String?): Date? {
+            if (date.isNullOrEmpty()) return null
+            try {
+                val cleanDate = date.replace("/Date(", StringUtils.EMPTY).replace(")/", StringUtils.EMPTY)
+                val longDate = cleanDate.substring(0, cleanDate.length - 5).toLong()
+                return Date(longDate)
+            } catch (e: Exception) {
+            }
+            return null
+
+        }
+
+        fun serialize(date: Date): String {
+            return "/Date(" + date.time + ")/"
+        }
+
     }
 }

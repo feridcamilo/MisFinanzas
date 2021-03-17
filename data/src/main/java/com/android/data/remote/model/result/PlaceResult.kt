@@ -1,10 +1,11 @@
 package com.android.data.remote.model.result
 
 import com.android.data.remote.model.MasterDTO
-import com.google.gson.annotations.SerializedName
-import java.io.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class PlaceResult(
-    @SerializedName("getLugaresResult")
+    @SerialName("getLugaresResult")
     val results: List<MasterDTO>
-) : Serializable
+)

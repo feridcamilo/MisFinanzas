@@ -1,11 +1,8 @@
 package com.android.misfinanzas.ui.logged.balance
 
-import android.Manifest
 import android.app.AlertDialog
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -23,18 +20,18 @@ import com.android.misfinanzas.ui.logged.movements.movementDetail.MovementDetail
 import com.android.misfinanzas.utils.*
 import com.android.misfinanzas.utils.events.EventSubject
 import com.android.misfinanzas.utils.events.getEventBus
+import com.android.misfinanzas.utils.permissions.Permission
+import com.android.misfinanzas.utils.permissions.requestPermissions
 import com.android.misfinanzas.utils.viewbinding.viewBinding
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class BalanceFragment : Fragment(R.layout.fragment_balance) {
 
-    private val REQUEST_PERMISSION_READ_SMS = 1
-
     private val viewModel by viewModel<BalanceViewModel>()
     private val configViewModel by viewModel<ConfigViewModel>()
 
     private val movementsAdapter by lazy { MovementsAdapter() }
-
+    private val smsPermission = requestPermissions(Permission.SmsRead())
     private val binding by viewBinding<FragmentBalanceBinding>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -98,7 +95,7 @@ class BalanceFragment : Fragment(R.layout.fragment_balance) {
     }
 
     private fun setupPotentialMovements() {
-        if (checkAndRequestPermissions()) {
+        smsPermission.runWithPermissions {
             setupRecyclerView()
             getPotentialMovements()
         }
@@ -106,26 +103,6 @@ class BalanceFragment : Fragment(R.layout.fragment_balance) {
 
     private fun getPotentialMovements() {
         viewModel.getPotentialMovementsFromSMS()
-    }
-
-    private fun checkAndRequestPermissions(): Boolean {
-        val sms = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_SMS)
-        if (sms != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(arrayOf(Manifest.permission.READ_SMS), REQUEST_PERMISSION_READ_SMS)
-            return false
-        }
-        return true
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            when (requestCode) {
-                REQUEST_PERMISSION_READ_SMS -> {
-                    setupPotentialMovements()
-                }
-            }
-        }
     }
 
     private fun setupEvents() = with(binding) {

@@ -8,5 +8,6 @@ data class PlaceVO(
     @PrimaryKey
     val id: Int,
     val name: String,
+    val latLng: String?,
     val enabled: Boolean
 )

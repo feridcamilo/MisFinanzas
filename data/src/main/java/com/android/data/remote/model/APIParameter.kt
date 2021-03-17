@@ -1,16 +1,18 @@
 package com.android.data.remote.model
 
-import com.google.gson.annotations.SerializedName
-import java.io.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class APIParameter(
-    @SerializedName("Nombre")
+    @SerialName("Nombre")
     var name: String,
-    @SerializedName("Valor")
+    @SerialName("Valor")
     var value: String
-) : Serializable
+)
 
+@Serializable
 data class APIParameterBody(
-    @SerializedName("parametros")
+    @SerialName("parametros")
     val paramList: List<APIParameter>
-) : Serializable
+)
