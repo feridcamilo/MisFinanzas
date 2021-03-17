@@ -72,10 +72,10 @@ class MastersListFragment(
 
     private val viewStateObserver = Observer<MastersListViewState> { state ->
         when (state) {
-            is MastersListViewState.PeopleLoaded -> setupRecyclerViewData(state.people)
-            is MastersListViewState.PlacesLoaded -> setupRecyclerViewData(state.places)
-            is MastersListViewState.CategoriesLoaded -> setupRecyclerViewData(state.categories)
-            is MastersListViewState.DebtsLoaded -> setupRecyclerViewData(state.debts)
+            is MastersListViewState.PeopleLoaded -> loadMasters(state.people)
+            is MastersListViewState.PlacesLoaded -> loadMasters(state.places)
+            is MastersListViewState.CategoriesLoaded -> loadMasters(state.categories)
+            is MastersListViewState.DebtsLoaded -> loadMasters(state.debts)
             is MastersListViewState.MastersFiltered -> setupRecyclerViewData(state.masters)
         }
     }
@@ -85,6 +85,14 @@ class MastersListFragment(
         layoutManager = LinearLayoutManager(requireContext())
         mastersAdapter.setOnActionItemListener(actionListener)
         addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+    }
+
+    private fun loadMasters(masters: List<MasterModel>) = with(binding) {
+        if (svSearch.query.isNotEmpty()) {
+            svSearch.setQuery(svSearch.query, true)
+        } else {
+            setupRecyclerViewData(masters)
+        }
     }
 
     private fun setupRecyclerViewData(items: List<MasterModel>) {
